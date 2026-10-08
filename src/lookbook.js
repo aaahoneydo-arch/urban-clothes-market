@@ -17,17 +17,18 @@ for(const section of document.querySelectorAll('[data-lookbook]')){
   let current=0,userPaused=reduced.matches||!!navigator.connection?.saveData,visible=false,hover=false,focused=false,timer;
   const reflect=()=>{pause.textContent=userPaused?'Play':'Pause';pause.setAttribute('aria-label',userPaused?'Play slideshow':'Pause slideshow');};
   const stop=()=>{clearInterval(timer);timer=null;};
-  const active=()=>visible&&!userPaused&&!hover&&!focused&&!document.hidden&&!reduced.matches;
+  const active=()=>visible&&!userPaused&&!hover&&!focused&&!document.hidden;
   const move=(delta,manual=false)=>{
     if(manual){userPaused=true;reflect();stop();}
-    current=(current+delta+cards.length)%cards.length;
+    const end=track.scrollWidth-track.clientWidth;
+    current=delta>0&&track.scrollLeft>=end-3?0:delta<0&&track.scrollLeft<=3?cards.length-1:(current+delta+cards.length)%cards.length;
     track.scrollTo({left:cards[current].offsetLeft-cards[0].offsetLeft,behavior:reduced.matches?'instant':'smooth'});
     position.textContent=`Look ${current+1} of ${cards.length}`;
   };
   const schedule=()=>{stop();if(active())timer=setInterval(()=>move(1),6000);};
   section.querySelector('[data-look-prev]').addEventListener('click',()=>move(-1,true));
   section.querySelector('[data-look-next]').addEventListener('click',()=>move(1,true));
-  pause.addEventListener('click',()=>{userPaused=!userPaused;reflect();schedule();});
+  pause.addEventListener('click',()=>{userPaused=!userPaused;if(!userPaused){hover=false;focused=false;}reflect();schedule();});
   section.addEventListener('mouseenter',()=>{hover=true;stop();});
   section.addEventListener('mouseleave',()=>{hover=false;schedule();});
   section.addEventListener('focusin',()=>{focused=true;stop();});

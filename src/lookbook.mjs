@@ -8,8 +8,8 @@ export function lookbook(photos,products){
 }
 
 export function productGallery(p,photos){
-  const photo=photos.find(x=>x.productId===p.id);
+  const looks=photos.filter(x=>x.productId===p.id);
   const image=`<div class="detail-image"><img data-gallery-main src="${esc(p.image)}" alt="${esc(p.name)}" width="700" height="700" fetchpriority="high"></div>`;
-  if(!photo)return image;
-  return `<div class="product-gallery" data-product-gallery>${image}<div class="gallery-thumbs" role="group" aria-label="Product images"><button type="button" data-gallery-src="${esc(p.image)}" data-gallery-alt="${esc(p.name)}" aria-label="Show product photo" aria-pressed="true"><img src="${esc(p.image)}" alt="" width="90" height="90" loading="lazy"><span>Product photo</span></button><button type="button" data-gallery-src="${esc(photo.src)}" data-gallery-alt="${esc(photo.alt||p.name+' in a styled look')}" aria-label="Show styled look" aria-pressed="false"><img src="${esc(photo.src)}" alt="" width="90" height="90" loading="lazy"><span>Styled look</span></button></div><p class="gallery-note">Styled look created with AI. The product photo shows the exact item.</p></div>`;
+  if(!looks.length)return image;
+  return `<div class="product-gallery" data-product-gallery>${image}<div class="gallery-thumbs" role="group" aria-label="Product images"><button type="button" data-gallery-src="${esc(p.image)}" data-gallery-alt="${esc(p.name)}" aria-label="Show product photo" aria-pressed="true"><img src="${esc(p.image)}" alt="" width="90" height="90" loading="lazy"><span>Product photo</span></button>${looks.map((photo,i)=>`<button type="button" data-gallery-src="${esc(photo.src)}" data-gallery-alt="${esc(photo.alt||p.name+' in a styled look')}" aria-label="Show styled look${looks.length>1?' '+(i+1):''}" aria-pressed="false"><img src="${esc(photo.src)}" alt="" width="90" height="90" loading="lazy"><span>Styled look${looks.length>1?' '+(i+1):''}</span></button>`).join('')}</div><p class="gallery-note">Styled looks created with AI. Check the product photo for the exact garment, print, and colors.</p></div>`;
 }

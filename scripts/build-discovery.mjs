@@ -45,7 +45,7 @@ function buildGoogleMerchantFeed() {
     return `    <item>
       <g:id>${esc(p.id)}</g:id>
       <g:title>${esc(p.name)}</g:title>
-      <g:description>${esc(p.name)}. Authentic print-on-demand graphic apparel and lifestyle gifts by Urban Clothes Market. Made to order with premium materials and fast direct shipping.</g:description>
+      <g:description>${esc(p.name)}. Graphic apparel and lifestyle gifts by Urban Clothes Market. Choose available sizes and colors at checkout.</g:description>
       <g:link>${fullUrl}</g:link>
       <g:image_link>${esc(p.image)}</g:image_link>
       <g:condition>new</g:condition>
@@ -85,7 +85,7 @@ function buildPinterestCatalog() {
 
   for (const p of products) {
     const fullUrl = ORIGIN + p.path;
-    const desc = `${p.name}. Discover everyday graphic clothing and gifts at Urban Clothes Market. High-density print on demand, true to size fit, ships direct to your door.`;
+    const desc = `${p.name}. Discover everyday graphic clothing and gifts at Urban Clothes Market. Choose available sizes and colors at checkout.`;
     rows.push([
       csvCell(p.id),
       csvCell(p.name),
@@ -189,6 +189,15 @@ const GIFT_GUIDES = [
   }
 ];
 
+for (const guide of GIFT_GUIDES) {
+  guide.description=guide.description.replace('top-rated','graphic').replace('High-converting conversation starters','Conversation starters');
+  const matching=products.filter(p=>p.themes.includes(guide.themeId));
+  guide.faqs=[
+    {q:'What can I find in this gift edit?',a:matching.length.toLocaleString()+' listings, including '+[...new Set(matching.map(p=>p.productType))].slice(0,4).join(', ')+'. Browse the full collection for more options.'},
+    {q:'How do I choose sizes and colors?',a:'Open a product and select Pick size & colors. Available options and the size guide are shown before checkout.'},
+    {q:'Where can I confirm delivery, shipping costs and returns?',a:'Current shipping costs, delivery estimates, promotions and return terms are confirmed by our checkout partner. Check them before placing your order.'}
+  ];
+}
 const newSitemapUrls = [];
 
 for (const guide of GIFT_GUIDES) {
@@ -197,7 +206,7 @@ for (const guide of GIFT_GUIDES) {
   fs.mkdirSync(guideDir, { recursive: true });
 
   const matchingProds = products
-    .filter(p => p.themes.includes(guide.themeId))
+    .filter(p => p.themes.includes(guide.themeId) && (guide.slug !== 'gamers' || p.price < 25))
     .slice(0, 36);
 
   const faqSchema = {
@@ -224,45 +233,12 @@ for (const guide of GIFT_GUIDES) {
   const combinedSchema = [collectionSchema, faqSchema];
 
   const guideHtml = `<div class="wrap">
-    <div class="breadcrumb"><a href="/">Home</a> / <a href="/#collections">Gift Guides</a> / ${esc(guide.title)}</div>
-    <section class="collection-intro" style="margin-bottom: 2rem;">
-      <div class="eyebrow" style="color: #38bdf8; font-weight: 800; text-transform: uppercase;">🎁 Curated Gift Guide • Under $25 Picks</div>
-      <h1 style="font-size: 2.25rem; font-weight: 900; line-height: 1.2; margin-top: 0.25rem;">${esc(guide.title)}</h1>
-      <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 840px; margin-top: 0.75rem; line-height: 1.6;">${esc(guide.leadText)}</p>
-      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem;">
-        <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #38bdf8;">✓ Direct Made-To-Order</span>
-        <span style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #4ade80;">✓ Reduced Creator Margins ($1–$3 Profit)</span>
-        <span style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #fbbf24;">✓ Sizing XS to 5XL</span>
-      </div>
-    </section>
-
-    <!-- Product Grid -->
-    <section id="catalog" style="margin-bottom: 3.5rem;">
-      <div class="results-top" style="margin-bottom: 1.5rem;">
-        <span id="result-count" style="font-weight: 800; font-size: 1.1rem; color: #fff;">Featured Top Picks (${matchingProds.length} Designs)</span>
-        <a href="${SHOP}/all" class="btn" style="text-decoration: none;" target="_blank" rel="noopener">Browse Full Catalog ↗</a>
-      </div>
-      <div class="grid">${matchingProds.map(card).join('')}</div>
-    </section>
-
-    <!-- Buyer Guide & FAQ Section -->
-    <section style="background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem; margin-bottom: 3.5rem;">
-      <h2 style="font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 1rem;">Frequently Asked Buyer Questions</h2>
-      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-        ${guide.faqs.map(f => `
-          <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
-            <h3 style="font-size: 1.05rem; font-weight: 800; color: #38bdf8; margin: 0 0 0.4rem 0;">${esc(f.q)}</h3>
-            <p style="font-size: 0.95rem; color: #94a3b8; margin: 0; line-height: 1.5;">${esc(f.a)}</p>
-          </div>
-        `).join('')}
-      </div>
-    </section>
-
-    <!-- Explore More -->
-    <section class="section">
-      <h2 style="font: 700 35px var(--display)">Explore other gift categories</h2>
-      ${themeTiles(meta)}
-    </section>
+    <div class="breadcrumb"><a href="/">Home</a> / Gift ideas / ${esc(guide.title)}</div>
+    <section class="collection-intro"><div class="eyebrow">GIFT IDEAS WITH PERSONALITY</div><h1>${esc(guide.title)}</h1><p>${esc(guide.leadText)}</p><a class="btn dark" href="/collections/${guide.themeId}/">Explore the full collection ↗</a></section>
+    <section class="section"><div class="section-head"><div><div class="sub">A FEW IDEAS TO GET YOU STARTED</div><h2>Find their next favorite.</h2><p>Displayed prices are from the current catalog. Final options, prices and availability are confirmed at checkout.</p></div></div><div class="grid">${matchingProds.map(card).join('')}</div></section>
+    <section class="legal"><h2>Good to know before you buy</h2>${guide.faqs.map(f=>`<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}</section>
+    <section class="section"><div class="section-head"><h2>More gift ideas.</h2></div><div class="type-links">${GIFT_GUIDES.map(g=>`<a href="/gifts/${g.slug}/">${esc(g.metaTitle)} ↗</a>`).join('')}</div></section>
+    <section class="section"><div class="section-head"><h2>Find their people.</h2></div>${themeTiles(meta)}</section>
   </div>`;
 
   const finalHtml = shell({
