@@ -1,3 +1,4 @@
+import './lookbook.js';
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!navigator.connection?.saveData){const observer=new IntersectionObserver(entries=>entries.forEach(({target,isIntersecting})=>{if(isIntersecting&&!target.dataset.userPaused){target.play().catch(()=>{});}else if(!isIntersecting){target.dataset.autoPause='1';target.pause();}}),{threshold:.55});document.querySelectorAll('[data-film]').forEach(v=>{v.addEventListener('pause',()=>{if(v.dataset.autoPause)delete v.dataset.autoPause;else v.dataset.userPaused='1';});v.addEventListener('play',()=>delete v.dataset.userPaused);observer.observe(v);});}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
