@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';import {normalize} from '../src/catalog-model.mjs';
+const p=normalize(JSON.parse(fs.readFileSync('data/catalog.json'))),idx=JSON.parse(fs.readFileSync('dist/catalog/index.json'));
+assert.equal(p.length,4497);assert.equal(new Set(p.map(x=>x.id)).size,p.length);assert(p.every(x=>fs.existsSync('dist'+x.path+'index.html')));assert(p.every(x=>!x.name.includes('\uFFFD')));
+assert(p.filter(x=>/sweatshirt/i.test(x.productType)).every(x=>x.category==='hoodies'));assert(p.filter(x=>/tumbler/i.test(x.productType)).every(x=>x.category==='mugs'));assert(p.filter(x=>/jacket/i.test(x.productType)&&!/hoodie|sweatshirt/i.test(x.productType)).every(x=>x.category==='jackets'));
+idx.rows.forEach(r=>r.push((idx.designs[r[1]]+' '+idx.productTypes[r[2]]+' '+r[6].join(' ')+' '+r[5]+' '+r[9]).toLowerCase()));
+let code=fs.readFileSync('src/search-worker.js','utf8');code=code.slice(code.indexOf('const hash=')).replace('export function search','function search');code=code.slice(0,code.indexOf('self.onmessage'));const ctx={};vm.createContext(ctx);vm.runInContext(code,ctx);
+const cats=ctx.search(idx,{theme:'cats',type:'hoodies',sort:'shuffle',seed:'test',size:24});assert(cats.total>0);assert(cats.rows.every(r=>p.find(x=>x.id===r.id).themes.includes('cats')&&p.find(x=>x.id===r.id).category==='hoodies'));
+const all=ctx.search(idx,{sort:'shuffle',seed:'one',size:24}),second=ctx.search(idx,{sort:'shuffle',seed:'one',size:24,page:2}),changed=ctx.search(idx,{sort:'shuffle',seed:'two',size:24});assert(!all.rows.some(x=>second.rows.some(y=>y.id===x.id)));assert.notDeepEqual(all.rows.map(x=>x.id),changed.rows.map(x=>x.id));
+const fav=ctx.search(idx,{savedOnly:true,favorites:[p[0].id]});assert.equal(fav.total,1);assert.equal(fav.rows[0].id,p[0].id);
+const champion=ctx.search(idx,{brand:'Champion'});assert(champion.total>0);assert(champion.rows.every(r=>p.find(x=>x.id===r.id).brand==='Champion'));
+assert.equal(ctx.search(idx,{q:'no-matching-design-xyz'}).total,0);
+const large={...idx,rows:Array.from({length:100000},(_,i)=>{let row=[...idx.rows[i%idx.rows.length]];row[0]='large-'+i;return row;})};let t=performance.now();const stress=ctx.search(large,{sort:'shuffle',seed:'scale',size:24,page:3000});assert.equal(stress.total,100000);assert.equal(stress.rows.length,24);const elapsed=Math.round(performance.now()-t);
+const map=fs.readFileSync('dist/sitemap.xml','utf8');assert(map.includes('<sitemapindex'));assert(fs.readFileSync('dist/sitemap-1.xml','utf8').includes(p.at(-1).path));
+console.log(JSON.stringify({passed:true,realProducts:p.length,themeTypeFilter:cats.total,brandFilter:champion.total,syntheticSearchItems:100000,syntheticSearchMs:elapsed,visibleCards:24}));

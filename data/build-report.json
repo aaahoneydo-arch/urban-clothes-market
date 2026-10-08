@@ -1,0 +1,34 @@
+{
+  "count": 4497,
+  "designs": 23,
+  "types": {
+    "tees": 1782,
+    "hoodies": 820,
+    "jackets": 253,
+    "bottoms": 75,
+    "mugs": 250,
+    "hats": 352,
+    "bags": 294,
+    "stickers": 109,
+    "art": 31,
+    "pets": 67,
+    "accessories": 44,
+    "home": 420,
+    "kids": 575
+  },
+  "themes": {
+    "cats": 202,
+    "dogs": 202,
+    "gamers": 402,
+    "political": 174,
+    "urban": 2856,
+    "humor": 1906,
+    "cars": 1179,
+    "diy": 781,
+    "pets": 404,
+    "kids": 575,
+    "all": 4497
+  },
+  "pages": 5271,
+  "indexBytes": 468527
+}

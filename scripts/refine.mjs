@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+let file='src/app.js';let s=fs.readFileSync(file,'utf8');
+s=s.replace("page:Number(params.get('page'))||1","brand:params.get('brand')||'',page:Number(params.get('page'))||(route[2]==='page'?Number(route[3]):1)");
+s=s.replace("['q','type','theme','audience','maxPrice','sort']","['q','type','theme','audience','brand','maxPrice','sort']");
+s=s.replace("['theme','theme'],['audience','audience']","['theme','theme'],['audience','audience'],['brand','brand']");
+s=s.replace("$('#audience').value=f.audience;","$('#audience').value=f.audience;$('#brand').value=f.brand;");
+s=s.replace("['audience',f.audience],","['audience',f.audience],['brand',f.brand],");
+s=s.replace("q:'',type:'',theme:'',audience:'',maxPrice","q:'',type:'',theme:'',audience:'',brand:'',maxPrice");fs.writeFileSync(file,s);
+file='src/templates.mjs';s=fs.readFileSync(file,'utf8');
+s=s.replace('More colors available','Choose colors & sizes');
+s=s.replace('<div class="filter-group"><label for="budget">','<div class="filter-group"><label for="brand">Garment brand</label><select id="brand"><option value="">All garment brands</option><option>Champion</option><option>Stanley/Stella</option><option>Bella + Canvas</option><option>Gildan</option><option>Under Armour</option><option>Adidas</option><option>Augusta Sportswear</option><option>Bayside</option><option>Flexfit</option><option>Spreadshirt & Other</option></select></div><div class="filter-group"><label for="budget">');fs.writeFileSync(file,s);
+fs.appendFileSync('src/style.css','\n.hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.catalog-layout>div{min-width:0}.hero-art{min-width:0}.hero-copy{min-width:0}@media(max-width:760px){.hero{grid-template-columns:1fr}}\n');
+if(fs.existsSync('dist/raw-catalog.json'))fs.unlinkSync('dist/raw-catalog.json');
