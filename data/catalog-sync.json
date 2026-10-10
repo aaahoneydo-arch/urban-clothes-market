@@ -1,25 +1,49 @@
 {
   "source": "https://urbanclothesmarket.myspreadshop.com/all",
-  "checkedAt": "2026-10-08T13:04:53.388Z",
-  "checkedDate": "October 8, 2026",
-  "publicPages": 53,
-  "previousListings": 4497,
-  "listings": 5048,
-  "addedListings": 551,
+  "checkedAt": "2026-10-10T05:55:56.522Z",
+  "checkedDate": "October 10, 2026",
+  "publicPages": 70,
+  "previousListings": 5048,
+  "listings": 6680,
+  "addedListings": 1632,
   "removedListings": 0,
-  "changedListings": 397,
+  "changedListings": 0,
   "addedDesigns": [
     {
-      "name": "Level 0 NOOB 1% HP Pixel Art Arcade Badge",
-      "listings": 163
+      "name": "Moonlit Snake Floral Crescent",
+      "listings": 201
     },
     {
-      "name": "Gamer Girl 80s Synthwave Arcade Graphic",
-      "listings": 194
+      "name": "City Dawn Laurel Emblem",
+      "listings": 206
     },
     {
-      "name": "Gamer Gurl Neon Cat-Ear Headset Sticker",
-      "listings": 194
+      "name": "Flame Tiger Head Emblem",
+      "listings": 201
+    },
+    {
+      "name": "Sunrise Summit Trail Circle",
+      "listings": 201
+    },
+    {
+      "name": "Atomic Orbit Neon",
+      "listings": 208
+    },
+    {
+      "name": "Concrete Bloom - Rose and Thorns",
+      "listings": 201
+    },
+    {
+      "name": "Racing Club - Vintage Piston 01",
+      "listings": 201
+    },
+    {
+      "name": "Night Run - Cobalt Panther",
+      "listings": 201
+    },
+    {
+      "name": "Midnight Queue - Anime Gamer Streetwear",
+      "listings": 12
     }
   ],
   "removedDesigns": []
