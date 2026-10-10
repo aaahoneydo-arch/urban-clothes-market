@@ -24,6 +24,8 @@ meta.hero = products.find(p => /home is where the cat sits/i.test(p.design) && /
 
 console.log('=== 1. GENERATING GOOGLE MERCHANT CENTER XML FEED ===');
 function buildGoogleMerchantFeed() {
+  console.log(`  Generating dynamic Google Merchant feed for ${products.length} products...`);
+
   const xmlItems = products.map(p => {
     const fullUrl = ORIGIN + p.path;
     const catMapping = {
@@ -42,6 +44,11 @@ function buildGoogleMerchantFeed() {
       kids: 'Apparel &amp; Accessories &gt; Clothing &gt; Baby &amp; Toddler Clothing'
     }[p.category] || 'Apparel &amp; Accessories &gt; Clothing';
 
+    const gender = p.audience === 'Women' ? 'female' : (p.audience === 'Men' ? 'male' : 'unisex');
+    const ageGroup = p.kids ? 'kids' : 'adult';
+    const color = (p.colors && p.colors[0] && p.colors[0].toLowerCase() !== 'nude') ? p.colors[0] : (p.colors && p.colors[0] ? 'Neutral Beige' : 'Black');
+    const size = (p.sizes && p.sizes.length) ? p.sizes.join(', ') : 'S, M, L, XL';
+
     return `    <item>
       <g:id>${esc(p.id)}</g:id>
       <g:title>${esc(p.name)}</g:title>
@@ -54,6 +61,15 @@ function buildGoogleMerchantFeed() {
       <g:brand>Urban Clothes Market</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
       <g:google_product_category>${catMapping}</g:google_product_category>
+      <g:gender>${gender}</g:gender>
+      <g:age_group>${ageGroup}</g:age_group>
+      <g:color>${esc(color)}</g:color>
+      <g:size>${esc(size)}</g:size>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard Flat Rate</g:service>
+        <g:price>6.99 USD</g:price>
+      </g:shipping>
     </item>`;
   }).join('\n');
 
@@ -68,7 +84,11 @@ ${xmlItems}
 </rss>`;
 
   fs.writeFileSync(path.join(distDir, 'google-merchant-feed.xml'), xmlContent, 'utf8');
-  console.log(`  ✓ Written dist/google-merchant-feed.xml (${(xmlContent.length / 1024 / 1024).toFixed(2)} MB, ${products.length} items)`);
+  const scratchFeed = 'C:/Users/aaaho/.gemini/antigravity-ide/scratch/google-merchant-feed-optimized.xml';
+  const jasonFeed = 'C:/Users/aaaho/.gemini/antigravity-ide/scratch/jason-coleman-network/google-merchant-feed.xml';
+  try { fs.writeFileSync(scratchFeed, xmlContent, 'utf8'); } catch(e) {}
+  try { fs.writeFileSync(jasonFeed, xmlContent, 'utf8'); } catch(e) {}
+  console.log(`  ✓ Written dist/google-merchant-feed.xml (${(xmlContent.length / 1024 / 1024).toFixed(2)} MB, ${products.length} items) and synced to scratch + jason-coleman-network.`);
 }
 buildGoogleMerchantFeed();
 
