@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /catalog/
+Sitemap: https://urbanclothesmarket.com/sitemap.xml
