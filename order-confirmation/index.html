@@ -1,111 +1,31 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Order Confirmation | Urban Clothes Market</title>
-  <meta name="description" content="Thank you for your order at Urban Clothes Market. Your order is confirmed and being crafted.">
-  <meta name="robots" content="noindex,follow">
-  <link rel="canonical" href="https://www.urbanclothesmarket.com/order-confirmation/">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Order Confirmation | Urban Clothes Market">
-  <meta property="og:description" content="Thank you for your order at Urban Clothes Market.">
-  <meta property="og:url" content="https://www.urbanclothesmarket.com/order-confirmation/">
-  <meta property="og:site_name" content="Urban Clothes Market">
-  <meta name="theme-color" content="#d5fa42">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css">
+<!DOCTYPE HTML><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Order Confirmation | Urban Clothes Market</title><meta name="description" content="Thank you for your order at Urban Clothes Market."><meta name="robots" content="noindex,follow"><link rel="canonical" href="https://www.urbanclothesmarket.com/order-confirmation/"><meta property="og:type" content="website"><meta property="og:title" content="Order Confirmation"><meta property="og:description" content="Thank you for your order at Urban Clothes Market."><meta property="og:url" content="https://www.urbanclothesmarket.com/order-confirmation/"><meta property="og:site_name" content="Urban Clothes Market"><meta property="og:image" content="https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X71Y10D1059074786W18688H18688/views/1/Home%20Is%20Where%20the%20Cat%20Sits.png?width=600&amp;height=600&amp;appearanceId=1"><meta name="theme-color" content="#d5fa42"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css?v=20261008-lookbook"><script type="module" src="/app.js"></script><script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script><script>window.addEventListener("load",function(){var el=document.getElementById("merchantWidgetScript");if(el){el.addEventListener("load",function(){if(window.merchantwidget&&window.merchantwidget.start){window.merchantwidget.start({merchant_id:5871199587,position:"BOTTOM_RIGHT",region:"US"});}});}});</script></head><body><div class="announce">Find your favorites: tees, hoodies, hats, gifts &amp; more. <span>Wear your personality.</span></div><header class="header"><div class="wrap headrow"><a class="logo" href="/" aria-label="Urban Clothes Market home"><span class="logo-mark">UCM</span><span class="logo-text">URBAN CLOTHES<small>MARKET</small></span></a><form class="head-search" action="/#catalog" method="GET" role="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="head-search-input" name="q" type="search" placeholder="Search a topic across all 40,000+ items…" aria-label="Search all 40,000+ items"><button type="submit">Search</button></form><nav class="topnav" aria-label="Main navigation"><a href="/#catalog">Shop All</a><a href="/#collections">Shop Your Vibe</a><a href="/types/tees/">Clothing</a><a href="/types/home/">Gifts &amp; Gear</a></nav><div class="head-actions"><button data-favorites aria-label="View favorites"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><span class="pill-count" data-favcount>0</span></button></div></div></header><main><article class="legal wrap"><div class="eyebrow" style="color:var(--accent,#d5fa42);font-weight:700">Order Confirmed</div><h1 style="margin-top:8px">THANK YOU FOR YOUR ORDER!</h1><p>Your order has been received and is being prepared with our production partners. You will receive an email confirmation with tracking information once your package ships.</p><div style="background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:24px;margin:24px 0"><h3 style="margin-top:0">Order Status &amp; Delivery</h3><ul style="line-height:1.8;padding-left:20px;color:#ccc"><li><strong>Production:</strong> Your items are custom made to order (typically 2-3 business days).</li><li><strong>Estimated Delivery:</strong> 3-5 business days after fulfillment.</li><li><strong>Google Customer Reviews:</strong> We value your genuine feedback. A Google Customer Review survey will appear to let you rate your shopping experience.</li></ul></div><p><a class="btn dark" href="/#catalog">Continue Shopping ↗</a> &nbsp; <a class="btn" href="/shipping/">Shipping Details</a></p></article>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+<script>
+  window.renderOptIn = function() {
+    window.gapi.load('surveyoptin', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('order_id') || 'UCM-' + Math.floor(100000 + Math.random() * 900000);
+      const customerEmail = urlParams.get('email') || '';
+      const countryCode = urlParams.get('country') || 'US';
 
-  <!-- Google Customer Reviews Badge Integration -->
-  <script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
-  <script>
-    window.addEventListener("load", function() {
-      var el = document.getElementById("merchantWidgetScript");
-      if (el) {
-        el.addEventListener("load", function () {
-          if (window.merchantwidget && window.merchantwidget.start) {
-            window.merchantwidget.start({
-              merchant_id: 5871199587,
-              position: "BOTTOM_RIGHT",
-              region: "US"
-            });
-          }
-        });
-      }
-    });
-  </script>
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 5);
+      const yyyy = deliveryDate.getFullYear();
+      const mm = String(deliveryDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(deliveryDate.getDate()).padStart(2, '0');
+      const estDeliveryDate = urlParams.get('delivery_date') || (yyyy + '-' + mm + '-' + dd);
 
-  <!-- Google Customer Reviews Opt-In Integration (Official Code Snippet) -->
-  <script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
-  <script>
-    window.renderOptIn = function() {
-      window.gapi.load('surveyoptin', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('order_id') || 'UCM-' + Math.floor(100000 + Math.random() * 900000);
-        const customerEmail = urlParams.get('email') || '';
-        const countryCode = urlParams.get('country') || 'US';
-
-        const deliveryDate = new Date();
-        deliveryDate.setDate(deliveryDate.getDate() + 5);
-        const yyyy = deliveryDate.getFullYear();
-        const mm = String(deliveryDate.getMonth() + 1).padStart(2, '0');
-        const dd = String(deliveryDate.getDate()).padStart(2, '0');
-        const estDeliveryDate = urlParams.get('delivery_date') || (yyyy + '-' + mm + '-' + dd);
-
-        window.gapi.surveyoptin.render({
-          // REQUIRED FIELDS
-          "merchant_id": 5871199587,
-          "order_id": orderId,
-          "email": customerEmail,
-          "delivery_country": countryCode,
-          "estimated_delivery_date": estDeliveryDate,
-          // OPTIONAL FIELDS
-          "opt_in_style": "CENTER_DIALOG"
-        });
+      window.gapi.surveyoptin.render({
+        // REQUIRED FIELDS
+        "merchant_id": 5871199587,
+        "order_id": orderId,
+        "email": customerEmail,
+        "delivery_country": countryCode,
+        "estimated_delivery_date": estDeliveryDate,
+        // OPTIONAL FIELDS
+        "opt_in_style": "CENTER_DIALOG"
       });
-    };
-  </script>
-</head>
-<body>
-  <div class="announce">Official Storefront: Graphic Tees, Hoodies, Mugs &amp; Gifts. <span>Wear your personality.</span></div>
-  <header class="header">
-    <div class="wrap headrow">
-      <a class="logo" href="/" aria-label="Urban Clothes Market home">
-        <span class="logo-mark">UCM</span>
-        <span class="logo-text">URBAN CLOTHES<small>MARKET</small></span>
-      </a>
-      <nav class="topnav" aria-label="Main navigation">
-        <a href="/#catalog">Shop All</a>
-        <a href="/#collections">Collections</a>
-        <a href="/types/tees/">Apparel</a>
-        <a href="/shipping/">Shipping</a>
-      </nav>
-    </div>
-  </header>
-  <main>
-    <article class="legal wrap">
-      <div class="eyebrow" style="color:var(--accent,#d5fa42);font-weight:700">Order Confirmed</div>
-      <h1 style="margin-top:8px">THANK YOU FOR YOUR ORDER!</h1>
-      <p>Your order has been received and is being prepared with our production partners. You will receive an email confirmation with tracking information once your package ships.</p>
-      
-      <div style="background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:24px;margin:24px 0">
-        <h3 style="margin-top:0">Order Status &amp; Delivery</h3>
-        <ul style="line-height:1.8;padding-left:20px;color:#ccc">
-          <li><strong>Production:</strong> Your items are custom made to order (typically 2-3 business days).</li>
-          <li><strong>Estimated Delivery:</strong> 3-5 business days after fulfillment.</li>
-          <li><strong>Google Customer Reviews:</strong> We value your genuine feedback. A Google Customer Review survey will appear to let you rate your shopping experience.</li>
-        </ul>
-      </div>
-      <p><a class="btn dark" href="/#catalog">Continue Shopping ↗</a> &nbsp; <a class="btn" href="/shipping/">Shipping Details</a></p>
-    </article>
-  </main>
-  <footer class="footer">
-    <div class="wrap">
-      <div class="foot-bottom">
-        <span>© 2026 Urban Clothes Market. Made to order. Delivered to your door.</span>
-        <span>Google Customer Reviews Certified Merchant · Account ID 5871199587</span>
-      </div>
-    </div>
-  </footer>
-</body>
-</html>
+    });
+  };
+</script>
+</main><footer class="footer"><div class="wrap"><div class="foot-grid"><div><a class="logo" href="/"><span class="logo-mark">UCM</span><span class="logo-text">URBAN CLOTHES<small>MARKET</small></span></a><p>A market full of personality. Graphic apparel, everyday favorites, and gifts that feel like you.</p></div><div><h4>Find your fit</h4><ul><li><a href="/types/tees/">Tees & Tanks</a></li><li><a href="/types/hoodies/">Hoodies & Sweatshirts</a></li><li><a href="/types/jackets/">Jackets & Outerwear</a></li><li><a href="/types/bottoms/">Shorts & Joggers</a></li><li><a href="/types/mugs/">Mugs & Drinkware</a></li><li><a href="/types/hats/">Hats & Beanies</a></li></ul></div><div><h4>Find your people</h4><ul><li><a href="/collections/cats/">Cat Lovers</a></li><li><a href="/collections/dogs/">Dog Lovers</a></li><li><a href="/collections/gamers/">Gamers</a></li><li><a href="/collections/humor/">Funny & Sarcastic</a></li><li><a href="/collections/cars/">Car Lovers</a></li><li><a href="/collections/diy/">DIY & Makers</a></li></ul></div><div><h4>Good to know</h4><ul><li><a href="/about/">About the market</a></li><li><a href="/gifts/cats/">Gift ideas</a></li><li><a href="/shipping/">Shipping & delivery</a></li><li><a href="/returns/">Returns & exchanges</a></li><li><a href="/privacy/">Privacy</a></li></ul></div></div><div class="foot-bottom"><span>© 2026 Urban Clothes Market. Made to order. Delivered to your door.</span><span>78,980 listings · Catalog checked October 10, 2026 · Final prices, sizes & availability confirmed at checkout.</span></div></div></footer><div id="toast" class="toast" role="status" hidden></div></body></html>
