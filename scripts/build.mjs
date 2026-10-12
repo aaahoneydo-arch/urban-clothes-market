@@ -193,10 +193,12 @@ write('index.html', shell({
   }
 }));
 
-// Copy index.html, style.css, app.js directly to root
+// Copy index.html, style.css, app.js directly from source to dist and root
 fs.copyFileSync(path.join(root,'index.html'), 'index.html');
-fs.copyFileSync(path.join(root,'style.css'), 'style.css');
-fs.copyFileSync(path.join(root,'app.js'), 'app.js');
+fs.copyFileSync('src/style.css', path.join(root,'style.css'));
+fs.copyFileSync('src/style.css', 'style.css');
+fs.copyFileSync('src/app.js', path.join(root,'app.js'));
+fs.copyFileSync('src/app.js', 'app.js');
 
 if(isHomeOnly){
   console.log('Homepage, styles, and scripts compiled and synced to root successfully!');
