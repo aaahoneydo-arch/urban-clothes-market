@@ -1,34 +1,34 @@
 {
-  "count": 78980,
-  "designs": 1307,
+  "count": 93530,
+  "designs": 1501,
   "types": {
-    "tees": 18225,
-    "hoodies": 8603,
+    "tees": 21329,
+    "hoodies": 10155,
     "jackets": 374,
     "bottoms": 110,
-    "mugs": 6027,
-    "hats": 6268,
-    "bags": 4231,
-    "stickers": 3794,
+    "mugs": 7191,
+    "hats": 7432,
+    "bags": 5007,
+    "stickers": 4570,
     "art": 236,
-    "pets": 1087,
+    "pets": 1281,
     "accessories": 66,
-    "home": 29959,
-    "kids": 7526
+    "home": 35779,
+    "kids": 9078
   },
   "themes": {
     "cats": 277,
     "dogs": 277,
     "gamers": 2335,
     "political": 174,
-    "urban": 68233,
+    "urban": 80543,
     "humor": 2068,
-    "cars": 2643,
+    "cars": 3843,
     "diy": 1280,
     "pets": 704,
-    "kids": 7526,
-    "all": 78980
+    "kids": 9078,
+    "all": 93530
   },
-  "pages": 89458,
-  "indexBytes": 10088280
+  "pages": 105911,
+  "indexBytes": 11990979
 }
