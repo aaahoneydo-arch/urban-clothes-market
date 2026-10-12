@@ -88,46 +88,47 @@ const themeShowcase = (id, title, subtitle) => {
 
 const homeBody = `
 <div class="wrap">
-  <!-- INVENTORY SHOWCASE HERO -->
-  <section class="inventory-hero">
-    <div class="inventory-hero-badge">⚡ MASSIVE LIVE INVENTORY · ${products.length.toLocaleString()} PRODUCTS</div>
-    <h1>EXPLORE ${products.length.toLocaleString()}+<br><span class="outline">ORIGINAL GRAPHICS.</span></h1>
-    <p class="inventory-hero-desc">Discover massive collections of graphic apparel, drinkware, hats, stickers &amp; everyday gear across 13 distinct variations. Every item custom-made when you order and delivered directly to your door.</p>
-    
-    <div class="stats-strip">
-      <div class="stat-item"><span class="stat-num">${products.length.toLocaleString()}</span><span class="stat-label">Total Listings</span></div>
-      <div class="stat-item"><span class="stat-num">${designs.length.toLocaleString()}</span><span class="stat-label">Unique Graphic Designs</span></div>
-      <div class="stat-item"><span class="stat-num">13</span><span class="stat-label">Item Variations</span></div>
-      <div class="stat-item"><span class="stat-num">11</span><span class="stat-label">Curated Collections</span></div>
+  <!-- TOP QUICK-JUMP CATEGORY PILLS BAR -->
+  <div class="top-nav-strip">
+    <div class="top-strip-left">
+      <span class="live-indicator">⚡ <strong>${products.length.toLocaleString()}+</strong> Original Graphic Items Across <strong>13</strong> Variations</span>
     </div>
-
-    <!-- PRIMARY TOP SEARCH & DISCOVERY BAR -->
-    <div class="hero-search-hub">
-      <form class="hero-search-form" action="/#catalog" method="GET" role="search">
-        ${icon('search')}
-        <input id="hero-search-input" name="q" type="search" placeholder="Search across all ${products.length.toLocaleString()} items (e.g. cat hoodie, arcade tee, car mug, dog sticker, gamer...)" aria-label="Search all products">
-        <button type="submit" class="acid">Search Catalog</button>
-        <button type="button" class="dark" data-surprise aria-label="Surprise me with random products">${icon('shuffle')} Surprise Me</button>
-      </form>
+    <div class="top-strip-right">
+      <button type="button" class="btn-surprise-pill" data-surprise aria-label="Surprise me with random picks">${icon('shuffle')} Surprise Me</button>
     </div>
+  </div>
+  ${categoryChips(meta)}
 
-    <!-- QUICK-JUMP CATEGORY CHIPS BAR -->
-    ${categoryChips(meta)}
-  </section>
-</div>
+  <!-- ALL 13 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
+  ${typeShowcase('tees', 'Tees, Tanks & Graphic Shirts', 'Classic heavyweight tees, slim-fit premium shirts, and athletic tanks.')}
+  ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and zip sweatshirts.')}
+  ${typeShowcase('hats', 'Hats, Caps & Beanies', 'Snapbacks, vintage baseball caps, trucker hats, and knit beanies.')}
+  ${typeShowcase('mugs', 'Mugs, Tumblers & Drinkware', 'Ceramic coffee mugs, insulated travel tumblers, and beverage gear.')}
+  ${typeShowcase('bags', 'Bags, Backpacks & Totes', 'Canvas totes, gym duffels, drawstring bags, and travel pouches.')}
+  ${typeShowcase('stickers', 'Stickers, Decals & Buttons', 'Durable vinyl die-cut stickers for laptops, water bottles, and cars.')}
 
-<!-- RUNNING MARQUEE -->
-<div class="marquee">
-  <span>TEES &amp; TANKS</span> ✳ <span>HOODIES</span> ✳ <span>MUGS</span> ✳ <span>HATS</span> ✳ <span>BAGS &amp; TOTES</span> ✳ <span>STICKERS</span> ✳ <span>WALL ART</span> ✳ <span>KIDS &amp; BABY</span> ✳ <span>PET GEAR</span> ✳ <span>HOME &amp; LIVING</span>
-</div>
+  <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
+  ${discoveryBar({
+    id: 'discovery-mid1',
+    title: 'Looking for a Specific Graphic or Theme?',
+    subtitle: 'Search across all 78,000+ items or hit surprise me for an instant random discovery mix.',
+    placeholder: 'Search 78,000+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
+  })}
 
-<div class="wrap">
+  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
+  ${typeShowcase('art', 'Posters, Prints & Wall Art', 'High-resolution archival paper posters and graphic wall art prints.')}
+  ${typeShowcase('home', 'Home, Pillows & Kitchen Gear', 'Throw pillows, aprons, mousepads, holiday ornaments, and magnets.')}
+  ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
+  ${typeShowcase('kids', 'Kids, Toddler & Baby Gear', 'Youth tees, toddler apparel, and organic baby bodysuits.')}
+  ${typeShowcase('bottoms', 'Shorts, Joggers & Activewear', 'Comfortable cotton joggers, athletic shorts, and loungewear.')}
+  ${typeShowcase('accessories', 'Accessories & Keychains', 'Embroidered jet tags, novelty keychains, and everyday add-ons.')}
+
   <!-- INTERACTIVE CATALOG BROWSER & DEEP FILTERS -->
   <section class="catalog-head" id="catalog">
     <div class="section-head">
       <div>
         <div class="sub">INSTANT INVENTORY EXPLORER · ALL 78,000+ ITEMS</div>
-        <h2>Filter &amp; Discover</h2>
+        <h2>Filter &amp; Discover Entire Archive</h2>
         <p>Narrow by item variation, passion theme, budget, or brand. Click shuffle for a brand new discovery mix anytime.</p>
       </div>
       <div class="row-actions">
@@ -138,38 +139,13 @@ const homeBody = `
     ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='tees')).slice(0, 24).map(card).join(''))}
   </section>
 
-  <!-- MID-PAGE SEARCH BAR #1 -->
+  <!-- MID-PAGE SEARCH BAR #2 (Transition to Curated Themes) -->
   ${discoveryBar({
-    id: 'discovery-apparel',
-    title: 'Explore Our Complete Apparel Variations',
-    subtitle: 'From ultra-soft classic tees to heavyweight zip hoodies, find your favorite graphic on your preferred cut and color.',
-    placeholder: 'Search tees, hoodies, outerwear, shorts & joggers...'
+    id: 'discovery-mid2',
+    title: 'Gifts & Apparel by Passion Theme',
+    subtitle: 'Brighten your desk, garage, wardrobe, or phone with durable graphic prints made for daily life.',
+    placeholder: 'Search themes, hobbies, sports, animals, humor...'
   })}
-
-  <!-- APPAREL VARIATIONS SECTIONS (SCROLLABLE WITH SHUFFLE) -->
-  ${typeShowcase('tees', 'Tees, Tanks & Graphic Shirts', 'Classic heavyweight tees, slim-fit premium shirts, and athletic tanks.')}
-  ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and zip sweatshirts.')}
-  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
-  ${typeShowcase('bottoms', 'Shorts, Joggers & Activewear', 'Comfortable cotton joggers, athletic shorts, and loungewear.')}
-  ${typeShowcase('hats', 'Hats, Caps & Beanies', 'Snapbacks, vintage baseball caps, trucker hats, and knit beanies.')}
-  ${typeShowcase('bags', 'Bags, Backpacks & Totes', 'Canvas totes, gym duffels, drawstring bags, and travel pouches.')}
-
-  <!-- MID-PAGE SEARCH BAR #2 (Transition to Gifts & Living) -->
-  ${discoveryBar({
-    id: 'discovery-lifestyle',
-    title: 'Gifts, Drinkware & Everyday Lifestyle Gear',
-    subtitle: 'Brighten your desk, garage, kitchen, or phone with durable graphic prints made for daily life.',
-    placeholder: 'Search mugs, tumblers, stickers, posters, home gifts...'
-  })}
-
-  <!-- LIFESTYLE & GEAR VARIATIONS SECTIONS (SCROLLABLE WITH SHUFFLE) -->
-  ${typeShowcase('mugs', 'Mugs, Tumblers & Drinkware', 'Ceramic coffee mugs, insulated travel tumblers, and beverage gear.')}
-  ${typeShowcase('stickers', 'Stickers, Decals & Buttons', 'Durable vinyl die-cut stickers for laptops, water bottles, and cars.')}
-  ${typeShowcase('art', 'Posters, Prints & Wall Art', 'High-resolution archival paper posters and graphic wall art prints.')}
-  ${typeShowcase('home', 'Home, Pillows & Kitchen Gear', 'Throw pillows, aprons, mousepads, holiday ornaments, and magnets.')}
-  ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
-  ${typeShowcase('kids', 'Kids, Toddler & Baby Gear', 'Youth tees, toddler apparel, and organic baby bodysuits.')}
-  ${typeShowcase('accessories', 'Accessories & Keychains', 'Embroidered jet tags, novelty keychains, and everyday add-ons.')}
 
   <!-- PASSION THEMES HEADER -->
   <section class="section" id="collections">
