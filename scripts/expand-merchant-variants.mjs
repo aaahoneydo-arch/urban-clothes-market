@@ -72,7 +72,9 @@ for (const p of baseCatalog) {
     const variations = COLORWAYS[prodKey];
     for (const color of variations) {
       const colorSlug = color.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const varId = `${p.id}-${colorSlug}`;
+      const shortColor = colorSlug.slice(0, 15);
+      const shortBase = p.id.replace('flow-gen-', 'fg-');
+      const varId = `${shortBase}-${shortColor}`.slice(0, 48);
       const varTitle = `${p.name} (${color})`;
       const varLink = `${p.url}?color=${encodeURIComponent(color)}`;
       const desc = escXml(`Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`);
