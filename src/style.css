@@ -77,7 +77,69 @@
 .pay-badge.gpay strong{margin-left:3px;font-weight:800;color:#5f6368;font-size:13px;letter-spacing:-0.2px}
 .pay-badge.card{font-size:10px;letter-spacing:0.5px;color:#555}
 .pay-badge.card span{display:flex;align-items:center;gap:4px;font-weight:700}
-.trust-note{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5}
+/* KEYBOARD SHORTCUT HINT */
+.kbd-hint{display:inline-flex;align-items:center;justify-content:center;background:#f0f0f0;color:#666;border:1px solid #ccc;border-radius:3px;font-family:monospace;font-size:11px;font-weight:700;padding:2px 6px;margin-right:8px;pointer-events:none;line-height:1}
+@media(max-width:760px){.kbd-hint{display:none}}
+
+/* CARD COLOR SWATCHES */
+.card-swatches{display:flex;align-items:center;gap:5px;margin-top:6px;min-height:14px}
+.swatch{width:11px;height:11px;border-radius:50%;display:inline-block;box-shadow:0 0 0 1px rgba(0,0,0,0.06);transition:transform 0.15s ease}
+.swatch:hover{transform:scale(1.35)}
+.swatch-more{font-size:9px;color:var(--muted);margin-left:2px;font-weight:600}
+
+/* IN-ROW SUBFILTERS */
+.row-subfilters{display:flex;align-items:center;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;scrollbar-width:none}
+.row-subfilters::-webkit-scrollbar{display:none}
+.subfilter-chip{background:#f6f6f6;border:1px solid var(--line);border-radius:14px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s ease}
+.subfilter-chip:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.subfilter-chip.active{background:var(--ink);color:var(--acid);border-color:var(--ink)}
+
+/* SEARCH AUTOCOMPLETE DROPDOWN */
+.head-search, .searchbar, .discovery-search-form{position:relative}
+.search-autocomplete{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1.5px solid var(--ink);border-radius:6px;box-shadow:0 12px 35px rgba(0,0,0,0.18);z-index:900;overflow:hidden;max-height:450px;overflow-y:auto;text-align:left}
+.autocomplete-section-title{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:8px 14px;background:#f8f8f8;border-bottom:1px solid var(--line)}
+.autocomplete-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #f0f0f0;transition:background 0.15s;text-decoration:none;color:var(--ink)}
+.autocomplete-item:hover, .autocomplete-item.focused{background:#f4f6e8}
+.autocomplete-thumb{width:42px;height:42px;object-fit:contain;background:#fdfdfd;border:1px solid var(--line);border-radius:4px;flex-shrink:0}
+.autocomplete-meta{flex:1;min-width:0}
+.autocomplete-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.autocomplete-desc{font-size:10px;color:var(--muted)}
+.autocomplete-price{font-size:12px;font-weight:800;color:var(--ink);flex-shrink:0}
+.autocomplete-category-pill{display:block;padding:8px 14px;font-size:11px;font-weight:700;color:var(--ink);border-bottom:1px solid #f0f0f0;transition:background 0.15s;text-decoration:none}
+.autocomplete-category-pill:hover{background:var(--acid);color:var(--ink)}
+
+/* RECENTLY VIEWED FLOATING DOCK */
+.recent-dock{position:fixed;bottom:24px;right:24px;z-index:400}
+.recent-trigger{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:1px solid #333;border-radius:24px;padding:10px 16px;font-size:12px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,0.25);cursor:pointer;transition:transform 0.15s ease, background 0.15s}
+.recent-trigger:hover{background:#2a2a2a;transform:translateY(-2px)}
+.recent-trigger svg{color:var(--acid)}
+.recent-badge{background:var(--acid);color:var(--ink);padding:2px 6px;border-radius:10px;font-size:10px;font-weight:900}
+.recent-drawer{position:absolute;bottom:calc(100% + 10px);right:0;width:340px;background:#fff;border:1px solid var(--ink);border-radius:8px;box-shadow:0 12px 35px rgba(0,0,0,0.22);padding:14px;z-index:401}
+.recent-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--line);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.recent-clear-btn{background:transparent;border:0;padding:0;font-size:10px;color:var(--muted);text-decoration:underline;cursor:pointer}
+.recent-items{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-top:10px}
+.recent-item{display:flex;align-items:center;gap:10px;padding:6px;border-radius:6px;transition:background 0.15s;text-decoration:none;color:var(--ink)}
+.recent-item:hover{background:#f6f6f6}
+.recent-item img{width:40px;height:40px;object-fit:contain;border:1px solid var(--line);border-radius:4px;background:#fff}
+.recent-item-info{flex:1;min-width:0}
+.recent-item-title{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-item-price{font-size:11px;color:var(--muted)}
+
+/* SHARE WISHLIST BUTTON */
+.btn-share-wishlist{display:inline-flex;align-items:center;gap:6px;background:#f5f5f5;border:1px solid var(--ink);border-radius:4px;padding:9px 13px;font-size:11px;font-weight:800;cursor:pointer;transition:all 0.15s}
+.btn-share-wishlist:hover{background:var(--ink);color:var(--acid)}
+.btn-share-wishlist svg{width:13px;height:13px}
+
+/* PRODUCT DETAIL VARIATION SWITCHER */
+.variation-switcher{margin:22px 0;padding:16px;background:#fcfcfc;border:1px solid var(--line);border-radius:8px}
+.switcher-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.switcher-badge{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--ink)}
+.switcher-header small{font-size:10px;color:var(--muted)}
+.switcher-track{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.switcher-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:7px 11px;font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap;transition:all 0.15s;text-decoration:none}
+.switcher-pill:hover{border-color:var(--ink);background:var(--ink);color:#fff;transform:translateY(-1px)}
+.switcher-pill.active{background:var(--ink);color:var(--acid);border-color:var(--ink)}
+.switcher-pill .pill-price{font-weight:800;opacity:0.85;font-size:10px}
 
 /* RESPONSIVE LAYOUT */
 @media(max-width:1100px){

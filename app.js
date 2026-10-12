@@ -25,7 +25,9 @@ function toast(message){
 }
 
 function card(p){
-  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div></article>`;
+  const isApparel = ['tees','hoodies','jackets','bottoms','kids'].includes(p.category);
+  const swatchesHtml = isApparel ? `<div class="card-swatches" aria-hidden="true"><span class="swatch" style="background:#171717" title="Black"></span><span class="swatch" style="background:#f5f5f5;border:1px solid #d5d5d5" title="White"></span><span class="swatch" style="background:#9e9e9e" title="Heather Grey"></span><span class="swatch" style="background:#1b2a4a" title="Navy"></span><span class="swatch-more">+colors</span></div>` : '';
+  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div>${swatchesHtml}</article>`;
 }
 
 let worker=new Worker('/search-worker.js',{type:'module'}),requestId=0,pending=new Map(),shards=new Map();
@@ -75,6 +77,15 @@ let f={
   size:24,
   savedOnly:params.get('saved')==='1'
 };
+
+// Parse shared wishlist from URL (e.g. ?wishlist=id1,id2,id3)
+const sharedWishlist = (params.get('wishlist') || '').split(',').map(s=>s.trim()).filter(Boolean);
+if(sharedWishlist.length){
+  sharedWishlist.forEach(id => favorites.add(id));
+  f.savedOnly = true;
+  saveState();
+  setTimeout(() => toast(`🎁 Loaded ${sharedWishlist.length} items from shared wishlist!`), 400);
+}
 
 let renderVersion=0;
 async function render({url=true}={}){
@@ -141,6 +152,139 @@ async function renderRow(id, isType = false) {
     container.innerHTML = products.map(card).join('');
     saveState();
   }
+}
+
+// RECENTLY VIEWED STORAGE & DOCK
+function getRecentlyViewed(){
+  try{ return JSON.parse(localStorage.getItem('ucm_recent') || '[]'); }catch{ return []; }
+}
+function saveRecentlyViewed(item){
+  let list = getRecentlyViewed().filter(x => x.id !== item.id);
+  list.unshift(item);
+  if(list.length > 8) list = list.slice(0, 8);
+  try{ localStorage.setItem('ucm_recent', JSON.stringify(list)); }catch{}
+  renderRecentDock();
+}
+function renderRecentDock(){
+  const dock = $('#recent-dock');
+  if(!dock) return;
+  const list = getRecentlyViewed();
+  const count = $('#recent-count');
+  if(count) count.textContent = list.length;
+  if(!list.length){
+    dock.hidden = true;
+    return;
+  }
+  dock.hidden = false;
+  const container = $('#recent-items');
+  if(container){
+    container.innerHTML = list.map(item => `
+      <a class="recent-item" href="${esc(item.path)}">
+        <img src="${esc(item.image)}" alt="${esc(item.design)}" loading="lazy">
+        <div class="recent-item-info">
+          <div class="recent-item-title">${esc(item.design)}</div>
+          <div class="recent-item-price">$${Number(item.price).toFixed(2)} · ${esc(item.productType || 'Gear')}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+}
+
+// CROSS-VARIATION GRAPHIC SWITCHER ON PRODUCT DETAIL PAGES
+async function initVariationSwitcher(){
+  const detailInfo = $('.detail-info');
+  if(!detailInfo) return;
+  const design = detailInfo.querySelector('h1')?.textContent?.trim();
+  if(!design) return;
+  try{
+    const res = await search({ q: design, size: 25 });
+    const items = await details(res.rows);
+    const matches = items.filter(p => p.design.toLowerCase() === design.toLowerCase());
+    if(matches.length <= 1) return;
+    const icons = {
+      tees: '👕', hoodies: '🧥', mugs: '☕', hats: '🧢', stickers: '🏷️',
+      bags: '👜', art: '🖼️', home: '🏠', pets: '🐾', kids: '👶',
+      bottoms: '🩳', jackets: '🧥', accessories: '✨'
+    };
+    const seen = new Set();
+    const variations = [];
+    for(const p of matches){
+      if(!seen.has(p.category)){
+        seen.add(p.category);
+        variations.push(p);
+      }
+    }
+    if(variations.length <= 1) return;
+    const html = `
+      <div class="variation-switcher">
+        <div class="switcher-header">
+          <span class="switcher-badge">✨ GET THIS GRAPHIC ON OTHER GEAR (${variations.length} VARIATIONS)</span>
+          <small>Same original artwork printed across different items</small>
+        </div>
+        <div class="switcher-track">
+          ${variations.map(p => {
+            const isCur = location.pathname === p.path;
+            const ico = icons[p.category] || '📦';
+            const catName = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+            return `<a href="${esc(p.path)}" class="switcher-pill ${isCur?'active':''}" title="${esc(p.productType)}">
+              <span>${ico} ${esc(catName)}</span>
+              <span class="pill-price">$${p.price.toFixed(2)}</span>
+            </a>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    const buyBtn = detailInfo.querySelector('.btn.dark');
+    if(buyBtn && !$('.variation-switcher')){
+      buyBtn.insertAdjacentHTML('afterend', html);
+    }
+  }catch(e){}
+}
+
+// SEARCH AUTOCOMPLETE SETUP
+function setupAutocomplete(input, dropdown){
+  if(!input || !dropdown) return;
+  let debounceTimer;
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if(q.length < 2){
+      dropdown.hidden = true;
+      dropdown.innerHTML = '';
+      return;
+    }
+    debounceTimer = setTimeout(async () => {
+      try{
+        const res = await search({ q, size: 4 });
+        const items = await details(res.rows);
+        if(!items.length){
+          dropdown.hidden = true;
+          return;
+        }
+        dropdown.innerHTML = `
+          <div class="autocomplete-section-title">TOP MATCHING GRAPHICS</div>
+          ${items.map(p => `
+            <a class="autocomplete-item" href="${esc(p.path)}">
+              <img class="autocomplete-thumb" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">
+              <div class="autocomplete-meta">
+                <div class="autocomplete-name">${esc(p.design)}</div>
+                <div class="autocomplete-desc">${esc(p.productType)}</div>
+              </div>
+              <div class="autocomplete-price">$${p.price.toFixed(2)}</div>
+            </a>
+          `).join('')}
+          <div class="autocomplete-section-title">NARROW SEARCH IN VARIATION</div>
+          <a class="autocomplete-category-pill" href="/?q=${encodeURIComponent(q)}&type=tees#catalog">👕 Search "${esc(q)}" in Tees &amp; Tanks ↗</a>
+          <a class="autocomplete-category-pill" href="/?q=${encodeURIComponent(q)}&type=hoodies#catalog">🧥 Search "${esc(q)}" in Hoodies ↗</a>
+          <a class="autocomplete-category-pill" href="/?q=${encodeURIComponent(q)}&type=mugs#catalog">☕ Search "${esc(q)}" in Drinkware ↗</a>
+          <a class="autocomplete-category-pill" href="/?q=${encodeURIComponent(q)}&type=stickers#catalog">🏷️ Search "${esc(q)}" in Stickers ↗</a>
+        `;
+        dropdown.hidden = false;
+      }catch{
+        dropdown.hidden = true;
+      }
+    }, 100);
+  });
 }
 
 // Global click delegation
@@ -244,6 +388,51 @@ document.addEventListener('click', async e => {
     return;
   }
 
+  // Row subfilter chips
+  const subfilterBtn = e.target.closest('[data-row-subfilter]');
+  if(subfilterBtn){
+    const rowEl = subfilterBtn.closest('.showcase-row');
+    const track = rowEl?.querySelector('.scroll-track');
+    if(track){
+      rowEl.querySelectorAll('.subfilter-chip').forEach(c => c.classList.remove('active'));
+      subfilterBtn.classList.add('active');
+      const subfilter = subfilterBtn.dataset.rowSubfilter;
+      const targetType = subfilterBtn.dataset.targetType;
+      try{
+        const filter = {
+          type: targetType === 'kids' ? 'kids' : targetType,
+          theme: subfilter === 'all' ? '' : subfilter,
+          sort: 'shuffle',
+          seed: crypto.randomUUID(),
+          size: 10
+        };
+        const result = await search(filter);
+        const products = await details(result.rows);
+        if(products.length){
+          track.innerHTML = products.map(card).join('');
+          saveState();
+        }
+      }catch(err){}
+    }
+    return;
+  }
+
+  // Share wishlist link
+  if(e.target.closest('[data-share-wishlist]')){
+    if(!favorites.size){
+      toast('Save some favorites with ♡ first to share your wishlist!');
+      return;
+    }
+    const shareUrl = location.origin + '/?wishlist=' + [...favorites].join(',') + '#catalog';
+    try{
+      await navigator.clipboard.writeText(shareUrl);
+      toast('📋 Wishlist link copied to clipboard!');
+    }catch{
+      prompt('Copy your shareable wishlist link:', shareUrl);
+    }
+    return;
+  }
+
   // View favorites
   if(e.target.closest('[data-favorites]')){
     if(!$('#results')){
@@ -265,6 +454,37 @@ document.addEventListener('click', async e => {
     return;
   }
 
+  // Toggle recently viewed drawer
+  if(e.target.closest('#recent-trigger')){
+    const drawer = $('#recent-drawer');
+    if(drawer){
+      const isHidden = drawer.hasAttribute('hidden');
+      if(isHidden) drawer.removeAttribute('hidden');
+      else drawer.setAttribute('hidden', '');
+      $('#recent-trigger').setAttribute('aria-expanded', isHidden);
+    }
+    return;
+  }
+
+  // Clear recently viewed
+  if(e.target.closest('#clear-recent')){
+    try{ localStorage.removeItem('ucm_recent'); }catch{}
+    renderRecentDock();
+    $('#recent-drawer')?.setAttribute('hidden', '');
+    toast('Recently viewed cleared');
+    return;
+  }
+
+  // Close autocompletes if clicked outside
+  if(!e.target.closest('.head-search, .searchbar, .discovery-search-form')){
+    $$('.search-autocomplete').forEach(d => { d.hidden = true; });
+  }
+
+  // Close recently viewed drawer if clicked outside
+  if(!e.target.closest('#recent-dock')){
+    $('#recent-drawer')?.setAttribute('hidden', '');
+  }
+
   // Pagination
   if(e.target.closest('#prev')||e.target.closest('#next')){
     f.page += e.target.closest('#prev') ? -1 : 1;
@@ -273,13 +493,14 @@ document.addEventListener('click', async e => {
   }
 });
 
-// Search form submit delegation (handles hero search, discovery searches, head search)
+// Search form submit delegation
 document.addEventListener('submit', e => {
   const form = e.target.closest('.hero-search-form, .discovery-search-form, .head-search, .searchbar');
   if(!form) return;
   e.preventDefault();
   const input = form.querySelector('input[name="q"], input[type="search"]');
   const query = (input?.value || '').trim();
+  $$('.search-autocomplete').forEach(d => { d.hidden = true; });
   if($('#results')){
     f.q = query;
     f.page = 1;
@@ -288,6 +509,30 @@ document.addEventListener('submit', e => {
   } else {
     location.href = '/?q=' + encodeURIComponent(query) + '#catalog';
   }
+});
+
+// Keyboard Navigation (/ to search, Esc to close)
+document.addEventListener('keydown', e => {
+  if(e.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){
+    e.preventDefault();
+    const searchInput = $('#head-search-input') || $('#search') || $('input[type="search"]');
+    if(searchInput){
+      searchInput.focus();
+      searchInput.select();
+    }
+  }
+  if(e.key === 'Escape'){
+    $$('.search-autocomplete').forEach(d => { d.hidden = true; });
+    $('#recent-drawer')?.setAttribute('hidden', '');
+    $('#filters')?.classList.remove('open');
+  }
+});
+
+// Setup autocompletes
+setupAutocomplete($('#head-search-input'), $('#head-autocomplete'));
+setupAutocomplete($('#search'), $('#catalog-autocomplete'));
+$$('.discovery-search-form').forEach(form => {
+  setupAutocomplete(form.querySelector('input'), form.querySelector('.search-autocomplete'));
 });
 
 // Real-time catalog search input debounce
@@ -312,4 +557,20 @@ if($('#search')){
   render({url:false});
 }
 
+// Track product detail page visit & initialize variation switcher
+const detailInfo = $('.detail-info');
+if(detailInfo){
+  const title = detailInfo.querySelector('h1')?.textContent?.trim() || '';
+  const type = detailInfo.querySelector('h2')?.textContent?.trim() || '';
+  const priceText = detailInfo.querySelector('.detail-price')?.textContent?.replace(/[^0-9.]/g,'') || '0';
+  const img = $('.detail-image img')?.src || '';
+  const idMatch = location.pathname.match(/-([a-z0-9]+)-([0-9]+)\/?$/i);
+  const id = idMatch ? `${idMatch[1]}-${idMatch[2]}` : location.pathname;
+  if(title){
+    saveRecentlyViewed({ id, design: title, productType: type, price: Number(priceText), image: img, path: location.pathname });
+  }
+  initVariationSwitcher();
+}
+
+renderRecentDock();
 saveState();
