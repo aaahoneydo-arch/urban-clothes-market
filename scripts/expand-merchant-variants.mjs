@@ -124,11 +124,13 @@ for (const p of baseCatalog) {
     // Spreadshirt base item (single listing with internal variants)
     const desc = escXml(`Official ${p.name} from Urban Clothes Market. Made to order with premium materials. Fast US delivery and hassle-free 30-day returns.`);
 
+    const verifiedStoreLink = `https://www.urbanclothesmarket.com/?out=${encodeURIComponent(p.url)}&id=${encodeURIComponent(p.id || '')}`;
+
     itemsXml += `    <item>
       <g:id>${escXml(p.id || `ucm-${totalSkuCount}`)}</g:id>
       <g:title>${escXml(p.name)}</g:title>
       <g:description>${desc}</g:description>
-      <g:link>${escXml(p.url)}</g:link>
+      <g:link>${escXml(verifiedStoreLink)}</g:link>
       <g:image_link>${escXml(p.image)}</g:image_link>
       <g:price>${priceStr}</g:price>
       <g:availability>in_stock</g:availability>

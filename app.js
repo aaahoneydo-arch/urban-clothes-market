@@ -2,6 +2,17 @@ const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const heart='<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>';
 
+// Seamless outbound checkout router for partner shop items (ensures 100% domain match for Google Merchant)
+try {
+  const _sp = new URLSearchParams(location.search);
+  if (_sp.has('out')) {
+    const _tgt = decodeURIComponent(_sp.get('out'));
+    if (_tgt.startsWith('https://urbanclothesmarket.myspreadshop.com/')) {
+      location.replace(_tgt);
+    }
+  }
+} catch(e) {}
+
 let favorites=new Set();
 try{favorites=new Set(JSON.parse(localStorage.getItem('ucm-favorites')||'[]'));}catch{}
 
