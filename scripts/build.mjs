@@ -501,3 +501,26 @@ write('_headers','/catalog/*\n  Cache-Control: public, max-age=3600\n/*\n  X-Con
 
 fs.writeFileSync('data/build-report.json',JSON.stringify({count:products.length,designs:designs.length,types:meta.typeCounts,themes:meta.themeCounts,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size},null,2));
 console.log(JSON.stringify({products:products.length,designs:designs.length,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size}));
+
+// Automatically synchronize compiled dist directories to repo root for GitHub Pages live serving
+if (!isHomeOnly) {
+  console.log('Synchronizing dist build artifacts to repo root for 100% zero-404 live serving...');
+  const syncDirs = ['products', 'types', 'collections', 'gifts', 'catalog'];
+  for (const d of syncDirs) {
+    const srcDir = path.join(root, d);
+    const destDir = path.resolve(d);
+    if (fs.existsSync(srcDir)) {
+      fs.cpSync(srcDir, destDir, { recursive: true });
+    }
+  }
+  const syncFiles = ['sitemap.xml', 'robots.txt', '404.html', 'style.css', 'app.js', 'search-worker.js', 'favicon.svg'];
+  for (let i = 1; i <= chunks.length; i++) syncFiles.push(`sitemap-${i}.xml`);
+  for (const f of syncFiles) {
+    const srcF = path.join(root, f);
+    const destF = path.resolve(f);
+    if (fs.existsSync(srcF)) {
+      fs.copyFileSync(srcF, destF);
+    }
+  }
+  console.log('✓ Successfully synchronized all compiled pages and sitemaps to repo root!');
+}
