@@ -25,10 +25,15 @@ meta.hero=products.find(p=>/home is where the cat sits/i.test(p.design)&&/premiu
 
 const photos = JSON.parse(fs.readFileSync('data/lifestyle.json','utf8'));
 const generatedFiles = new Set();
+const createdDirs = new Set();
 function write(file,data){
   const target=path.join(root,file);
   generatedFiles.add(target);
-  fs.mkdirSync(path.dirname(target),{recursive:true});
+  const dir = path.dirname(target);
+  if (!createdDirs.has(dir)) {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
+    createdDirs.add(dir);
+  }
   fs.writeFileSync(target,data);
 }
 
@@ -55,12 +60,15 @@ const uniqueByDesign = arr => {
   return res;
 };
 
-// Row showcase generators
+// Row showcase generators with memoization to avoid quadratic scans across full catalog
+const typeShowcaseCache = new Map();
 const typeShowcase = (id, title, subtitle) => {
+  const cacheKey = `${id}|${title}|${subtitle}`;
+  if (typeShowcaseCache.has(cacheKey)) return typeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'kids' ? p.kids : p.category === id);
   const uniqueItems = uniqueByDesign(matching);
   const count = matching.length;
-  return showcaseRow({
+  const res = showcaseRow({
     id,
     title,
     subtitle,
@@ -69,13 +77,18 @@ const typeShowcase = (id, title, subtitle) => {
     isType: true,
     products: uniqueItems.slice(0, 10)
   });
+  typeShowcaseCache.set(cacheKey, res);
+  return res;
 };
 
+const themeShowcaseCache = new Map();
 const themeShowcase = (id, title, subtitle) => {
+  const cacheKey = `${id}|${title}|${subtitle}`;
+  if (themeShowcaseCache.has(cacheKey)) return themeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'all' || p.themes.includes(id));
   const uniqueItems = uniqueByDesign(matching);
   const count = matching.length;
-  return showcaseRow({
+  const res = showcaseRow({
     id,
     title,
     subtitle,
@@ -84,6 +97,8 @@ const themeShowcase = (id, title, subtitle) => {
     isType: false,
     products: uniqueItems.slice(0, 10)
   });
+  themeShowcaseCache.set(cacheKey, res);
+  return res;
 };
 
 const homeBody = `
@@ -357,13 +372,69 @@ function collection(id,label,kind,description,group){
 for(const [id,label,,description] of THEMES) collection(id,label,'collections',description,products.filter(p=>id==='all'||p.themes.includes(id)));
 for(const [id,label] of TYPES) collection(id,label,'types','Explore '+label.toLowerCase()+' featuring original graphic designs. Combine a theme with an item variation to find your perfect match.',products.filter(p=>id==='kids'?p.kids:p.category===id));
 
+function getProductDetails(p) {
+  const cat = p.category;
+  if (cat === 'art') {
+    return {
+      eyebrow: 'Gallery Quality Wall Art',
+      desc: `Museum-grade ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” artwork. Printed with fade-resistant archival pigment inks for exceptional color depth and fine detail. Ready to hang and elevate any living space, studio, or office.`,
+      specLabel: 'Art Quality & Materials',
+      specValue: 'Heavyweight cotton-poly blend archival canvas • Solid wood backing • Vivid UV fade-resistant inks'
+    };
+  } else if (cat === 'mugs') {
+    return {
+      eyebrow: 'Signature Ceramic Drinkware',
+      desc: `Premium made-to-order ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Durable ceramic construction designed for daily coffee, tea, and beverages with vivid double-sided permanent print.`,
+      specLabel: 'Drinkware Specs',
+      specValue: '100% High-grade ceramic • Lead and BPA free • Microwave and dishwasher safe'
+    };
+  } else if (cat === 'tech') {
+    return {
+      eyebrow: 'Impact Tech Protection',
+      desc: `Precision-engineered ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Dual-layer impact absorption protects your device against drops and scratches while keeping a sleek, modern profile.`,
+      specLabel: 'Tech Specs',
+      specValue: 'Shock-absorbing TPU liner • Scratch-resistant polycarbonate shell • Wireless charging compatible'
+    };
+  } else if (cat === 'home') {
+    return {
+      eyebrow: 'Curated Artisan Home Decor',
+      desc: `Artisan ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Designed to bring personality, cozy comfort, and vibrant aesthetic into your home decor.`,
+      specLabel: 'Home Decor Specs',
+      specValue: 'Ultra-plush hypoallergenic microfiber • Full edge-to-edge sublimation print • Machine washable'
+    };
+  } else if (cat === 'stickers') {
+    return {
+      eyebrow: 'All-Weather Vinyl Art',
+      desc: `Heavy-duty ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Waterproof, weather-resistant, and scratch-resistant for laptops, water bottles, skateboards, and cars.`,
+      specLabel: 'Vinyl Specs',
+      specValue: 'Premium all-weather vinyl • UV protective laminate • Clean peel with zero sticky residue'
+    };
+  } else if (cat === 'stationery') {
+    return {
+      eyebrow: 'Fine Stationery & Office',
+      desc: `High-quality ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Smooth writing surface with durable binding for journaling, planning, sketching, and notes.`,
+      specLabel: 'Stationery Specs',
+      specValue: '120 ruled archival pages • 90gsm acid-free paper • Sturdy protective cover'
+    };
+  } else {
+    return {
+      eyebrow: 'Wear Your Personality',
+      desc: `A premium ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Soft, breathable, and pre-shrunk for comfortable all-day streetwear fit.`,
+      specLabel: 'Fabric & Garment Specs',
+      specValue: 'Pre-shrunk combed ring-spun cotton blend • Double-needle stitched hem & sleeves • Retail unisex fit'
+    };
+  }
+}
+
 let prodCount=0;
 for(const p of products){
   prodCount++;
   if(prodCount % 5000 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
   const buyUrl = (p.url && !p.url.includes('urbanclothesmarket.com')) ? p.url : `${SHOP}/?q=${encodeURIComponent(p.design)}`;
   const trustBadgeHtml = `<div class="payment-trust-bar"><div class="trust-heading"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Guaranteed Safe &amp; Secure Checkout</span></div><div class="payment-icons"><span class="pay-badge gpay" title="Google Pay Accepted at Checkout"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.7 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.6c-.3 1.5-1.1 2.8-2.4 3.7v3.1h3.9c2.3-2.1 3.6-5.2 3.6-9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.9-3.1c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.2v3.2C3.3 21.4 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.1c-.2-.7-.4-1.4-.4-2.1s.2-1.4.4-2.1V6.7H1.2C.4 8.3 0 10.1 0 12s.4 3.7 1.2 5.3l4.1-3.2z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.6 1.2 6.7l4.1 3.2c.9-2.9 3.6-5.1 6.7-5.1z"/></svg><strong>Pay</strong></span><span class="pay-badge applepay" title="Apple Pay Accepted at Checkout"><svg viewBox="0 0 42 18" width="40" height="17"><path fill="#000" d="M6.2 9.1c0-1.1.6-2.1 1.2-2.7-.6-.8-1.5-1.3-2.5-1.3-1.2 0-1.9.7-2.5.7-.7 0-1.5-.7-2.4-.7C-1.2 5.1-2.4 6.4-2.4 8.7c0 2.4 2.1 5.8 3.8 5.8.7 0 1.2-.5 2-.5.8 0 1.2.5 2 .5 1.4 0 2.4-1.5 3.2-2.7-.8-.4-1.4-1.3-1.4-2.7zm-1.4-5.2c.6-.7.9-1.6.8-2.6-.8 0-1.8.6-2.3 1.3-.5.6-.8 1.5-.7 2.4.9.1 1.6-.4 2.2-1.1z"/><text x="11" y="14" fill="#000" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-weight="700" font-size="13">Pay</text></svg></span><span class="pay-badge paypal" title="PayPal Accepted at Checkout"><span style="color:#003087;font-weight:900;font-style:italic">Pay</span><span style="color:#0079C1;font-weight:900;font-style:italic">Pal</span></span><span class="pay-badge card" title="Visa / Mastercard Accepted"><svg viewBox="0 0 24 24" width="16" height="16"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" fill="none"/><line x1="2" y1="10" x2="22" y2="10" stroke="currentColor"/></svg><span>Cards</span></span></div><div class="trust-note">Fast 1-click checkout with Google Pay, Apple Pay &amp; PayPal confirmed at checkout.</div></div>`;
-  const body=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / <a href="/types/${p.category}/">${TYPES.find(x=>x[0]===p.category)?.[1]||'Apparel'}</a> / ${esc(p.design)}</div><section class="detail">${productGallery(p,photos)}<div class="detail-info"><div class="eyebrow">Wear your personality</div><h1>${esc(p.design)}</h1><h2>${esc(p.productType)}</h2><div class="detail-price">$${p.price.toFixed(2)}</div><small>USD · Catalog price checked ${meta.updated}</small><p>A ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” design. Pick your size and color, then continue to checkout.</p><a class="btn dark" href="${esc(buyUrl)}">Pick size &amp; colors ${icon('arrow')}</a>${trustBadgeHtml}<p style="font-size:11px">Choose your options, then complete checkout. Final prices, availability, shipping and any active promotions are confirmed there.</p><dl><dt>Who it's for</dt><dd>${esc(p.audience)}</dd><dt>Sizes offered in the catalog</dt><dd>${p.sizes.length?p.sizes.map(esc).join(' · '):'Pick options at checkout'}</dd><dt>Colors shown in the catalog</dt><dd>${p.colors.length?p.colors.map(esc).join(' · '):'Pick options at checkout'}</dd></dl><div class="detail-tags">${p.themes.map(id=>`<a href="/collections/${id}/">${THEMES.find(t=>t[0]===id)?.[1]||'Urban'}</a>`).join('')}</div></div></section>${themeShowcase(p.themes[0]||'urban','Related Designs','')}</div>`;
+  const qualityGuaranteeHtml = `<div class="quality-guarantee-box" style="margin:16px 0;padding:14px;background:#18181b;border:1px solid #27272a;border-radius:10px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="color:#d5fa42;font-size:16px">★★★★★</span><strong style="color:#fff;font-size:13px">100% Quality &amp; Satisfaction Guarantee</strong></div><p style="font-size:12px;color:#a1a1aa;margin:0;line-height:1.5">Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#71717a"><span>🚚 Dispatched in 2-3 Business Days</span><span>📦 Tracked Door-to-Door</span><span>↩️ 30-Day Hassle-Free Returns</span></div></div>`;
+  const details = getProductDetails(p);
+  const body=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / <a href="/types/${p.category}/">${TYPES.find(x=>x[0]===p.category)?.[1]||'Collection'}</a> / ${esc(p.design)}</div><section class="detail">${productGallery(p,photos)}<div class="detail-info"><div class="eyebrow">${details.eyebrow}</div><h1>${esc(p.design)}</h1><h2>${esc(p.productType)}</h2><div class="detail-price">$${p.price.toFixed(2)}</div><small>USD · Catalog price checked ${meta.updated}</small><p>${details.desc}</p><a class="btn dark" href="${esc(buyUrl)}">Pick size &amp; colors ${icon('arrow')}</a>${trustBadgeHtml}${qualityGuaranteeHtml}<p style="font-size:11px">Choose your options, then complete checkout. Final prices, availability, shipping and any active promotions are confirmed there.</p><dl><dt>Who it's for</dt><dd>${esc(p.audience)}</dd><dt>${details.specLabel}</dt><dd>${details.specValue}</dd><dt>Sizes offered in the catalog</dt><dd>${p.sizes.length?p.sizes.map(esc).join(' · '):'Pick options at checkout'}</dd><dt>Colors shown in the catalog</dt><dd>${p.colors.length?p.colors.map(esc).join(' · '):'Pick options at checkout'}</dd></dl><div class="detail-tags">${p.themes.map(id=>`<a href="/collections/${id}/">${THEMES.find(t=>t[0]===id)?.[1]||'Urban'}</a>`).join('')}</div></div></section>${themeShowcase(p.themes[0]||'urban','Related Designs','')}</div>`;
   write(p.path.slice(1)+'index.html',shell({title:p.design+' — '+p.productType,description:p.name+'. Pick your size and color and shop this graphic design at Urban Clothes Market.',path:p.path,body,meta,structured:{'@context':'https://schema.org','@type':'Product',name:p.name,image:[p.image],sku:p.id,description:p.name,brand:{'@type':'Brand',name:p.brand||'Urban Clothes Market'},offers:{'@type':'Offer',price:p.price.toFixed(2),priceCurrency:'USD',availability:'https://schema.org/InStock',url:ORIGIN+p.path,itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'Urban Clothes Market'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'6.99',currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'},deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:1,maxValue:3,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:3,maxValue:6,unitCode:'DAY'}}},hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'US',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:30,returnMethod:'https://schema.org/ReturnByMail',returnFees:'https://schema.org/FreeReturn',merchantReturnLink:'https://www.urbanclothesmarket.com/returns/'}}}}));
   sitemap.push(p.path);
 }

@@ -107,7 +107,13 @@ export function showcaseRow({ id, title, subtitle, count, link, isType = true, p
 }
 
 export function themeTiles(meta){
-  return `<div class="themes-grid">${['cats','dogs','gamers','urban','humor','cars','diy'].map(id=>{let t=THEMES.find(x=>x[0]===id),p=meta.themeHero[id];return `<a class="theme-tile" href="/collections/${id}/">${p?`<img src="${esc(p.image)}" alt="${esc(t[1])} designs" loading="lazy">`:''}<h3>${t[1]}</h3><small>${(meta.themeCounts[id]||0).toLocaleString()} items to discover</small><span class="arrow">↗</span></a>`;}).join('')}</div>`;
+  const featuredThemes = ['tarot', 'fantasy', 'cyber', 'streetwear', 'cats', 'dogs', 'gamers', 'humor', 'cars', 'diy'];
+  return `<div class="themes-grid">${featuredThemes.map(id => {
+    let t = THEMES.find(x => x[0] === id);
+    if (!t) return '';
+    let p = meta.themeHero[id] || meta.hero;
+    return `<a class="theme-tile" href="/collections/${id}/">${p ? `<img src="${esc(p.image)}" alt="${esc(t[1])} designs" loading="lazy">` : ''}<h3>${t[1]}</h3><small>${(meta.themeCounts[id] || 0).toLocaleString()} items to discover</small><span class="arrow">↗</span></a>`;
+  }).join('')}</div>`;
 }
 
 export function filters(meta,{type='',theme='',q=''}={}){
