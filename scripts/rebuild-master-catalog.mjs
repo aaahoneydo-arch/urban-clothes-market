@@ -30,29 +30,15 @@ try {
 }
 console.log(`Loaded ${generatedProducts.length} newly composited physical mockup listings.`);
 
-// Combine catalogs
-const masterCatalog = [...baseProducts];
-const seenIds = new Set();
-for (const p of baseProducts) {
-  const sellable = (p.url || '').split('sellable=')[1]?.split('&')[0] || p.name;
-  seenIds.add(sellable);
-}
+// Combine catalogs - Priority physical mockups FIRST
+const masterCatalog = [...generatedProducts];
+const seenIds = new Set(generatedProducts.map(p => p.id));
 
-for (const p of generatedProducts) {
-  if (!seenIds.has(p.id)) {
-    seenIds.add(p.id);
-    masterCatalog.push({
-      id: p.id,
-      name: p.name,
-      design: p.design,
-      productType: p.productType,
-      category: p.category,
-      price: p.price,
-      image: p.image,
-      url: p.url,
-      sizes: p.sizes,
-      colors: p.colors
-    });
+for (const p of baseProducts) {
+  const sellable = (p.url || '').split('sellable=')[1]?.split('&')[0] || p.id || p.name;
+  if (!seenIds.has(sellable)) {
+    seenIds.add(sellable);
+    masterCatalog.push(p);
   }
 }
 

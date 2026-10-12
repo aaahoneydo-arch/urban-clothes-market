@@ -113,7 +113,7 @@ const TEMPLATES = {
   }
 };
 
-const MOCKUP_OUT_DIR = path.resolve('public/mockups');
+const MOCKUP_OUT_DIR = path.resolve('mockups');
 if (!fs.existsSync(MOCKUP_OUT_DIR)) fs.mkdirSync(MOCKUP_OUT_DIR, { recursive: true });
 
 // Discover priority 194 files + all remaining vault files
