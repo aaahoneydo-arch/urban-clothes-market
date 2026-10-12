@@ -1,3 +1,4 @@
 node_modules/
 .sites-local/
 dist/
+google-merchant-feed.xml

@@ -57,6 +57,18 @@ function getAgeGroup(name) {
 let itemsXml = '';
 let totalSkuCount = 0;
 
+const SIZES = {
+  'tshirt-black': ['S', 'M', 'L', 'XL', '2XL'],
+  'hoodie-black': ['S', 'M', 'L', 'XL', '2XL'],
+  'tshirt-white': ['S', 'M', 'L', 'XL', '2XL'],
+  'mug-white': ['11oz', '15oz'],
+  'tote-natural': ['Standard', 'Jumbo'],
+  'poster-framed': ['12x18 in', '18x24 in', '24x36 in'],
+  'pillow-linen': ['16x16 in', '18x18 in', '20x20 in'],
+  'phonecase-white': ['iPhone 14', 'iPhone 15', 'iPhone 16', 'Galaxy S24'],
+  'sticker-diecut': ['3-Inch', '4-Inch', '6-Inch']
+};
+
 for (const p of baseCatalog) {
   const priceNum = parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 24.99;
   const priceStr = `${priceNum.toFixed(2)} USD`;
@@ -70,16 +82,18 @@ for (const p of baseCatalog) {
 
   if (prodKey && COLORWAYS[prodKey]) {
     const variations = COLORWAYS[prodKey];
+    const sizes = SIZES[prodKey] || ['Standard'];
     for (const color of variations) {
-      const colorSlug = color.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const shortColor = colorSlug.slice(0, 15);
-      const shortBase = p.id.replace('flow-gen-', 'fg-');
-      const varId = `${shortBase}-${shortColor}`.slice(0, 48);
-      const varTitle = `${p.name} (${color})`;
-      const varLink = `${p.url}?color=${encodeURIComponent(color)}`;
-      const desc = escXml(`Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`);
+      for (const size of sizes) {
+        const colorSlug = color.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 10);
+        const sizeSlug = size.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 8);
+        const shortBase = p.id.replace('flow-gen-', 'fg-');
+        const varId = `${shortBase}-${colorSlug}-${sizeSlug}`.slice(0, 48);
+        const varTitle = `${p.name} (${color} - ${size})`;
+        const varLink = `${p.url}?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`;
+        const desc = escXml(`Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`);
 
-      itemsXml += `    <item>
+        itemsXml += `    <item>
       <g:id>${escXml(varId)}</g:id>
       <g:item_group_id>${escXml(p.id)}</g:item_group_id>
       <g:title>${escXml(varTitle)}</g:title>
@@ -88,6 +102,7 @@ for (const p of baseCatalog) {
       <g:image_link>${escXml(p.image)}</g:image_link>
       <g:price>${priceStr}</g:price>
       <g:color>${escXml(color)}</g:color>
+      <g:size>${escXml(size)}</g:size>
       <g:availability>in_stock</g:availability>
       <g:condition>new</g:condition>
       <g:brand>Urban Clothes Market</g:brand>
@@ -102,7 +117,8 @@ for (const p of baseCatalog) {
       </g:shipping>
     </item>\n`;
 
-      totalSkuCount++;
+        totalSkuCount++;
+      }
     }
   } else {
     // Spreadshirt base item (single listing with internal variants)
