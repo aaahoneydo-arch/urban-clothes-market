@@ -208,14 +208,148 @@ if(isHomeOnly){
 // Full build continued:
 let sitemap=['/','/about/'];
 
+const TYPE_SEO = {
+  tees: {
+    title: 'Graphic Tees, Modern Streetwear Shirts & Bargain Tops | Urban Clothes Market',
+    h1: 'Graphic Tees, Modern Streetwear Shirts &amp; Bargain Tops',
+    eyebrow: 'ORIGINAL GRAPHIC APPAREL UNDER $25',
+    description: 'Shop original graphic tees, oversized streetwear shirts, vintage heavyweight t-shirts, and cheap bargain graphic tops under $25 at Urban Clothes Market.',
+    leadText: 'Explore over 18,000+ original graphic tees, athletic tanks, heavyweight cotton shirts, and modern streetwear tops. Wear your personality with durable screen-quality prints made for everyday style.',
+    breadcrumb: 'Graphic Tees &amp; Tops'
+  },
+  hoodies: {
+    title: 'Cheap Graphic Hoodies, Heavyweight Pullovers & Urban Sweatshirts | Urban Clothes Market',
+    h1: 'Graphic Hoodies, Heavyweight Pullovers &amp; Urban Sweatshirts',
+    eyebrow: 'HEAVYWEIGHT FLEECE &amp; COZY STREETWEAR',
+    description: 'Explore heavyweight graphic hoodies, cozy fleece pullovers, zip sweatshirts, and cheap urban streetwear hoodies at Urban Clothes Market. High-density prints built for everyday comfort.',
+    leadText: 'Cozy up in over 8,600+ graphic hoodies and sweatshirts. From heavyweight fleece pullovers by Gildan and Champion to organic zip hoodies, find your signature streetwear layer.',
+    breadcrumb: 'Hoodies &amp; Sweatshirts'
+  },
+  hats: {
+    title: 'Streetwear Hats, Vintage Snapbacks & Embroidered Beanies | Urban Clothes Market',
+    h1: 'Streetwear Hats, Vintage Snapbacks &amp; Beanies',
+    eyebrow: 'AUTHENTIC HEADWEAR &amp; RETRO CAPS',
+    description: 'Shop flat-brim snapbacks, vintage baseball caps, embroidered dad hats, trucker hats, and knit beanies at Urban Clothes Market. Bold graphic street style for every fit.',
+    leadText: 'Top off your look with 6,200+ original headwear styles. Discover premium Flexfit baseball caps, breathable trucker hats, washed rope caps, and soft knit beanies.',
+    breadcrumb: 'Hats &amp; Beanies'
+  },
+  mugs: {
+    title: 'Novelty Graphic Coffee Mugs & Ceramic Drinkware | Urban Clothes Market',
+    h1: 'Graphic Coffee Mugs, Travel Tumblers &amp; Novelty Drinkware',
+    eyebrow: 'CERAMIC MUGS, TUMBLERS &amp; BOTTLES',
+    description: 'Discover funny novelty coffee mugs, ceramic graphic mugs, insulated travel tumblers, and water bottles at Urban Clothes Market. Perfect affordable gifts with personality.',
+    leadText: 'Brighten your morning coffee routine with over 6,000+ graphic mugs, 40 oz travel tumblers, camper mugs, and insulated stainless bottles featuring unique original artwork.',
+    breadcrumb: 'Mugs &amp; Drinkware'
+  },
+  jackets: {
+    title: 'Streetwear Jackets, Windbreakers & Urban Outerwear | Urban Clothes Market',
+    h1: 'Streetwear Jackets, Windbreakers &amp; Urban Outerwear',
+    eyebrow: 'LIGHTWEIGHT LAYERS &amp; WINDBREAKERS',
+    description: 'Shop weather-resistant lightweight jackets, track windbreakers, and urban outerwear layers at Urban Clothes Market. Modern street aesthetic built for all seasons.',
+    leadText: 'Stay warm and elevate your street fit with lightweight windbreakers, command zip layers, and weather-ready graphic jackets designed for daily city energy.',
+    breadcrumb: 'Jackets &amp; Outerwear'
+  },
+  bottoms: {
+    title: 'Urban Joggers, Athletic Shorts & Streetwear Pants | Urban Clothes Market',
+    h1: 'Urban Joggers, Athletic Shorts &amp; Streetwear Bottoms',
+    eyebrow: 'ALL-DAY COMFORT &amp; ACTIVE STREETWEAR',
+    description: 'Discover comfortable cotton joggers, athletic shorts, and lounge bottoms at Urban Clothes Market. Relaxed fits and street-ready comfort at direct-to-consumer prices.',
+    leadText: 'Level up your daily rotation with relaxed cotton fleece joggers and athletic training shorts engineered for casual streetwear mobility.',
+    breadcrumb: 'Shorts &amp; Joggers'
+  },
+  stickers: {
+    title: 'Vinyl Die-Cut Stickers, Decals & Graphic Badges | Urban Clothes Market',
+    h1: 'Vinyl Die-Cut Stickers, Laptop Decals &amp; Buttons',
+    eyebrow: 'WEATHERPROOF VINYL DECALS UNDER $5',
+    description: 'Shop durable vinyl die-cut stickers, laptop decals, water bottle stickers, and bumper decals at Urban Clothes Market. High-gloss, UV-resistant original graphics.',
+    leadText: 'Over 3,700+ waterproof vinyl decals and pin badges. Perfect for personalizing laptops, hydro flasks, skate decks, and toolboxes with vibrant scratch-resistant art.',
+    breadcrumb: 'Stickers &amp; Decals'
+  },
+  bags: {
+    title: 'Canvas Tote Bags, Backpacks & Travel Pouches | Urban Clothes Market',
+    h1: 'Canvas Tote Bags, Backpacks &amp; Travel Gear',
+    eyebrow: 'EVERYDAY CARRY &amp; REUSABLE CANVAS TOTES',
+    description: 'Shop durable cotton canvas tote bags, gym backpacks, and travel pouches at Urban Clothes Market. Eco-friendly everyday carry featuring original graphic art.',
+    leadText: 'Carry your essentials in style with 4,200+ heavy-duty cotton canvas totes, gym duffels, and graphic backpacks built for school, groceries, and weekend trips.',
+    breadcrumb: 'Bags &amp; Totes'
+  },
+  art: {
+    title: 'Graphic Posters, Wall Art Prints & Canvas Decor | Urban Clothes Market',
+    h1: 'Graphic Posters, Gallery Wall Art &amp; Prints',
+    eyebrow: 'ARCHIVAL PRINTS &amp; MODERN WALL DECOR',
+    description: 'Discover archival paper posters, stretched canvas gallery wraps, and modern graphic wall art prints at Urban Clothes Market. Vibrant visual decor for homes and studios.',
+    leadText: 'Transform your space with gallery-quality art prints and high-resolution posters celebrating gaming, cars, animals, synthwave, and urban culture.',
+    breadcrumb: 'Posters &amp; Wall Art'
+  },
+  pets: {
+    title: 'Pet Bandanas, Dog Gear & Animal Lover Accessories | Urban Clothes Market',
+    h1: 'Pet Bandanas, Dog Gear &amp; Animal Accessories',
+    eyebrow: 'ORIGINAL GEAR FOR FOUR-LEGGED FRIENDS',
+    description: 'Shop soft cotton pet bandanas, dog accessories, and animal lover gear at Urban Clothes Market. Keep your four-legged best friend looking fresh on every walk.',
+    leadText: 'Treat your pup to soft cotton graphic bandanas and durable pet accessories designed to match your favorite streetwear fits.',
+    breadcrumb: 'Pet Gear'
+  },
+  kids: {
+    title: 'Kids Graphic Tees, Toddler Hoodies & Baby Bodysuits | Urban Clothes Market',
+    h1: 'Kids Graphic Apparel, Toddler Hoodies &amp; Baby Bodysuits',
+    eyebrow: 'SMALL SIZES WITH BIG PERSONALITY',
+    description: 'Shop funny kids graphic tees, cozy toddler hoodies, and organic cotton baby bodysuits at Urban Clothes Market. Made soft and durable for little adventurers.',
+    leadText: 'Over 7,500+ colorful graphic pieces made specifically for toddlers, kids, and babies. Soft, ring-spun cotton that withstands the playground and repeated wash cycles.',
+    breadcrumb: 'Kids &amp; Baby'
+  },
+  home: {
+    title: 'Graphic Throw Pillows, Blankets & Home Accents | Urban Clothes Market',
+    h1: 'Graphic Home Decor, Throw Pillows &amp; Blankets',
+    eyebrow: 'COZY LIVING WITH DISTINCT PERSONALITY',
+    description: 'Discover decorative throw pillows, plush fleece blankets, kitchen aprons, and desk mats at Urban Clothes Market. Elevate your room with original art.',
+    leadText: 'Infuse your home or workspace with original personality across 29,000+ throw pillows, cozy blankets, mousepads, holiday ornaments, and kitchen accessories.',
+    breadcrumb: 'Home &amp; Gifts'
+  },
+  accessories: {
+    title: 'Streetwear Accessories, Keychains & Novelty Items | Urban Clothes Market',
+    h1: 'Streetwear Accessories, Keychains &amp; Jet Tags',
+    eyebrow: 'EVERYDAY ACCENTS &amp; SMALL FINDS',
+    description: 'Shop embroidered keychains, jet tags, novelty accessories, and everyday accents at Urban Clothes Market. Small pieces that make a big statement.',
+    leadText: 'Complete your daily carry with high-detail embroidered jet tags, graphic keychains, and novelty lifestyle accents.',
+    breadcrumb: 'Accessories'
+  }
+};
+
 function collection(id,label,kind,description,group){
   const base='/'+kind+'/'+id+'/';
   const pageSize=24,pages=Math.max(1,Math.ceil(group.length/pageSize));
+  const seo = (kind==='types' && TYPE_SEO[id]) ? TYPE_SEO[id] : null;
+  const pageTitle = seo ? seo.title : label;
+  const pageDesc = seo ? seo.description : description;
+  const pageH1 = seo ? seo.h1 : esc(label);
+  const pageEyebrow = seo ? seo.eyebrow : 'Find your own kind of original';
+  const pageLead = seo ? seo.leadText : esc(description);
+  const pageCrumb = seo ? seo.breadcrumb : esc(label);
+
   for(let page=1;page<=pages;page++){
     const pagePath=page===1?base:base+'page/'+page+'/';
     const selected=group.slice((page-1)*pageSize,page*pageSize);
-    const intro=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / ${kind==='types'?'Product variations':'Collections'} / ${esc(label)}</div><section class="collection-intro"><div class="eyebrow">Find your own kind of original</div><h1>${esc(label)}</h1><p>${esc(description)}</p></section><section id="catalog">${filters(meta,{type:kind==='types'?id:'',theme:kind==='collections'?id:''}).replace('__CARDS__',selected.map(card).join(''))}<nav aria-label="Collection pages" class="pagination">${page>1?`<a class="btn" href="${page===2?base:base+'page/'+(page-1)+'/'}">← Page ${page-1}</a>`:''}<span>Catalog page ${page} of ${pages}</span>${page<pages?`<a class="btn" href="${base}page/${page+1}/">Page ${page+1} →</a>`:''}</nav></section><section class="section"><h2 style="font:700 35px var(--display)">Explore another variation</h2>${themeTiles(meta)}</section></div>`;
-    write(pagePath.slice(1)+'index.html',shell({title:label+(page>1?' — Page '+page:''),description,path:pagePath,body:intro,meta,structured:{'@context':'https://schema.org','@type':'CollectionPage',name:label,url:ORIGIN+pagePath}}));
+    const intro=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / <a href="/#catalog">${kind==='types'?'Product Variations':'Collections'}</a> / ${pageCrumb}</div><section class="collection-intro"><div class="eyebrow">${pageEyebrow}</div><h1>${pageH1}</h1><p>${pageLead}</p></section><section id="catalog">${filters(meta,{type:kind==='types'?id:'',theme:kind==='collections'?id:''}).replace('__CARDS__',selected.map(card).join(''))}<nav aria-label="Collection pages" class="pagination">${page>1?`<a class="btn" href="${page===2?base:base+'page/'+(page-1)+'/'}">← Page ${page-1}</a>`:''}<span>Catalog page ${page} of ${pages}</span>${page<pages?`<a class="btn" href="${base}page/${page+1}/">Page ${page+1} →</a>`:''}</nav></section><section class="section"><h2 style="font:700 35px var(--display)">Explore another variation</h2>${themeTiles(meta)}</section></div>`;
+    
+    const structuredGraph = [
+      {
+        '@type': 'CollectionPage',
+        name: pageTitle + (page>1 ? ' — Page '+page : ''),
+        description: pageDesc,
+        url: ORIGIN + pagePath,
+        isPartOf: { '@type': 'WebSite', name: 'Urban Clothes Market', url: ORIGIN }
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: ORIGIN },
+          { '@type': 'ListItem', position: 2, name: kind==='types'?'Product Types':'Collections', item: ORIGIN + '/#catalog' },
+          { '@type': 'ListItem', position: 3, name: seo ? seo.breadcrumb.replace(/&amp;/g, '&') : label, item: ORIGIN + base }
+        ]
+      }
+    ];
+
+    write(pagePath.slice(1)+'index.html',shell({title:pageTitle+(page>1?' — Page '+page:''),description:pageDesc,path:pagePath,body:intro,meta,structured:{'@context':'https://schema.org','@graph':structuredGraph}}));
     sitemap.push(pagePath);
   }
 }
