@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { normalize } from '../src/catalog-model.mjs';
 
 console.log('=== MULTIPLYING MASTER CATALOG TO MAXIMUM MERCHANT VARIANT SKUS ===');
 
-const baseCatalog = JSON.parse(fs.readFileSync('data/catalog.json', 'utf8'));
+const rawCatalog = JSON.parse(fs.readFileSync('data/catalog.json', 'utf8'));
+const baseCatalog = normalize(rawCatalog);
 console.log(`Starting with ${baseCatalog.length} base physical listings...`);
 
 const COLORWAYS = {
@@ -70,14 +72,16 @@ const SIZES = {
 };
 
 for (const p of baseCatalog) {
+  const title = p.title || p.name || 'Official Streetwear';
   const priceNum = parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 24.99;
   const priceStr = `${priceNum.toFixed(2)} USD`;
-  const gCategory = getGoogleCategory(p.name);
-  const gender = getGender(p.name);
-  const ageGroup = getAgeGroup(p.name);
+  const gCategory = getGoogleCategory(title);
+  const gender = getGender(title);
+  const ageGroup = getAgeGroup(title);
+  const pageUrl = `https://www.urbanclothesmarket.com${p.path || `/products/${p.id}/`}`;
 
   // Check if this is a newly generated mockup product with variants
-  const prodKeyMatch = p.url?.match(/(tshirt-black|hoodie-black|tshirt-white|mug-white|tote-natural|poster-framed|pillow-linen|phonecase-white|sticker-diecut)/);
+  const prodKeyMatch = (p.id + ' ' + (p.url || '')).match(/(tshirt-black|hoodie-black|tshirt-white|mug-white|tote-natural|poster-framed|pillow-linen|phonecase-white|sticker-diecut)/);
   const prodKey = prodKeyMatch ? prodKeyMatch[1] : null;
 
   if (prodKey && COLORWAYS[prodKey]) {
@@ -87,10 +91,10 @@ for (const p of baseCatalog) {
       for (const size of sizes) {
         const colorSlug = color.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 10);
         const sizeSlug = size.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 8);
-        const shortBase = p.id.replace('flow-gen-', 'fg-');
+        const shortBase = String(p.id).replace('flow-gen-', 'fg-');
         const varId = `${shortBase}-${colorSlug}-${sizeSlug}`.slice(0, 48);
-        const varTitle = `${p.name} (${color} - ${size})`;
-        const varLink = `${p.url}?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`;
+        const varTitle = `${title} (${color} - ${size})`;
+        const varLink = `${pageUrl}?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`;
         const richDesc = p.description ? `${p.description} Selected variation: ${color} in size ${size}.` : `Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`;
         const desc = escXml(richDesc);
 
@@ -122,16 +126,14 @@ for (const p of baseCatalog) {
       }
     }
   } else {
-    // Spreadshirt base item (single listing with internal variants)
-    const desc = escXml(`Official ${p.name} from Urban Clothes Market. Made to order with premium materials. Fast US delivery and hassle-free 30-day returns.`);
-
-    const verifiedStoreLink = `https://www.urbanclothesmarket.com/?out=${encodeURIComponent(p.url)}&id=${encodeURIComponent(p.id || '')}`;
+    // Spreadshirt base item (single listing with direct buy box on site)
+    const desc = escXml(`Official ${title} from Urban Clothes Market. Made to order with premium materials. Fast US delivery and hassle-free 30-day returns.`);
 
     itemsXml += `    <item>
       <g:id>${escXml(p.id || `ucm-${totalSkuCount}`)}</g:id>
-      <g:title>${escXml(p.name)}</g:title>
+      <g:title>${escXml(title)}</g:title>
       <g:description>${desc}</g:description>
-      <g:link>${escXml(verifiedStoreLink)}</g:link>
+      <g:link>${escXml(pageUrl)}</g:link>
       <g:image_link>${escXml(p.image)}</g:image_link>
       <g:price>${priceStr}</g:price>
       <g:availability>in_stock</g:availability>

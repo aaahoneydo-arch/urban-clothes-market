@@ -1,6 +1,6 @@
 {
   "count": 13844,
-  "designs": 7199,
+  "designs": 6695,
   "types": {
     "tees": 3682,
     "hoodies": 1851,
@@ -19,19 +19,19 @@
     "accessories": 66
   },
   "themes": {
-    "tarot": 1015,
-    "fantasy": 0,
-    "cyber": 603,
-    "streetwear": 1416,
-    "cats": 202,
-    "dogs": 202,
-    "gamers": 965,
-    "humor": 1906,
-    "cars": 1380,
-    "diy": 944,
+    "tarot": 1735,
+    "fantasy": 144,
+    "cyber": 1368,
+    "streetwear": 1824,
+    "cats": 211,
+    "dogs": 211,
+    "gamers": 1118,
+    "humor": 1933,
+    "cars": 1632,
+    "diy": 1025,
     "kids": 886,
     "all": 13844
   },
-  "pages": 15412,
-  "indexBytes": 1997876
+  "pages": 15515,
+  "indexBytes": 2087243
 }
