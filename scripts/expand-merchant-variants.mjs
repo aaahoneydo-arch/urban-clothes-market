@@ -91,7 +91,8 @@ for (const p of baseCatalog) {
         const varId = `${shortBase}-${colorSlug}-${sizeSlug}`.slice(0, 48);
         const varTitle = `${p.name} (${color} - ${size})`;
         const varLink = `${p.url}?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`;
-        const desc = escXml(`Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`);
+        const richDesc = p.description ? `${p.description} Selected variation: ${color} in size ${size}.` : `Shop official ${varTitle}. Premium quality made-to-order physical merchandise. Durable finish, high-resolution direct print, 30-day money-back guarantee with fast US delivery.`;
+        const desc = escXml(richDesc);
 
         itemsXml += `    <item>
       <g:id>${escXml(varId)}</g:id>
