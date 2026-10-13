@@ -815,18 +815,7 @@ $('#cart-drawer-overlay')?.addEventListener('click', e => {
 $('#btn-checkout-cart')?.addEventListener('click', () => {
   const cart = getCart();
   if(!cart.length) return;
-  closeCartDrawer();
-  const first = cart[0];
-  const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1), 0);
-  openOrderModal({
-    id: 'cart-bundle',
-    name: `${cart.length} item(s) from Shopping Bag`,
-    price: totalAmount,
-    image: first.image,
-    size: first.size,
-    color: first.color,
-    qty: 1
-  });
+  window.location.href = '/checkout/';
 });
 
 // Modal close

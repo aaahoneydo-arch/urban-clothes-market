@@ -47,14 +47,9 @@ let itemsXml = '';
 let count = 0;
 
 for (const p of products) {
-  let sellable = '';
-  try {
-    sellable = new URL(p.url).searchParams.get('sellable');
-  } catch (e) {}
-  if (!sellable) sellable = 'ucm-' + count;
-
-  const id = `ucm-${sellable}`;
+  const id = p.id;
   const title = p.name;
+  const slug = p.id.replace(/^ucm-/, '');
   
   // Format high-resolution 1200x1200 product mockup URL
   let imgUrl = p.image;
@@ -73,11 +68,19 @@ for (const p of products) {
 
   const desc = `Shop ${escXml(title)}. Official graphic merchandise custom made to order. High resolution print quality, durable materials, and comfortable streetwear fit. Fast door-to-door delivery and 30-day quality guarantee.`;
 
+  let link = p.url;
+  if (!link || !link.startsWith('https://www.urbanclothesmarket.com/')) {
+    link = `https://www.urbanclothesmarket.com/products/${slug}/`;
+  }
+
+  const color = (p.colors && p.colors.length) ? p.colors[0] : 'Black';
+  const size = (p.sizes && p.sizes.length) ? p.sizes[0] : 'M';
+
   itemsXml += `    <item>
       <g:id>${escXml(id)}</g:id>
       <g:title>${escXml(title)}</g:title>
       <g:description>${desc}</g:description>
-      <g:link>${escXml(p.url)}</g:link>
+      <g:link>${escXml(link)}</g:link>
       <g:image_link>${escXml(imgUrl)}</g:image_link>
       <g:price>${priceStr}</g:price>
       <g:availability>in_stock</g:availability>
@@ -87,6 +90,8 @@ for (const p of products) {
       <g:google_product_category>${gCategory}</g:google_product_category>
       <g:gender>${gender}</g:gender>
       <g:age_group>${ageGroup}</g:age_group>
+      <g:color>${escXml(color)}</g:color>
+      <g:size>${escXml(size)}</g:size>
       <g:shipping>
         <g:country>US</g:country>
         <g:service>Standard Shipping</g:service>
