@@ -11,7 +11,7 @@ export function card(p){
 }
 
 export function header(){
-  return `<div class="announce">⚡ 78,980+ Original Graphic Designs Across 13 Item Variations. <span>Wear Your Personality.</span></div><header class="header"><div class="wrap headrow"><a class="logo" href="/" aria-label="Urban Clothes Market home"><span class="logo-mark">UCM</span><span class="logo-text">URBAN CLOTHES<small>MARKET</small></span></a><form class="head-search" action="/#catalog" method="GET" role="search">${icon('search')}<input id="head-search-input" name="q" type="search" placeholder="Search 78,000+ items (cats, gaming, cars, hoodies, mugs...)" aria-label="Search all 78,000+ items" autocomplete="off"><kbd class="kbd-hint" aria-hidden="true">/</kbd><button type="submit">Search</button><div class="search-autocomplete" id="head-autocomplete" hidden></div></form><nav class="topnav" aria-label="Main navigation"><a href="/#catalog">Explore All</a><a href="/types/tees/">Tees &amp; Tanks</a><a href="/types/hoodies/">Hoodies</a><a href="/types/mugs/">Drinkware</a><a href="/types/hats/">Hats</a><a href="/#collections">Themes</a></nav><div class="head-actions"><button data-favorites aria-label="View favorites">${icon('heart')}<span class="pill-count" data-favcount>0</span></button><button data-cart aria-label="View shopping bag" class="head-cart-btn" id="head-cart-trigger">${icon('bag')}<span class="pill-count" data-cartcount id="head-cart-count">0</span></button></div></div></header>`;
+  return `<div class="announce">⚡ 100,000+ Original Graphic Designs &amp; Creator Merch Across 39 Departments. <span>Wear Your Personality.</span></div><header class="header"><div class="wrap headrow"><a class="logo" href="/" aria-label="Urban Clothes Market home"><span class="logo-mark">UCM</span><span class="logo-text">URBAN CLOTHES<small>MARKET</small></span></a><form class="head-search" action="/#catalog" method="GET" role="search">${icon('search')}<input id="head-search-input" name="q" type="search" placeholder="Search 100,000+ items (cats, gaming, cars, hoodies, mugs...)" aria-label="Search all 100,000+ items" autocomplete="off"><kbd class="kbd-hint" aria-hidden="true">/</kbd><button type="submit">Search</button><div class="search-autocomplete" id="head-autocomplete" hidden></div></form><nav class="topnav" aria-label="Main navigation"><a href="/#catalog">Explore All</a><a href="/types/tees/">Tees &amp; Tanks</a><a href="/types/hoodies/">Hoodies</a><a href="/types/mugs/">Drinkware</a><a href="/types/hats/">Hats</a><a href="/#collections">Themes</a></nav><div class="head-actions"><button data-favorites aria-label="View favorites">${icon('heart')}<span class="pill-count" data-favcount>0</span></button><button data-cart aria-label="View shopping bag" class="head-cart-btn" id="head-cart-trigger">${icon('bag')}<span class="pill-count" data-cartcount id="head-cart-count">0</span></button></div></div></header>`;
 }
 
 export function footer(meta){
@@ -48,7 +48,7 @@ export function categoryChips(meta){
   `</div></nav>`;
 }
 
-export function discoveryBar({ id, title, subtitle, placeholder = "Search 78,000+ items across all variations..." }){
+export function discoveryBar({ id, title, subtitle, placeholder = "Search 100,000+ items across all variations..." }){
   return `<section class="discovery-bar wrap" id="${esc(id)}">
     <div class="discovery-content">
       <div class="discovery-text">

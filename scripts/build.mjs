@@ -126,8 +126,8 @@ const homeBody = `
   ${discoveryBar({
     id: 'discovery-mid1',
     title: 'Looking for a Specific Graphic or Theme?',
-    subtitle: 'Search across all 78,000+ items or hit surprise me for an instant random discovery mix.',
-    placeholder: 'Search 78,000+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
+    subtitle: 'Search across all 100,000+ items or hit surprise me for an instant random discovery mix.',
+    placeholder: 'Search 100,000+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
   })}
 
   ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
@@ -142,7 +142,7 @@ const homeBody = `
   <section class="catalog-head" id="catalog">
     <div class="section-head">
       <div>
-        <div class="sub">INSTANT INVENTORY EXPLORER · ALL 78,000+ ITEMS</div>
+        <div class="sub">INSTANT INVENTORY EXPLORER · ALL 100,000+ ITEMS</div>
         <h2>Filter &amp; Discover Entire Archive</h2>
         <p>Narrow by item variation, passion theme, budget, or brand. Click shuffle for a brand new discovery mix anytime.</p>
       </div>
@@ -188,8 +188,8 @@ const homeBody = `
   ${discoveryBar({
     id: 'discovery-bottom',
     title: 'Ready to Find Your Next Favorite?',
-    subtitle: 'Search across 78,000+ items or hit surprise me to discover something unexpected.',
-    placeholder: 'Search 78,000+ items or enter a theme...'
+    subtitle: 'Search across 100,000+ items or hit surprise me to discover something unexpected.',
+    placeholder: 'Search 100,000+ items or enter a theme...'
   })}
 </div>
 `;
