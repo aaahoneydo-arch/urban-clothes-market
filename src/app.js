@@ -525,6 +525,39 @@ document.addEventListener('keydown', e => {
     $$('.search-autocomplete').forEach(d => { d.hidden = true; });
     $('#recent-drawer')?.setAttribute('hidden', '');
     $('#filters')?.classList.remove('open');
+    $('#dept-dropdown')?.classList.remove('open');
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
+  }
+});
+
+// Departments dropdown toggle
+$('#dept-btn')?.addEventListener('click', e => {
+  e.stopPropagation();
+  const dropdown = $('#dept-dropdown');
+  const menu = $('#dept-menu');
+  if(!dropdown || !menu) return;
+  const isOpen = dropdown.classList.toggle('open');
+  $('#dept-btn').setAttribute('aria-expanded', String(isOpen));
+  menu.style.display = isOpen ? 'block' : 'none';
+});
+$('#dept-dropdown')?.addEventListener('mouseenter', () => {
+  const menu = $('#dept-menu');
+  if(menu) menu.style.display = 'block';
+});
+$('#dept-dropdown')?.addEventListener('mouseleave', () => {
+  const dropdown = $('#dept-dropdown');
+  if(!dropdown?.classList.contains('open')){
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
+  }
+});
+document.addEventListener('click', e => {
+  if(!e.target.closest('#dept-dropdown')){
+    $('#dept-dropdown')?.classList.remove('open');
+    $('#dept-btn')?.setAttribute('aria-expanded', 'false');
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
   }
 });
 

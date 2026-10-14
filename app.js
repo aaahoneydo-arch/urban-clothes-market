@@ -525,6 +525,39 @@ document.addEventListener('keydown', e => {
     $$('.search-autocomplete').forEach(d => { d.hidden = true; });
     $('#recent-drawer')?.setAttribute('hidden', '');
     $('#filters')?.classList.remove('open');
+    $('#dept-dropdown')?.classList.remove('open');
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
+  }
+});
+
+// Departments dropdown toggle
+$('#dept-btn')?.addEventListener('click', e => {
+  e.stopPropagation();
+  const dropdown = $('#dept-dropdown');
+  const menu = $('#dept-menu');
+  if(!dropdown || !menu) return;
+  const isOpen = dropdown.classList.toggle('open');
+  $('#dept-btn').setAttribute('aria-expanded', String(isOpen));
+  menu.style.display = isOpen ? 'block' : 'none';
+});
+$('#dept-dropdown')?.addEventListener('mouseenter', () => {
+  const menu = $('#dept-menu');
+  if(menu) menu.style.display = 'block';
+});
+$('#dept-dropdown')?.addEventListener('mouseleave', () => {
+  const dropdown = $('#dept-dropdown');
+  if(!dropdown?.classList.contains('open')){
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
+  }
+});
+document.addEventListener('click', e => {
+  if(!e.target.closest('#dept-dropdown')){
+    $('#dept-dropdown')?.classList.remove('open');
+    $('#dept-btn')?.setAttribute('aria-expanded', 'false');
+    const menu = $('#dept-menu');
+    if(menu) menu.style.display = 'none';
   }
 });
 
@@ -815,7 +848,18 @@ $('#cart-drawer-overlay')?.addEventListener('click', e => {
 $('#btn-checkout-cart')?.addEventListener('click', () => {
   const cart = getCart();
   if(!cart.length) return;
-  window.location.href = '/checkout/';
+  closeCartDrawer();
+  const first = cart[0];
+  const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1), 0);
+  openOrderModal({
+    id: 'cart-bundle',
+    name: `${cart.length} item(s) from Shopping Bag`,
+    price: totalAmount,
+    image: first.image,
+    size: first.size,
+    color: first.color,
+    qty: 1
+  });
 });
 
 // Modal close
