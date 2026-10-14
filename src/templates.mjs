@@ -182,11 +182,19 @@ export function showcaseRow({ id, title, subtitle, count, link, isType = true, p
     subfilters.map(sf => `<button type="button" class="subfilter-chip ${sf.id==='all'?'active':''}" data-row-subfilter="${sf.id}" data-target-type="${esc(id)}">${sf.label}</button>`).join('') +
   `</div>` : '';
 
+  const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > 10 ? count - 10 : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
+
   return `<section class="showcase-row" id="${isType ? 'type-' + id : 'theme-' + id}">
     <div class="section-head">
-      <div>
+      <div class="section-title-wrap">
         <div class="sub">${isType ? 'PRODUCT TYPE VARIATION' : 'CURATED PASSION THEME'}</div>
-        <h2>${esc(title)} <span class="count-pill">${count.toLocaleString()} items</span></h2>
+        <div class="title-row-flex">
+          <h2>${esc(title)} <span class="count-pill">${count.toLocaleString()} items</span></h2>
+          <a class="btn-see-all-pill" href="${esc(link)}">
+            <span>See All ${count.toLocaleString()}+ Items</span>
+            <span class="see-all-arrow">↗</span>
+          </a>
+        </div>
         ${subtitle ? `<p>${esc(subtitle)}</p>` : ''}
       </div>
       <div class="row-actions">
@@ -197,12 +205,13 @@ export function showcaseRow({ id, title, subtitle, count, link, isType = true, p
         <button class="shuffle" data-row-shuffle="${esc(id)}" data-is-type="${isType}">
           ${icon('shuffle')} Shuffle ${esc(title.split(' ')[0])}
         </button>
-        <a class="text-link" href="${esc(link)}">View all ${count.toLocaleString()} ↗</a>
+        <a class="btn-see-all-action" href="${esc(link)}">Explore All ${count.toLocaleString()} ↗</a>
       </div>
     </div>
     ${subfilterHtml}
-    <div class="scroll-track" data-track="${esc(id)}" ${isType ? `data-row-type="${esc(id)}"` : `data-row="${esc(id)}"`}>
+    <div class="scroll-track" data-track="${esc(id)}" ${isType ? `data-row-type="${esc(id)}"` : `data-row="${esc(id)}"`} data-row-title="${esc(title)}" data-row-count="${count}" data-row-link="${esc(link)}">
       ${products.slice(0, 10).map(card).join('')}
+      ${endCardHtml}
     </div>
   </section>`;
 }

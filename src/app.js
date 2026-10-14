@@ -159,7 +159,11 @@ async function renderRow(id, isType = false) {
         uniqueItems.push(p);
       }
     }
-    container.innerHTML = uniqueItems.slice(0, 10).map(card).join('');
+    const link = container.dataset.rowLink || (isType ? `/types/${id}/` : `/collections/${id}/`);
+    const title = container.dataset.rowTitle || id;
+    const count = Number(container.dataset.rowCount) || result.total || 8000;
+    const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > 10 ? count - 10 : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
+    container.innerHTML = uniqueItems.slice(0, 10).map(card).join('') + endCardHtml;
     saveState();
   }
 }
@@ -429,7 +433,11 @@ document.addEventListener('click', async e => {
               uniqueItems.push(p);
             }
           }
-          track.innerHTML = uniqueItems.slice(0, 10).map(card).join('');
+          const link = track.dataset.rowLink || (targetType ? `/types/${targetType}/` : `/collections/${subfilter}/`);
+          const title = track.dataset.rowTitle || targetType || subfilter;
+          const count = Number(track.dataset.rowCount) || result.total || 8000;
+          const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > 10 ? count - 10 : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
+          track.innerHTML = uniqueItems.slice(0, 10).map(card).join('') + endCardHtml;
           saveState();
         }
       }catch(err){}
@@ -628,6 +636,49 @@ if(detailInfo){
 
 renderRecentDock();
 saveState();
+
+// DYNAMIC SHOWCASE RANDOMIZER (Fresh discovery mix on every page visit)
+function initDynamicRandomizer(){
+  const tracks = $$('.scroll-track[data-track]');
+  if(!tracks.length) return;
+
+  // Immediately randomize top 2 visible rows (Hoodies & Jackets) on page arrival
+  const topTracks = tracks.slice(0, 2);
+  topTracks.forEach(track => {
+    const typeId = track.dataset.rowType;
+    const themeId = track.dataset.row;
+    if(typeId) renderRow(typeId, true);
+    else if(themeId) renderRow(themeId, false);
+  });
+
+  // Lazy-randomize remaining tracks as user scrolls down
+  const remaining = tracks.slice(2);
+  if(!remaining.length) return;
+
+  if('IntersectionObserver' in window){
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          const track = entry.target;
+          obs.unobserve(track);
+          const typeId = track.dataset.rowType;
+          const themeId = track.dataset.row;
+          if(typeId) renderRow(typeId, true);
+          else if(themeId) renderRow(themeId, false);
+        }
+      });
+    }, { rootMargin: '300px 0px' });
+    remaining.forEach(t => observer.observe(t));
+  } else {
+    remaining.forEach(track => {
+      const typeId = track.dataset.rowType;
+      const themeId = track.dataset.row;
+      if(typeId) renderRow(typeId, true);
+      else if(themeId) renderRow(themeId, false);
+    });
+  }
+}
+initDynamicRandomizer();
 
 // ==========================================================================
 // SHOPPING BAG & INSTANT CHECKOUT CONTROLLER

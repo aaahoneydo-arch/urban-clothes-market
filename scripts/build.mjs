@@ -68,8 +68,9 @@ const typeShowcase = (id, title, subtitle) => {
   const cacheKey = `${id}|${title}|${subtitle}`;
   if (typeShowcaseCache.has(cacheKey)) return typeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'kids' ? p.kids : p.category === id);
-  matching.sort((a, b) => (isCleanProfessional(b) ? 1 : 0) - (isCleanProfessional(a) ? 1 : 0));
-  const uniqueItems = uniqueByDesign(matching);
+  const clean = matching.filter(isCleanProfessional).sort(() => Math.random() - 0.5);
+  const other = matching.filter(p => !isCleanProfessional(p)).sort(() => Math.random() - 0.5);
+  const uniqueItems = uniqueByDesign([...clean, ...other]);
   const count = matching.length;
   const res = showcaseRow({
     id,
@@ -89,8 +90,9 @@ const themeShowcase = (id, title, subtitle) => {
   const cacheKey = `${id}|${title}|${subtitle}`;
   if (themeShowcaseCache.has(cacheKey)) return themeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'all' || p.themes.includes(id));
-  matching.sort((a, b) => (isCleanProfessional(b) ? 1 : 0) - (isCleanProfessional(a) ? 1 : 0));
-  const uniqueItems = uniqueByDesign(matching);
+  const clean = matching.filter(isCleanProfessional).sort(() => Math.random() - 0.5);
+  const other = matching.filter(p => !isCleanProfessional(p)).sort(() => Math.random() - 0.5);
+  const uniqueItems = uniqueByDesign([...clean, ...other]);
   const count = matching.length;
   const res = showcaseRow({
     id,
@@ -157,7 +159,7 @@ const homeBody = `
         <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
       </div>
     </div>
-    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').sort((a,b)=>(isCleanProfessional(b)?1:0)-(isCleanProfessional(a)?1:0))).slice(0, 24).map(card).join(''))}
+    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
   </section>
 
   <!-- MID-PAGE SEARCH BAR #2 (Transition to Curated Themes) -->
@@ -224,6 +226,8 @@ fs.copyFileSync('src/style.css', path.join(root,'style.css'));
 fs.copyFileSync('src/style.css', 'style.css');
 fs.copyFileSync('src/app.js', path.join(root,'app.js'));
 fs.copyFileSync('src/app.js', 'app.js');
+fs.copyFileSync('src/search-worker.js', path.join(root,'search-worker.js'));
+fs.copyFileSync('src/search-worker.js', 'search-worker.js');
 
 if(isHomeOnly){
   console.log('Homepage, styles, and scripts compiled and synced to root successfully!');
