@@ -41,7 +41,9 @@ function buildGoogleMerchantFeed() {
       accessories: 'Apparel &amp; Accessories &gt; Clothing Accessories',
       home: 'Home &amp; Garden &gt; Decor',
       art: 'Home &amp; Garden &gt; Decor &gt; Artwork &gt; Posters, Prints, &amp; Visual Artwork',
-      kids: 'Apparel &amp; Accessories &gt; Clothing &gt; Baby &amp; Toddler Clothing'
+      kids: 'Apparel &amp; Accessories &gt; Clothing &gt; Baby &amp; Toddler Clothing',
+      tech: 'Electronics &gt; Communications &gt; Telephony &gt; Mobile Phone Accessories &gt; Mobile Phone Cases',
+      stationery: 'Office Supplies &gt; General Office Supplies &gt; Paper Products &gt; Notebooks &amp; Notepads'
     }[p.category] || 'Apparel &amp; Accessories &gt; Clothing';
 
     const gender = p.audience === 'Women' ? 'female' : (p.audience === 'Men' ? 'male' : 'unisex');

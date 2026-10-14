@@ -106,7 +106,7 @@ const homeBody = `
   <!-- TOP QUICK-JUMP CATEGORY PILLS BAR -->
   <div class="top-nav-strip">
     <div class="top-strip-left">
-      <span class="live-indicator">⚡ <strong>${products.length.toLocaleString()}+</strong> Original Graphic Items Across <strong>13</strong> Variations</span>
+      <span class="live-indicator">⚡ <strong>${products.length.toLocaleString()}+</strong> Original Graphic Items Across <strong>15</strong> Departments</span>
     </div>
     <div class="top-strip-right">
       <button type="button" class="btn-surprise-pill" data-surprise aria-label="Surprise me with random picks">${icon('shuffle')} Surprise Me</button>
@@ -114,13 +114,14 @@ const homeBody = `
   </div>
   ${categoryChips(meta)}
 
-  <!-- ALL 13 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
+  <!-- ALL 15 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
   ${typeShowcase('tees', 'Tees, Tanks & Graphic Shirts', 'Classic heavyweight tees, slim-fit premium shirts, and athletic tanks.')}
   ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and zip sweatshirts.')}
   ${typeShowcase('hats', 'Hats, Caps & Beanies', 'Snapbacks, vintage baseball caps, trucker hats, and knit beanies.')}
   ${typeShowcase('mugs', 'Mugs, Tumblers & Drinkware', 'Ceramic coffee mugs, insulated travel tumblers, and beverage gear.')}
   ${typeShowcase('bags', 'Bags, Backpacks & Totes', 'Canvas totes, gym duffels, drawstring bags, and travel pouches.')}
   ${typeShowcase('stickers', 'Stickers, Decals & Buttons', 'Durable vinyl die-cut stickers for laptops, water bottles, and cars.')}
+  ${typeShowcase('tech', 'Phone Cases, Laptop Sleeves & Desk Mats', 'Shockproof phone cases, padded laptop sleeves, and smooth gaming desk pads.')}
 
   <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
   ${discoveryBar({
@@ -130,12 +131,13 @@ const homeBody = `
     placeholder: 'Search 100,000+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
   })}
 
-  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
-  ${typeShowcase('art', 'Posters, Prints & Wall Art', 'High-resolution archival paper posters and graphic wall art prints.')}
-  ${typeShowcase('home', 'Home, Pillows & Kitchen Gear', 'Throw pillows, aprons, mousepads, holiday ornaments, and magnets.')}
-  ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
+  ${typeShowcase('art', 'Posters, Prints & Wall Art', 'High-resolution archival paper posters, canvas wraps, and graphic art prints.')}
+  ${typeShowcase('home', 'Home Decor, Pillows & Fleece Blankets', 'Decorative throw pillows, cozy fleece blankets, kitchen aprons, and wall clocks.')}
+  ${typeShowcase('stationery', 'Stationery, Spiral Notebooks & Journals', 'Hardcover journals, ruled spiral notebooks, and greeting stationery.')}
   ${typeShowcase('kids', 'Kids, Toddler & Baby Gear', 'Youth tees, toddler apparel, and organic baby bodysuits.')}
+  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
   ${typeShowcase('bottoms', 'Shorts, Joggers & Activewear', 'Comfortable cotton joggers, athletic shorts, and loungewear.')}
+  ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
   ${typeShowcase('accessories', 'Accessories & Keychains', 'Embroidered jet tags, novelty keychains, and everyday add-ons.')}
 
   <!-- INTERACTIVE CATALOG BROWSER & DEEP FILTERS -->
@@ -197,7 +199,7 @@ const homeBody = `
 // Write index.html
 write('index.html', shell({
   title: 'Graphic Clothing, Gifts & Massive Inventory Showcase',
-  description: `Shop ${products.length.toLocaleString()}+ graphic tees, hoodies, mugs, stickers, and gifts across 13 variations for cat lovers, dog lovers, gamers, cars and more at Urban Clothes Market.`,
+  description: `Shop ${products.length.toLocaleString()}+ graphic tees, hoodies, mugs, stickers, and gifts across 15 departments for cat lovers, dog lovers, gamers, cars and more at Urban Clothes Market.`,
   body: homeBody,
   meta,
   structured: {
@@ -327,6 +329,22 @@ const TYPE_SEO = {
     description: 'Shop embroidered keychains, jet tags, novelty accessories, and everyday accents at Urban Clothes Market. Small pieces that make a big statement.',
     leadText: 'Complete your daily carry with high-detail embroidered jet tags, graphic keychains, and novelty lifestyle accents.',
     breadcrumb: 'Accessories'
+  },
+  tech: {
+    title: 'Phone Cases, Laptop Sleeves & Desk Mats | Urban Clothes Market',
+    h1: 'Phone Cases, Laptop Sleeves &amp; Gaming Desk Mats',
+    eyebrow: 'SLIM SNAP CASES, SLEEVES &amp; DESK PADS',
+    description: 'Shop protective iPhone cases, Samsung phone cases, padded laptop sleeves, and oversized gaming desk mats at Urban Clothes Market. High-definition graphic tech gear.',
+    leadText: 'Protect your everyday devices and outfit your battle station with impact-resistant phone cases, 13-15 inch padded laptop sleeves, and ultra-smooth extended gaming desk pads.',
+    breadcrumb: 'Phone Cases &amp; Tech'
+  },
+  stationery: {
+    title: 'Spiral Notebooks, Journals & Creative Stationery | Urban Clothes Market',
+    h1: 'Spiral Notebooks, Hardcover Journals &amp; Stationery',
+    eyebrow: 'RULED NOTEBOOKS &amp; CREATOR JOURNALS',
+    description: 'Discover 120-page spiral notebooks, hardcover journals, and creative stationery at Urban Clothes Market. Featuring original graphic covers for notes, sketches, and journaling.',
+    leadText: 'Put pen to paper with original graphic notebooks and journals. Durable spiral bindings, 90gsm ruled pages, and vibrant high-definition cover prints.',
+    breadcrumb: 'Stationery &amp; Journals'
   }
 };
 
