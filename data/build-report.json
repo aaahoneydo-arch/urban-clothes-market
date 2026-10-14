@@ -1,15 +1,42 @@
 {
   "count": 7414,
-  "designs": 750,
-  "stores": {
-    "Threadless": 704,
-    "Fourthwall": 16,
-    "Spreadshop": 6680,
-    "Printify": 10,
-    "Printful": 4
+  "designs": 753,
+  "types": {
+    "hoodies": 1056,
+    "jackets": 374,
+    "tees": 2805,
+    "hats": 429,
+    "mugs": 383,
+    "art": 38,
+    "tech": 372,
+    "home": 102,
+    "stickers": 228,
+    "bags": 440,
+    "stationery": 31,
+    "kids": 886,
+    "bottoms": 110,
+    "pets": 94,
+    "accessories": 66
   },
-  "pages": 8595,
-  "files": 15336,
-  "merchantFeeds": false,
-  "onSiteCheckout": false
+  "themes": {
+    "love": 15,
+    "gothic": 31,
+    "sports": 7,
+    "relationships": 218,
+    "inspirational": 10,
+    "gamers": 980,
+    "cats": 202,
+    "dogs": 202,
+    "cars": 1399,
+    "humor": 1910,
+    "streetwear": 743,
+    "cyber": 636,
+    "tarot": 1043,
+    "fantasy": 14,
+    "diy": 946,
+    "kids": 886,
+    "all": 7414
+  },
+  "pages": 8438,
+  "indexBytes": 827234
 }
