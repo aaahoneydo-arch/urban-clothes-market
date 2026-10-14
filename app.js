@@ -144,12 +144,22 @@ async function renderRow(id, isType = false) {
   const container = $(selector);
   if (!container) return;
   const filter = isType ? 
-    { type: id === 'kids' ? 'kids' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 10 } : 
-    { theme: id === 'all' ? '' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 10 };
+    { type: id === 'kids' ? 'kids' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 35 } : 
+    { theme: id === 'all' ? '' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 35 };
   const result = await search(filter);
-  const products = await details(result.rows);
+  let products = await details(result.rows);
   if (products.length) {
-    container.innerHTML = products.map(card).join('');
+    const isClean = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+    products.sort((a, b) => (isClean(b) ? 1 : 0) - (isClean(a) ? 1 : 0));
+    const seen = new Set();
+    const uniqueItems = [];
+    for(const p of products){
+      if(!seen.has(p.design)){
+        seen.add(p.design);
+        uniqueItems.push(p);
+      }
+    }
+    container.innerHTML = uniqueItems.slice(0, 10).map(card).join('');
     saveState();
   }
 }
@@ -404,12 +414,22 @@ document.addEventListener('click', async e => {
           theme: subfilter === 'all' ? '' : subfilter,
           sort: 'shuffle',
           seed: crypto.randomUUID(),
-          size: 10
+          size: 35
         };
         const result = await search(filter);
-        const products = await details(result.rows);
+        let products = await details(result.rows);
         if(products.length){
-          track.innerHTML = products.map(card).join('');
+          const isClean = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+          products.sort((a, b) => (isClean(b) ? 1 : 0) - (isClean(a) ? 1 : 0));
+          const seen = new Set();
+          const uniqueItems = [];
+          for(const p of products){
+            if(!seen.has(p.design)){
+              seen.add(p.design);
+              uniqueItems.push(p);
+            }
+          }
+          track.innerHTML = uniqueItems.slice(0, 10).map(card).join('');
           saveState();
         }
       }catch(err){}

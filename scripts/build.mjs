@@ -60,12 +60,15 @@ const uniqueByDesign = arr => {
   return res;
 };
 
+const isCleanProfessional = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+
 // Row showcase generators with memoization to avoid quadratic scans across full catalog
 const typeShowcaseCache = new Map();
 const typeShowcase = (id, title, subtitle) => {
   const cacheKey = `${id}|${title}|${subtitle}`;
   if (typeShowcaseCache.has(cacheKey)) return typeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'kids' ? p.kids : p.category === id);
+  matching.sort((a, b) => (isCleanProfessional(b) ? 1 : 0) - (isCleanProfessional(a) ? 1 : 0));
   const uniqueItems = uniqueByDesign(matching);
   const count = matching.length;
   const res = showcaseRow({
@@ -86,6 +89,7 @@ const themeShowcase = (id, title, subtitle) => {
   const cacheKey = `${id}|${title}|${subtitle}`;
   if (themeShowcaseCache.has(cacheKey)) return themeShowcaseCache.get(cacheKey);
   const matching = products.filter(p => id === 'all' || p.themes.includes(id));
+  matching.sort((a, b) => (isCleanProfessional(b) ? 1 : 0) - (isCleanProfessional(a) ? 1 : 0));
   const uniqueItems = uniqueByDesign(matching);
   const count = matching.length;
   const res = showcaseRow({
@@ -115,8 +119,9 @@ const homeBody = `
   ${categoryChips(meta)}
 
   <!-- ALL 15 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
+  ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and heavyweight zip sweatshirts built for cold weather.')}
+  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip streetwear layers.')}
   ${typeShowcase('tees', 'Tees, Tanks & Graphic Shirts', 'Classic heavyweight tees, slim-fit premium shirts, and athletic tanks.')}
-  ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and zip sweatshirts.')}
   ${typeShowcase('hats', 'Hats, Caps & Beanies', 'Snapbacks, vintage baseball caps, trucker hats, and knit beanies.')}
   ${typeShowcase('mugs', 'Mugs, Tumblers & Drinkware', 'Ceramic coffee mugs, insulated travel tumblers, and beverage gear.')}
   ${typeShowcase('bags', 'Bags, Backpacks & Totes', 'Canvas totes, gym duffels, drawstring bags, and travel pouches.')}
@@ -135,7 +140,6 @@ const homeBody = `
   ${typeShowcase('home', 'Home Decor, Pillows & Fleece Blankets', 'Decorative throw pillows, cozy fleece blankets, kitchen aprons, and wall clocks.')}
   ${typeShowcase('stationery', 'Stationery, Spiral Notebooks & Journals', 'Hardcover journals, ruled spiral notebooks, and greeting stationery.')}
   ${typeShowcase('kids', 'Kids, Toddler & Baby Gear', 'Youth tees, toddler apparel, and organic baby bodysuits.')}
-  ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip layers.')}
   ${typeShowcase('bottoms', 'Shorts, Joggers & Activewear', 'Comfortable cotton joggers, athletic shorts, and loungewear.')}
   ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
   ${typeShowcase('accessories', 'Accessories & Keychains', 'Embroidered jet tags, novelty keychains, and everyday add-ons.')}
@@ -153,7 +157,7 @@ const homeBody = `
         <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
       </div>
     </div>
-    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='tees')).slice(0, 24).map(card).join(''))}
+    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').sort((a,b)=>(isCleanProfessional(b)?1:0)-(isCleanProfessional(a)?1:0))).slice(0, 24).map(card).join(''))}
   </section>
 
   <!-- MID-PAGE SEARCH BAR #2 (Transition to Curated Themes) -->
@@ -178,13 +182,17 @@ const homeBody = `
   </section>
 
   <!-- PASSION THEMES SCROLLABLE ROWS -->
+  ${themeShowcase('love', 'Love & Romance Collection', 'Heartfelt gifts, soulmates, and loving couple designs.')}
+  ${themeShowcase('gothic', 'Gothic & Dark Aesthetic', 'Skulls, dark fantasy, occult mystery, and alternative streetwear.')}
+  ${themeShowcase('sports', 'Sports & Fitness Collection', 'Active workout gear, athletic pride, and sports passion.')}
+  ${themeShowcase('relationships', 'Relationships & Family Edit', 'Apparel and gifts celebrating family, couples, and lifelong bonds.')}
+  ${themeShowcase('inspirational', 'Inspirational & Daily Mindset', 'Positive energy, motivational quotes, and uplifting reminders.')}
+  ${themeShowcase('gamers', 'Gamers & Retro Arcade', 'For your next game night, boss fight, or victory lap.')}
   ${themeShowcase('cats', 'Cat Lovers Edit', 'For the ones who know who really runs the house.')}
   ${themeShowcase('dogs', 'Dog Lovers Edit', 'Wear a little love for your four-legged best friend.')}
-  ${themeShowcase('gamers', 'Gamers & Retro Arcade', 'For your next game night, boss fight, or victory lap.')}
   ${themeShowcase('cars', 'Car Enthusiasts & Garage Crew', 'For the garage crowd and the open-road dreamers.')}
   ${themeShowcase('humor', 'Funny & Sarcastic', 'Good jokes, deadpan humor, and great conversation starters.')}
   ${themeShowcase('diy', 'DIY, Makers & Handymen', 'Made for people who would rather build it themselves.')}
-  ${themeShowcase('political', 'Satire & Commentary', 'A little commentary, sharp wit, and a lot of personality.')}
 
   <!-- BOTTOM SEARCH & DISCOVERY BANNER -->
   ${discoveryBar({
@@ -350,7 +358,8 @@ const TYPE_SEO = {
 
 function collection(id,label,kind,description,group){
   const base='/'+kind+'/'+id+'/';
-  const pageSize=24,pages=Math.max(1,Math.ceil(group.length/pageSize));
+  const sortedGroup = [...group].sort((a,b)=>(isCleanProfessional(b)?1:0)-(isCleanProfessional(a)?1:0));
+  const pageSize=24,pages=Math.max(1,Math.ceil(sortedGroup.length/pageSize));
   const seo = (kind==='types' && TYPE_SEO[id]) ? TYPE_SEO[id] : null;
   const pageTitle = seo ? seo.title : label;
   const pageDesc = seo ? seo.description : description;
@@ -361,7 +370,7 @@ function collection(id,label,kind,description,group){
 
   for(let page=1;page<=pages;page++){
     const pagePath=page===1?base:base+'page/'+page+'/';
-    const selected=group.slice((page-1)*pageSize,page*pageSize);
+    const selected=sortedGroup.slice((page-1)*pageSize,page*pageSize);
     const intro=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / <a href="/#catalog">${kind==='types'?'Product Variations':'Collections'}</a> / ${pageCrumb}</div><section class="collection-intro"><div class="eyebrow">${pageEyebrow}</div><h1>${pageH1}</h1><p>${pageLead}</p></section><section id="catalog">${filters(meta,{type:kind==='types'?id:'',theme:kind==='collections'?id:''}).replace('__CARDS__',selected.map(card).join(''))}<nav aria-label="Collection pages" class="pagination">${page>1?`<a class="btn" href="${page===2?base:base+'page/'+(page-1)+'/'}">← Page ${page-1}</a>`:''}<span>Catalog page ${page} of ${pages}</span>${page<pages?`<a class="btn" href="${base}page/${page+1}/">Page ${page+1} →</a>`:''}</nav></section><section class="section"><h2 style="font:700 35px var(--display)">Explore another variation</h2>${themeTiles(meta)}</section></div>`;
     
     const structuredGraph = [
