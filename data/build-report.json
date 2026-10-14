@@ -1,15 +1,15 @@
 {
-  "count": 6722,
-  "designs": 64,
+  "count": 7414,
+  "designs": 750,
   "stores": {
-    "Threadless": 12,
+    "Threadless": 704,
     "Fourthwall": 16,
     "Spreadshop": 6680,
     "Printify": 10,
     "Printful": 4
   },
-  "pages": 7816,
-  "files": 14553,
+  "pages": 8595,
+  "files": 15336,
   "merchantFeeds": false,
   "onSiteCheckout": false
 }
