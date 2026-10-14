@@ -1,50 +1,5 @@
 {
-  "source": "https://urbanclothesmarket.myspreadshop.com/all",
-  "checkedAt": "2026-10-10T05:55:56.522Z",
-  "checkedDate": "October 10, 2026",
-  "publicPages": 70,
-  "previousListings": 5048,
-  "listings": 6680,
-  "addedListings": 1632,
-  "removedListings": 0,
-  "changedListings": 0,
-  "addedDesigns": [
-    {
-      "name": "Moonlit Snake Floral Crescent",
-      "listings": 201
-    },
-    {
-      "name": "City Dawn Laurel Emblem",
-      "listings": 206
-    },
-    {
-      "name": "Flame Tiger Head Emblem",
-      "listings": 201
-    },
-    {
-      "name": "Sunrise Summit Trail Circle",
-      "listings": 201
-    },
-    {
-      "name": "Atomic Orbit Neon",
-      "listings": 208
-    },
-    {
-      "name": "Concrete Bloom - Rose and Thorns",
-      "listings": 201
-    },
-    {
-      "name": "Racing Club - Vintage Piston 01",
-      "listings": 201
-    },
-    {
-      "name": "Night Run - Cobalt Panther",
-      "listings": 201
-    },
-    {
-      "name": "Midnight Queue - Anime Gamer Streetwear",
-      "listings": 12
-    }
-  ],
-  "removedDesigns": []
+  "checkedDate": "2026-10-14",
+  "spreadshopSnapshot": "2026-10-10",
+  "method": "Source-linked records; new curated shop records checked in local Chrome."
 }
