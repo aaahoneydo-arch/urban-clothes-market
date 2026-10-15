@@ -2,3 +2,6 @@ node_modules/
 .sites-local/
 dist/
 google-merchant-feed.xml
+products/
+collections/*/page/
+types/*/page/
