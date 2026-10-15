@@ -1,1 +1,1 @@
-{"name":"urban-clothes-market","private":true,"type":"module","scripts":{"build":"node scripts/build-hub.mjs","test":"node scripts/check-hub.mjs"}}
+{"name":"urban-clothes-market","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs && node scripts/build-discovery.mjs","test":"node scripts/check.mjs"},"dependencies":{"sharp":"^0.35.5"}}

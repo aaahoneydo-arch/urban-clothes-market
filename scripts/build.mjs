@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-if(fs.existsSync('public')) fs.cpSync('public','dist',{recursive:true});
+if(fs.existsSync('public') && !fs.existsSync('dist/mockups')) fs.cpSync('public','dist',{recursive:true});
 
 import {productGallery} from '../src/lookbook.mjs';
 import {normalize,TYPES,THEMES} from '../src/catalog-model.mjs';
@@ -34,6 +34,7 @@ function write(file,data){
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
     createdDirs.add(dir);
   }
+  if (file.startsWith('products/') && fs.existsSync(target)) return;
   fs.writeFileSync(target,data);
 }
 
@@ -374,6 +375,12 @@ function collection(id,label,kind,description,group){
 
   for(let page=1;page<=pages;page++){
     const pagePath=page===1?base:base+'page/'+page+'/';
+    const targetFile = path.join(root, pagePath.slice(1) + 'index.html');
+    if (fs.existsSync(targetFile)) {
+      sitemap.push(pagePath);
+      generatedFiles.add(targetFile);
+      continue;
+    }
     const selected=sortedGroup.slice((page-1)*pageSize,page*pageSize);
     const intro=`<div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / <a href="/#catalog">${kind==='types'?'Product Variations':'Collections'}</a> / ${pageCrumb}</div><section class="collection-intro"><div class="eyebrow">${pageEyebrow}</div><h1>${pageH1}</h1><p>${pageLead}</p></section><section id="catalog">${filters(meta,{type:kind==='types'?id:'',theme:kind==='collections'?id:''}).replace('__CARDS__',selected.map(card).join(''))}<nav aria-label="Collection pages" class="pagination">${page>1?`<a class="btn" href="${page===2?base:base+'page/'+(page-1)+'/'}">← Page ${page-1}</a>`:''}<span>Catalog page ${page} of ${pages}</span>${page<pages?`<a class="btn" href="${base}page/${page+1}/">Page ${page+1} →</a>`:''}</nav></section><section class="section"><h2 style="font:700 35px var(--display)">Explore another variation</h2>${themeTiles(meta)}</section></div>`;
     
@@ -477,23 +484,80 @@ function getColorHex(c) {
 let prodCount=0;
 for(const p of products){
   prodCount++;
-  if(prodCount % 5000 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
-  const isExternalPartner = p.url && !p.url.includes('urbanclothesmarket.com') && (p.url.includes('myspreadshop.com') || p.url.includes('fourthwall.com') || p.url.includes('threadless.com'));
+  const targetFile = path.join(root, p.path.slice(1) + 'index.html');
+  if (fs.existsSync(targetFile)) {
+    sitemap.push(p.path);
+    generatedFiles.add(targetFile);
+    continue;
+  }
+  if(prodCount % 500 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
+  const isExternalPartner = p.url && !p.url.includes('urbanclothesmarket.com') && (p.url.includes('myspreadshop.com') || p.url.includes('fourthwall.com') || p.url.includes('threadless.com') || p.url.includes('zazzle.com') || p.url.includes('redbubble.com'));
 
-  let purchaseActionHtml = `<div class="purchase-box external-purchase-box">
-    <div class="purchase-box-header">
-      <span class="stock-pill in-stock">✓ Official Store In Stock</span>
-      <span class="official-partner-tag">${esc(p.brand || 'Verified Partner Shop')}</span>
-    </div>
-    <a class="btn dark buy-now checkout-partner-btn" href="${esc(p.url)}" target="_blank" rel="noopener">
-      <span>BUY NOW!</span> ${icon('arrow')}
-    </a>
-    <div class="trust-mini-notes">
-      <span>🔒 Direct to Exact Product Checkout</span>
-      <span>🚚 Tracked Delivery to Your Door</span>
-      <span>↩️ 30-Day Satisfaction Policy</span>
-    </div>
-  </div>`;
+  let purchaseActionHtml = '';
+  if (isExternalPartner) {
+    purchaseActionHtml = `<div class="purchase-box external-purchase-box">
+      <div class="purchase-box-header">
+        <span class="stock-pill in-stock">✓ Official Store In Stock</span>
+        <span class="official-partner-tag">${p.url && p.url.includes("zazzle.com") ? "Zazzle Verified" : (p.url && p.url.includes("threadless.com") ? "Threadless Artist Shop" : "Spreadshop Verified")}</span>
+      </div>
+      <a class="btn dark checkout-partner-btn" href="${esc(p.url)}" target="_blank" rel="noopener">
+        <span>Pick Size &amp; Colors on Official Store</span> ${icon('arrow')}
+      </a>
+      <div class="trust-mini-notes">
+        <span>🔒 Direct to Exact Product Checkout</span>
+        <span>🚚 Fast US &amp; Global Shipping</span>
+      </div>
+    </div>`;
+  } else {
+    purchaseActionHtml = `<div class="purchase-box on-site-purchase-box" id="product-purchase-box" data-id="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price.toFixed(2)}" data-image="${esc(p.image)}" data-path="${esc(p.path)}">
+      <div class="purchase-box-header">
+        <span class="stock-pill in-stock">✓ Made to Order (2-3 Business Days)</span>
+        <span class="official-partner-tag">Urban Clothes Market Exclusive</span>
+      </div>
+      
+      <div class="variant-selector-section">
+        <div class="selector-row">
+          <div class="selector-meta">
+            <label class="selector-label">Select Size: <strong id="selected-size-label">${esc(p.sizes[0] || 'M')}</strong></label>
+          </div>
+          <div class="size-pill-group" role="radiogroup" aria-label="Select Garment Size">
+            ${(p.sizes.length ? p.sizes : ['S','M','L','XL','2XL','3XL']).map((sz, idx) => `<button type="button" class="size-pill ${idx === 0 ? 'active' : ''}" data-size="${esc(sz)}" aria-pressed="${idx === 0}">${esc(sz)}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="selector-row">
+          <div class="selector-meta">
+            <label class="selector-label">Select Color: <strong id="selected-color-label">${esc(p.colors[0] || 'Default')}</strong></label>
+          </div>
+          <div class="color-pill-group" role="radiogroup" aria-label="Select Garment Color">
+            ${(p.colors.length ? p.colors : ['Default']).map((c, idx) => `<button type="button" class="color-pill ${idx === 0 ? 'active' : ''}" data-color="${esc(c)}" aria-pressed="${idx === 0}"><span class="color-swatch-circle" style="background:${getColorHex(c)};${String(c).toLowerCase().includes('white')?'border:1px solid #ccc;':''}"></span><span>${esc(c)}</span></button>`).join('')}
+          </div>
+        </div>
+
+        <div class="selector-row qty-row">
+          <label class="selector-label">Quantity:</label>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" id="qty-dec" aria-label="Decrease quantity">−</button>
+            <span class="qty-val" id="qty-val">1</span>
+            <button type="button" class="qty-btn" id="qty-inc" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="purchase-btn-group">
+        <button type="button" class="btn acid btn-instant-buy" id="btn-instant-order">
+          <span>Order Now — $${p.price.toFixed(2)}</span> ${icon('arrow')}
+        </button>
+        <button type="button" class="btn dark btn-add-bag" id="btn-add-bag">
+          ${icon('bag')} Add to Bag
+        </button>
+      </div>
+      <div class="trust-mini-notes">
+        <span>🚚 Dispatched in 2-3 Business Days</span>
+        <span>↩️ 30-Day Money-Back Guarantee</span>
+      </div>
+    </div>`;
+  }
 
   const trustBadgeHtml = `<div class="payment-trust-bar"><div class="trust-heading"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Guaranteed Safe &amp; Secure Checkout</span></div><div class="payment-icons"><span class="pay-badge gpay" title="Google Pay Accepted at Checkout"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.7 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.6c-.3 1.5-1.1 2.8-2.4 3.7v3.1h3.9c2.3-2.1 3.6-5.2 3.6-9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.9-3.1c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.2v3.2C3.3 21.4 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.1c-.2-.7-.4-1.4-.4-2.1s.2-1.4.4-2.1V6.7H1.2C.4 8.3 0 10.1 0 12s.4 3.7 1.2 5.3l4.1-3.2z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.6 1.2 6.7l4.1 3.2c.9-2.9 3.6-5.1 6.7-5.1z"/></svg><strong>Pay</strong></span><span class="pay-badge applepay" title="Apple Pay Accepted at Checkout"><svg viewBox="0 0 42 18" width="40" height="17"><path fill="#000" d="M6.2 9.1c0-1.1.6-2.1 1.2-2.7-.6-.8-1.5-1.3-2.5-1.3-1.2 0-1.9.7-2.5.7-.7 0-1.5-.7-2.4-.7C-1.2 5.1-2.4 6.4-2.4 8.7c0 2.4 2.1 5.8 3.8 5.8.7 0 1.2-.5 2-.5.8 0 1.2.5 2 .5 1.4 0 2.4-1.5 3.2-2.7-.8-.4-1.4-1.3-1.4-2.7zm-1.4-5.2c.6-.7.9-1.6.8-2.6-.8 0-1.8.6-2.3 1.3-.5.6-.8 1.5-.7 2.4.9.1 1.6-.4 2.2-1.1z"/><text x="11" y="14" fill="#000" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-weight="700" font-size="13">Pay</text></svg></span><span class="pay-badge paypal" title="PayPal Accepted at Checkout"><span style="color:#003087;font-weight:900;font-style:italic">Pay</span><span style="color:#0079C1;font-weight:900;font-style:italic">Pal</span></span><span class="pay-badge card" title="Visa / Mastercard Accepted"><svg viewBox="0 0 24 24" width="16" height="16"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" fill="none"/><line x1="2" y1="10" x2="22" y2="10" stroke="currentColor"/></svg><span>Cards</span></span></div><div class="trust-note">Fast 1-click checkout with Google Pay, Apple Pay &amp; PayPal confirmed at checkout.</div></div>`;
   const qualityGuaranteeHtml = `<div class="quality-guarantee-box" style="margin:16px 0;padding:14px;background:#18181b;border:1px solid #27272a;border-radius:10px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="color:#d5fa42;font-size:16px">★★★★★</span><strong style="color:#fff;font-size:13px">100% Quality &amp; Satisfaction Guarantee</strong></div><p style="font-size:12px;color:#a1a1aa;margin:0;line-height:1.5">Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#71717a"><span>🚚 Dispatched in 2-3 Business Days</span><span>📦 Tracked Door-to-Door</span><span>↩️ 30-Day Hassle-Free Returns</span></div></div>`;
@@ -508,20 +572,37 @@ write('privacy/index.html',shell({title:'Privacy',description:'How Urban Clothes
 write('returns/index.html',shell({title:'Returns & exchanges',description:'Find the current return and exchange terms for your Urban Clothes Market order.',path:'/returns/',meta,body:`<article class="legal wrap"><h1>RETURNS & EXCHANGES</h1><p>Your order is handled by our checkout partner. Visit the order help center for the current return policy, eligibility and instructions.</p><p>Keep your order confirmation so support can find your purchase. Available return or exchange options depend on your order and the applicable terms.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000984869?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Returns & exchanges help ↗</a></article>`}));
 write('shipping/index.html',shell({title:'Shipping & delivery',description:'Confirm delivery estimates and shipping costs for Urban Clothes Market items before checkout.',path:'/shipping/',meta,body:`<article class="legal wrap"><h1>SHIPPING & DELIVERY</h1><p>Your items are made to order. Shipping costs and estimated delivery dates depend on the items, destination and delivery option you choose.</p><h2>Confirm your delivery details</h2><p>Choose your items, sizes and colors, then review the current shipping cost and estimated delivery date at checkout before ordering.</p><h2>After placing your order</h2><p>Use your order confirmation and our checkout partner’s help center for order updates and tracking information.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000993925?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Shipping & delivery help ↗</a></article>`}));
 
-const confirmationBody = `<article class="legal wrap"><div class="eyebrow" style="color:var(--accent,#d5fa42);font-weight:700">Hub Notice</div><h1 style="margin-top:8px">DIRECT PARTNER SHOPPING</h1><p>Urban Clothes Market is an affiliate and showcase hub. All purchases are completed directly on our official partner shops (Threadless, Spreadshop, Fourthwall, Printify, Printful).</p><p>Select any item and click <strong>BUY NOW!</strong> to open its official store page, pick your size and colors, and complete checkout securely.</p><p><a class="btn dark" href="/#catalog">Explore All Items ↗</a> &nbsp; <a class="btn" href="/shops/">Explore Our Shops</a></p></article>`;
+const optInScript = `
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+<script>
+  window.renderOptIn = function() {
+    window.gapi.load('surveyoptin', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('order_id') || 'UCM-' + Math.floor(100000 + Math.random() * 900000);
+      const customerEmail = urlParams.get('email') || '';
+      const countryCode = urlParams.get('country') || 'US';
 
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 5);
+      const yyyy = deliveryDate.getFullYear();
+      const mm = String(deliveryDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(deliveryDate.getDate()).padStart(2, '0');
+      const estDeliveryDate = urlParams.get('delivery_date') || (yyyy + '-' + mm + '-' + dd);
 
-for(const p of ['/cart/','/checkout/']){
-  write(p.slice(1)+'index.html', shell({
-    title: 'Partner Checkout',
-    description: 'Purchases are completed through the shop selling the item.',
-    path: p,
-    meta,
-    robots: 'noindex,follow',
-    body: confirmationBody
-  }));
-  sitemap.push(p);
-}
+      window.gapi.surveyoptin.render({
+        "merchant_id": 5871199587,
+        "order_id": orderId,
+        "email": customerEmail,
+        "delivery_country": countryCode,
+        "estimated_delivery_date": estDeliveryDate,
+        "opt_in_style": "CENTER_DIALOG"
+      });
+    });
+  };
+</script>
+`;
+
+const confirmationBody = `<article class="legal wrap"><div class="eyebrow" style="color:var(--accent,#d5fa42);font-weight:700">Order Confirmed</div><h1 style="margin-top:8px">THANK YOU FOR YOUR ORDER!</h1><p>Your order has been received and is being prepared with our production partners. You will receive an email confirmation with tracking information once your package ships.</p><div style="background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:24px;margin:24px 0"><h3 style="margin-top:0">Order Status &amp; Delivery</h3><ul style="line-height:1.8;padding-left:20px;color:#ccc"><li><strong>Production:</strong> Your items are custom made to order (typically 2-3 business days).</li><li><strong>Estimated Delivery:</strong> 3-5 business days after fulfillment.</li><li><strong>Google Customer Reviews:</strong> We value your genuine feedback. A Google Customer Review survey will appear to let you rate your shopping experience.</li></ul></div><p><a class="btn dark" href="/#catalog">Continue Shopping ↗</a> &nbsp; <a class="btn" href="/shipping/">Shipping Details</a></p></article>` + optInScript;
 
 for(const p of ['/order-confirmation/','/checkout/confirmation/','/confirmation/']){
   write(p.slice(1)+'index.html', shell({
@@ -534,24 +615,6 @@ for(const p of ['/order-confirmation/','/checkout/confirmation/','/confirmation/
   }));
   sitemap.push(p);
 }
-
-
-const shopList = [
-  ['Threadless', 'https://urbanclothesmarket.threadless.com/', 'Original graphic apparel, classic heavyweight tees, hoodies, and accessories. Browse the full artist shop for all available designs and options.'],
-  ['Spreadshop', 'https://urbanclothesmarket.myspreadshop.com/', 'Tees, hoodies, hats, mugs, stickers, and everyday streetwear gear. Choose your design, size, and color in the shop.'],
-  ['JasonTV Marketplace (Fourthwall)', 'https://jasontv-marketplace-shop.fourthwall.com/', 'Bold streetwear, humorous tees, mugs, and everyday personality on our Fourthwall storefront.'],
-  ['Printify', 'https://urban-clothes-market.printify.me/', 'Graphic clothing, stickers, stationery, and home accessories. Browse current designs and options in the shop.'],
-  ['Printful', 'https://urban-clothes-market.printful.me/', 'Graphic tees, mugs, and wall art. Explore current designs and product choices.']
-];
-
-write('shops/index.html', shell({
-  title: 'Explore Our Official Partner Shops',
-  description: 'Browse our full collections across Threadless, Spreadshop, Fourthwall, Printify, and Printful.',
-  path: '/shops/',
-  meta,
-  body: `<div class="wrap"><section class="collection-intro"><div class="eyebrow">All your favorites. One market.</div><h1>MORE TO DISCOVER.</h1><p>Our official shops bring different product options and custom apparel together. Explore the full collections here.</p></section><div class="shop-grid market-cta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:30px 0">${shopList.map(([name,url,desc])=>`<article class="shop-card" style="border:1px solid var(--line);padding:24px;border-radius:8px;background:#fff"><h2>${esc(name)}</h2><p style="color:var(--muted);line-height:1.6">${esc(desc)}</p><a class="btn dark" href="${url}" target="_blank" rel="noopener">Explore shop ${icon('arrow')}</a></article>`).join('')}</div><p class="status-note" style="color:var(--muted);font-size:12px;text-align:center">Every product’s BUY NOW! link opens its selling page. Choose options and complete checkout there. Orders from different shops are placed and handled separately.</p></div>`
-}));
-sitemap.push('/shops/');
 
 write('robots.txt','User-agent: *\nAllow: /\nDisallow: /catalog/\nSitemap: '+ORIGIN+'/sitemap.xml\n');
 const chunks=[];
@@ -574,10 +637,16 @@ if (!isHomeOnly) {
   for (const fullPath of generatedFiles) {
     const rel = path.relative(root, fullPath);
     const target = path.resolve(rel);
-    const dir = path.dirname(target);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.copyFileSync(fullPath, target);
-    synced++;
+    if (!rel.startsWith('products') || !fs.existsSync(target)) {
+      const dir = path.dirname(target);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.copyFileSync(fullPath, target);
+      synced++;
+    }
+  }
+  // Ensure root catalog directory is always 100% in sync with dist/catalog
+  if (fs.existsSync(path.join(root, 'catalog'))) {
+    fs.cpSync(path.join(root, 'catalog'), 'catalog', { recursive: true });
   }
   console.log(`✓ Successfully synchronized ${synced} compiled pages and assets directly to repo root!`);
 }

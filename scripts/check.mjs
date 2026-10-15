@@ -10,5 +10,5 @@ const fav=ctx.search(idx,{savedOnly:true,favorites:[p[0].id]});assert.equal(fav.
 const champion=ctx.search(idx,{brand:'Champion'});assert(champion.total>0);assert(champion.rows.every(r=>p.find(x=>x.id===r.id).brand==='Champion'));
 assert.equal(ctx.search(idx,{q:'no-matching-design-xyz'}).total,0);
 const large={...idx,rows:Array.from({length:100000},(_,i)=>{let row=[...idx.rows[i%idx.rows.length]];row[0]='large-'+i;return row;})};let t=performance.now();const stress=ctx.search(large,{sort:'shuffle',seed:'scale',size:24,page:3000});assert.equal(stress.total,100000);assert.equal(stress.rows.length,24);const elapsed=Math.round(performance.now()-t);
-const map=fs.readFileSync('dist/sitemap.xml','utf8');assert(map.includes('<sitemapindex'));assert(fs.readFileSync('dist/sitemap-1.xml','utf8').includes(p.at(-1).path));
+const map=fs.readFileSync('dist/sitemap.xml','utf8');assert(map.includes('<sitemapindex'));const allSitemaps=[1,2,3,4].filter(n=>fs.existsSync('dist/sitemap-'+n+'.xml')).map(n=>fs.readFileSync('dist/sitemap-'+n+'.xml','utf8')).join('');assert(allSitemaps.includes(p.at(-1).path));
 console.log(JSON.stringify({passed:true,realProducts:p.length,themeTypeFilter:cats.total,brandFilter:champion.total,syntheticSearchItems:100000,syntheticSearchMs:elapsed,visibleCards:24}));

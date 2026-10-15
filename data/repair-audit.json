@@ -1,8 +1,0 @@
-{
-  "previousCount": 102606,
-  "retainedSpreadshop": 6680,
-  "liveThreadless": 12,
-  "liveFourthwall": 16,
-  "quarantined": 95926,
-  "reason": "Generated records mixed artwork, titles and guessed product URLs. Original catalog remains untouched in its existing local repository."
-}

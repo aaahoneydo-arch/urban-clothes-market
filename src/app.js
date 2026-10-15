@@ -27,7 +27,7 @@ function toast(message){
 function card(p){
   const isApparel = ['tees','hoodies','jackets','bottoms','kids'].includes(p.category);
   const swatchesHtml = isApparel ? `<div class="card-swatches" aria-hidden="true"><span class="swatch" style="background:#171717" title="Black"></span><span class="swatch" style="background:#f5f5f5;border:1px solid #d5d5d5" title="White"></span><span class="swatch" style="background:#9e9e9e" title="Heather Grey"></span><span class="swatch" style="background:#1b2a4a" title="Navy"></span><span class="swatch-more">+colors</span></div>` : '';
-  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div>${swatchesHtml}<div class="card-buy-wrap"><a class="btn-card-buy" href="${esc(p.url || p.path)}" target="_blank" rel="noopener">BUY NOW!</a></div></article>`;
+  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div>${swatchesHtml}</article>`;
 }
 
 let worker=new Worker('/search-worker.js',{type:'module'}),requestId=0,pending=new Map(),shards=new Map();
@@ -679,3 +679,287 @@ function initDynamicRandomizer(){
   }
 }
 initDynamicRandomizer();
+
+// ==========================================================================
+// SHOPPING BAG & INSTANT CHECKOUT CONTROLLER
+// ==========================================================================
+function getCart(){
+  try{ return JSON.parse(localStorage.getItem('ucm-cart') || '[]'); }catch{ return []; }
+}
+function saveCart(cart){
+  try{ localStorage.setItem('ucm-cart', JSON.stringify(cart)); }catch{}
+  updateCartUI();
+}
+function addToCart(item){
+  const cart = getCart();
+  const existing = cart.find(x => x.id === item.id && x.size === item.size && x.color === item.color);
+  if(existing){
+    existing.qty = (existing.qty || 1) + (item.qty || 1);
+  } else {
+    cart.unshift(item);
+  }
+  saveCart(cart);
+  toast(`✓ Added to Bag: ${item.size} • ${item.color}`);
+  openCartDrawer();
+}
+function removeFromCart(index){
+  const cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+}
+function updateCartUI(){
+  const cart = getCart();
+  const totalCount = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1), 0);
+  
+  const countEl = $('#head-cart-count');
+  if(countEl) countEl.textContent = totalCount;
+  const drawerCount = $('#cart-item-count');
+  if(drawerCount) drawerCount.textContent = totalCount;
+  const subtotalEl = $('#cart-subtotal-val');
+  if(subtotalEl) subtotalEl.textContent = '$' + totalAmount.toFixed(2);
+
+  const container = $('#cart-drawer-items');
+  if(!container) return;
+
+  if(!cart.length){
+    container.innerHTML = `
+      <div class="cart-empty-state">
+        <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+        <h4 style="margin:8px 0 4px;font-size:14px;color:var(--ink)">Your shopping bag is empty</h4>
+        <p style="font-size:11px;color:var(--muted);margin:0">Pick options on any custom print design to add items.</p>
+      </div>
+    `;
+    const checkoutBtn = $('#btn-checkout-cart');
+    if(checkoutBtn) checkoutBtn.disabled = true;
+    return;
+  }
+
+  const checkoutBtn = $('#btn-checkout-cart');
+  if(checkoutBtn) checkoutBtn.disabled = false;
+
+  container.innerHTML = cart.map((item, idx) => `
+    <div class="cart-item-card">
+      <img class="cart-item-img" src="${esc(item.image)}" alt="${esc(item.name)}">
+      <div class="cart-item-info">
+        <div class="cart-item-title">${esc(item.name)}</div>
+        <div class="cart-item-specs">Size: <strong>${esc(item.size)}</strong> • Color: <strong>${esc(item.color)}</strong> • Qty: <strong>${item.qty || 1}</strong></div>
+        <div class="cart-item-bottom">
+          <span class="cart-item-price">$${((Number(item.price)||0) * (item.qty || 1)).toFixed(2)}</span>
+          <button type="button" class="cart-item-remove" data-remove-cart="${idx}">Remove</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('[data-remove-cart]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.removeCart);
+      removeFromCart(idx);
+    });
+  });
+}
+
+function openCartDrawer(){
+  const overlay = $('#cart-drawer-overlay');
+  if(overlay){
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add('open'));
+  }
+}
+function closeCartDrawer(){
+  const overlay = $('#cart-drawer-overlay');
+  if(overlay){
+    overlay.classList.remove('open');
+    setTimeout(() => { overlay.hidden = true; }, 250);
+  }
+}
+
+// ORDER MODAL CONTROLLER
+let activeCheckoutItem = null;
+function openOrderModal(item){
+  activeCheckoutItem = item;
+  const overlay = $('#order-modal-overlay');
+  if(!overlay) return;
+
+  const img = $('#order-summary-img');
+  if(img) { img.src = item.image; img.alt = item.name; }
+  const title = $('#order-summary-title');
+  if(title) title.textContent = item.name;
+  const specs = $('#order-summary-specs');
+  if(specs) specs.textContent = `Size: ${item.size} • Color: ${item.color} • Qty: ${item.qty || 1}`;
+  const price = $('#order-summary-price');
+  if(price) price.textContent = `$${((Number(item.price) || 0) * (item.qty || 1)).toFixed(2)} USD (Free US Tracked Delivery)`;
+
+  overlay.hidden = false;
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+function closeOrderModal(){
+  const overlay = $('#order-modal-overlay');
+  if(overlay){
+    overlay.classList.remove('open');
+    setTimeout(() => { overlay.hidden = true; }, 250);
+  }
+}
+
+function completeCheckout(email, name, method = 'Standard'){
+  const orderId = 'UCM-' + Math.floor(100000 + Math.random() * 900000);
+  const now = new Date();
+  const orderRecord = {
+    orderId,
+    email: email || 'customer@urbanclothesmarket.com',
+    name: name || 'Valued Customer',
+    item: activeCheckoutItem,
+    date: now.toISOString(),
+    paymentMethod: method
+  };
+  try{
+    const history = JSON.parse(localStorage.getItem('ucm-order-history') || '[]');
+    history.unshift(orderRecord);
+    localStorage.setItem('ucm-order-history', JSON.stringify(history));
+    localStorage.removeItem('ucm-cart');
+  }catch{}
+  updateCartUI();
+  location.href = `/order-confirmation/?order_id=${orderId}&email=${encodeURIComponent(orderRecord.email)}`;
+}
+
+// INIT ON-SITE VARIANT SELECTOR
+function initVariantSelector(){
+  const box = $('#product-purchase-box');
+  if(!box) return;
+
+  const id = box.dataset.id;
+  const name = box.dataset.name;
+  const price = parseFloat(box.dataset.price) || 24.99;
+  const image = box.dataset.image;
+  const path = box.dataset.path;
+
+  let selectedSize = box.querySelector('.size-pill.active')?.dataset.size || 'M';
+  let selectedColor = box.querySelector('.color-pill.active')?.dataset.color || 'Default';
+  let qty = 1;
+
+  box.querySelectorAll('.size-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      box.querySelectorAll('.size-pill').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      selectedSize = btn.dataset.size;
+      const lbl = $('#selected-size-label');
+      if(lbl) lbl.textContent = selectedSize;
+    });
+  });
+
+  box.querySelectorAll('.color-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      box.querySelectorAll('.color-pill').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      selectedColor = btn.dataset.color;
+      const lbl = $('#selected-color-label');
+      if(lbl) lbl.textContent = selectedColor;
+    });
+  });
+
+  const qtyInc = $('#qty-inc');
+  const qtyDec = $('#qty-dec');
+  const qtyVal = $('#qty-val');
+  if(qtyInc && qtyDec && qtyVal){
+    qtyInc.addEventListener('click', () => {
+      qty = Math.min(99, qty + 1);
+      qtyVal.textContent = qty;
+    });
+    qtyDec.addEventListener('click', () => {
+      qty = Math.max(1, qty - 1);
+      qtyVal.textContent = qty;
+    });
+  }
+
+  const buyNowBtn = $('#btn-instant-order');
+  if(buyNowBtn){
+    buyNowBtn.addEventListener('click', () => {
+      openOrderModal({ id, name, price, image, path, size: selectedSize, color: selectedColor, qty });
+    });
+  }
+
+  const addBagBtn = $('#btn-add-bag');
+  if(addBagBtn){
+    addBagBtn.addEventListener('click', () => {
+      addToCart({ id, name, price, image, path, size: selectedSize, color: selectedColor, qty });
+    });
+  }
+
+  // Pre-select from URL params if present (e.g. from Google Shopping or ads)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const qColor = params.get('color');
+    const qSize = params.get('size');
+    if (qColor) {
+      const matchBtn = Array.from(box.querySelectorAll('.color-pill')).find(b => b.dataset.color.toLowerCase() === qColor.toLowerCase());
+      if (matchBtn) matchBtn.click();
+    }
+    if (qSize) {
+      const matchBtn = Array.from(box.querySelectorAll('.size-pill')).find(b => b.dataset.size.toLowerCase() === qSize.toLowerCase());
+      if (matchBtn) matchBtn.click();
+    }
+  } catch {}
+}
+
+// Header cart trigger
+$('#head-cart-trigger')?.addEventListener('click', openCartDrawer);
+$('#cart-close-btn')?.addEventListener('click', closeCartDrawer);
+$('#cart-drawer-overlay')?.addEventListener('click', e => {
+  if(e.target === $('#cart-drawer-overlay')) closeCartDrawer();
+});
+$('#btn-checkout-cart')?.addEventListener('click', () => {
+  const cart = getCart();
+  if(!cart.length) return;
+  closeCartDrawer();
+  const first = cart[0];
+  const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1), 0);
+  openOrderModal({
+    id: 'cart-bundle',
+    name: `${cart.length} item(s) from Shopping Bag`,
+    price: totalAmount,
+    image: first.image,
+    size: first.size,
+    color: first.color,
+    qty: 1
+  });
+});
+
+// Modal close
+$('#modal-close-btn')?.addEventListener('click', closeOrderModal);
+$('#order-modal-overlay')?.addEventListener('click', e => {
+  if(e.target === $('#order-modal-overlay')) closeOrderModal();
+});
+
+// Express Pay Buttons
+$('#btn-gpay-express')?.addEventListener('click', () => {
+  completeCheckout('gpay-customer@urbanclothesmarket.com', 'Google Pay Customer', 'Google Pay');
+});
+$('#btn-apple-express')?.addEventListener('click', () => {
+  completeCheckout('apple-customer@urbanclothesmarket.com', 'Apple Pay Customer', 'Apple Pay');
+});
+$('#btn-paypal-express')?.addEventListener('click', () => {
+  completeCheckout('paypal-customer@urbanclothesmarket.com', 'PayPal Customer', 'PayPal');
+});
+$('#btn-card-toggle')?.addEventListener('click', () => {
+  $('#order-email')?.focus();
+});
+
+// Form submit
+$('#order-checkout-form')?.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = $('#order-email')?.value?.trim();
+  const name = $('#order-name')?.value?.trim();
+  completeCheckout(email, name, 'Credit Card');
+});
+
+updateCartUI();
+

@@ -74,10 +74,13 @@ export function normalize(raw) {
     const kids = /kid|baby|babies|toddler|youth|infant/i.test(productType);
     
     // Accurately determine product department category
-    let category = kids ? 'kids' : (priority.find(id => {
-      const typeDef = TYPES.find(t => t[0] === id);
-      return typeDef && typeDef[2].test(productType);
-    }) || 'tees');
+    let category = /sweatshirt|hoodie|hooded/i.test(productType) ? 'hoodies' :
+                   /tumbler/i.test(productType) ? 'mugs' :
+                   (/jacket/i.test(productType) && !/hoodie|sweatshirt/i.test(productType)) ? 'jackets' :
+                   kids ? 'kids' : (priority.find(id => {
+                     const typeDef = TYPES.find(t => t[0] === id);
+                     return typeDef && typeDef[2].test(productType);
+                   }) || 'tees');
 
     // Accurately match themes
     const themes = THEMES.filter(([id, , r]) => {
