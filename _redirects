@@ -1,0 +1,3 @@
+# Cloudflare Pages 200 Rewrite for Dynamic Product Catalog
+/products/ucm-th-* /404.html 200
+/products/* /404.html 200
