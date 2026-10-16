@@ -128,6 +128,42 @@ function buildPinterestCatalog() {
 }
 buildPinterestCatalog();
 
+console.log('=== 2B. GENERATING FACEBOOK & META COMMERCE CATALOG FEED ===');
+function buildFacebookCatalog() {
+  const headers = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand', 'google_product_category', 'fb_product_category'];
+  const rows = [headers.join(',')];
+
+  function csvCell(str) {
+    if (str === undefined || str === null) return '""';
+    const s = String(str).replace(/"/g, '""');
+    return `"${s}"`;
+  }
+
+  for (const p of products) {
+    const fullUrl = ORIGIN + p.path;
+    const desc = `${p.name}. Official Made-to-Order Graphic Apparel by Urban Clothes Market. View available sizes (S to 5XL) and color options online. Direct order checkout link: ${fullUrl}`;
+    rows.push([
+      csvCell(p.id),
+      csvCell(p.name),
+      csvCell(desc),
+      csvCell('in stock'),
+      csvCell('new'),
+      csvCell(`${p.price.toFixed(2)} USD`),
+      csvCell(fullUrl),
+      csvCell(p.image),
+      csvCell('Urban Clothes Market'),
+      csvCell('Apparel & Accessories > Clothing'),
+      csvCell('Clothing & Accessories > Clothing')
+    ].join(','));
+  }
+
+  const csvContent = rows.join('\n');
+  fs.writeFileSync(path.join(distDir, 'facebook-catalog-feed.csv'), csvContent, 'utf8');
+  fs.writeFileSync(path.join(rootDir, 'facebook-catalog-feed.csv'), csvContent, 'utf8');
+  console.log(`  ✓ Written dist/facebook-catalog-feed.csv and root facebook-catalog-feed.csv (${(csvContent.length / 1024 / 1024).toFixed(2)} MB, ${products.length} items)`);
+}
+buildFacebookCatalog();
+
 console.log('=== 3. GENERATING HIGH-INTENT BUYER GIFT GUIDES (WITH FAQ SCHEMA) ===');
 const GIFT_GUIDES = [
   {
