@@ -144,11 +144,13 @@ async function renderRow(id, isType = false) {
   const container = $(selector);
   if (!container) return;
   const filter = isType ? 
-    { type: id === 'kids' ? 'kids' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 45 } : 
-    { theme: id === 'all' ? '' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 45 };
+    { type: id === 'kids' ? 'kids' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 35 } : 
+    { theme: id === 'all' ? '' : id, sort: 'shuffle', seed: crypto.randomUUID(), size: 35 };
   const result = await search(filter);
   let products = await details(result.rows);
   if (products.length) {
+    const isClean = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+    products.sort((a, b) => (isClean(b) ? 1 : 0) - (isClean(a) ? 1 : 0));
     const seen = new Set();
     const uniqueItems = [];
     for(const p of products){
@@ -160,9 +162,8 @@ async function renderRow(id, isType = false) {
     const link = container.dataset.rowLink || (isType ? `/types/${id}/` : `/collections/${id}/`);
     const title = container.dataset.rowTitle || id;
     const count = Number(container.dataset.rowCount) || result.total || 8000;
-    const displayCount = Math.min(25, uniqueItems.length);
-    const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > displayCount ? count - displayCount : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
-    container.innerHTML = uniqueItems.slice(0, displayCount).map(card).join('') + endCardHtml;
+    const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > 10 ? count - 10 : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
+    container.innerHTML = uniqueItems.slice(0, 10).map(card).join('') + endCardHtml;
     saveState();
   }
 }
@@ -380,7 +381,6 @@ document.addEventListener('click', async e => {
       const dir = scrollBtn.dataset.scrollDir === 'next' ? 1 : -1;
       const amount = track.firstElementChild ? (track.firstElementChild.offsetWidth + 16) * 2 : 500;
       track.scrollBy({ left: dir * amount, behavior: 'smooth' });
-      track.dispatchEvent(new CustomEvent('manual-scroll'));
     }
     return;
   }
@@ -418,11 +418,13 @@ document.addEventListener('click', async e => {
           theme: subfilter === 'all' ? '' : subfilter,
           sort: 'shuffle',
           seed: crypto.randomUUID(),
-          size: 45
+          size: 35
         };
         const result = await search(filter);
         let products = await details(result.rows);
         if(products.length){
+          const isClean = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+          products.sort((a, b) => (isClean(b) ? 1 : 0) - (isClean(a) ? 1 : 0));
           const seen = new Set();
           const uniqueItems = [];
           for(const p of products){
@@ -434,9 +436,8 @@ document.addEventListener('click', async e => {
           const link = track.dataset.rowLink || (targetType ? `/types/${targetType}/` : `/collections/${subfilter}/`);
           const title = track.dataset.rowTitle || targetType || subfilter;
           const count = Number(track.dataset.rowCount) || result.total || 8000;
-          const displayCount = Math.min(25, uniqueItems.length);
-          const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > displayCount ? count - displayCount : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
-          track.innerHTML = uniqueItems.slice(0, displayCount).map(card).join('') + endCardHtml;
+          const endCardHtml = `<article class="product-card end-card-showcase"><a href="${esc(link)}" class="end-card-link"><div class="end-card-badge">⚡ COUNTLESS DESIGNS</div><div class="end-card-count">+${(count > 10 ? count - 10 : count).toLocaleString()}</div><h3>More ${esc(title.split('&')[0].trim())}</h3><p>Discover thousands of original graphics, colors &amp; custom fits in this full department.</p><span class="btn-end-explore">See Entire Collection (${count.toLocaleString()}+) ↗</span></a></article>`;
+          track.innerHTML = uniqueItems.slice(0, 10).map(card).join('') + endCardHtml;
           saveState();
         }
       }catch(err){}
@@ -652,83 +653,31 @@ function initDynamicRandomizer(){
 
   // Lazy-randomize remaining tracks as user scrolls down
   const remaining = tracks.slice(2);
-  if(remaining.length){
-    if('IntersectionObserver' in window){
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            const track = entry.target;
-            obs.unobserve(track);
-            const typeId = track.dataset.rowType;
-            const themeId = track.dataset.row;
-            if(typeId) renderRow(typeId, true);
-            else if(themeId) renderRow(themeId, false);
-          }
-        });
-      }, { rootMargin: '300px 0px' });
-      remaining.forEach(t => observer.observe(t));
-    } else {
-      remaining.forEach(track => {
-        const typeId = track.dataset.rowType;
-        const themeId = track.dataset.row;
-        if(typeId) renderRow(typeId, true);
-        else if(themeId) renderRow(themeId, false);
-      });
-    }
-  }
+  if(!remaining.length) return;
 
-  // Start continuous gliding across all sections
-  initAutoScrollTracks();
-}
-
-// AUTO-SCROLLING HORIZONTAL SHOWCASE RIBBONS (Dynamic gliding ribbons across all sections)
-function initAutoScrollTracks(){
-  const tracks = $$('.scroll-track');
-  if(!tracks.length) return;
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  tracks.forEach((track, idx) => {
-    if(track._autoScrollActive) return;
-    track._autoScrollActive = true;
-
-    let paused = false;
-    let pauseTimer = null;
-    // Pleasant steady glide speed: subtly staggered across alternate rows
-    const speed = 0.55 + ((idx % 3) * 0.12);
-
-    const pause = () => {
-      paused = true;
-      if(pauseTimer) clearTimeout(pauseTimer);
-    };
-
-    const resumeDelayed = (ms = 1800) => {
-      if(pauseTimer) clearTimeout(pauseTimer);
-      pauseTimer = setTimeout(() => { paused = false; }, ms);
-    };
-
-    track.addEventListener('mouseenter', pause, { passive: true });
-    track.addEventListener('mouseleave', () => resumeDelayed(1200), { passive: true });
-    track.addEventListener('touchstart', pause, { passive: true });
-    track.addEventListener('touchend', () => resumeDelayed(2200), { passive: true });
-    track.addEventListener('wheel', () => { pause(); resumeDelayed(2500); }, { passive: true });
-    track.addEventListener('manual-scroll', () => { pause(); resumeDelayed(3500); });
-
-    let lastTime = performance.now();
-    function tick(now){
-      const dt = Math.min(now - lastTime, 50);
-      lastTime = now;
-      if(!paused && track.scrollWidth > track.clientWidth){
-        track.scrollLeft += speed * (dt / 16.67);
-        if(track.scrollLeft + track.clientWidth >= track.scrollWidth - 10){
-          track.scrollLeft = 0;
+  if('IntersectionObserver' in window){
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          const track = entry.target;
+          obs.unobserve(track);
+          const typeId = track.dataset.rowType;
+          const themeId = track.dataset.row;
+          if(typeId) renderRow(typeId, true);
+          else if(themeId) renderRow(themeId, false);
         }
-      }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  });
+      });
+    }, { rootMargin: '300px 0px' });
+    remaining.forEach(t => observer.observe(t));
+  } else {
+    remaining.forEach(track => {
+      const typeId = track.dataset.rowType;
+      const themeId = track.dataset.row;
+      if(typeId) renderRow(typeId, true);
+      else if(themeId) renderRow(themeId, false);
+    });
+  }
 }
-
 initDynamicRandomizer();
 
 // ==========================================================================
