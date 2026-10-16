@@ -613,7 +613,84 @@ for(let i=0;i<sitemap.length;i+=40000){
   write(filename,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+sitemap.slice(i,i+40000).map(p=>'<url><loc>'+ORIGIN+esc(p)+'</loc></url>').join('')+'</urlset>');
 }
 write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+chunks.map(file=>'<sitemap><loc>'+ORIGIN+'/'+file+'</loc></sitemap>').join('')+'</sitemapindex>');
-write('404.html',shell({title:'Page not found',description:'Find your next favorite at Urban Clothes Market.',path:'/404.html',meta,robots:'noindex,follow',body:'<div class="legal wrap"><h1>THIS WAY TO THE MARKET.</h1><p>That page could not be found.</p><a class="btn dark" href="/">Back to the market ↗</a></div>'}));
+const fallbackScript = `<script id="dynamic-product-fallback">
+(function() {
+  const pth = window.location.pathname;
+  if (!pth.startsWith('/products/')) return;
+  const slug = pth.replace(/^\\/products\\//, '').replace(/\\/$/, '').trim();
+  if (!slug) return;
+  const main = document.querySelector('main');
+  if (main) {
+    main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
+  }
+  fetch('/catalog/index.json').then(r => r.json()).then(idx => {
+    const slugLower = slug.toLowerCase();
+    let foundRow = null;
+    for (let i = 0; i < idx.rows.length; i++) {
+      const r = idx.rows[i];
+      if (r[0] === slug || r[0].toLowerCase() === slugLower) {
+        foundRow = r;
+        break;
+      }
+    }
+    if (!foundRow) {
+      for (let i = 0; i < idx.rows.length; i++) {
+        const r = idx.rows[i];
+        if (slugLower.includes(r[0].toLowerCase()) || r[0].toLowerCase().includes(slugLower)) {
+          foundRow = r;
+          break;
+        }
+      }
+    }
+    if (!foundRow) return;
+    const shardId = foundRow[8];
+    return fetch('/catalog/shards/' + shardId + '.json').then(r => r.json()).then(items => {
+      const p = items.find(x => x.id === foundRow[0] || (x.path && x.path.includes(slug)));
+      if (!p) return;
+      document.title = (p.design || p.name) + ' | Urban Clothes Market';
+      const buyUrl = p.url || ('https://urbanclothesmarket.myspreadshop.com/' + encodeURIComponent(p.design || ''));
+      const price = Number(p.price || 24.99).toFixed(2);
+      if (main) {
+        main.innerHTML = \`
+          <div class="product-detail wrap" style="padding:32px 16px;max-width:1100px;margin:0 auto">
+            <nav class="breadcrumb" style="margin-bottom:20px;font-size:0.9rem;color:#777">
+              <a href="/" style="color:#111;text-decoration:none">Home</a> <span style="margin:0 6px">/</span>
+              <a href="/types/\${p.category || 'tees'}/" style="color:#111;text-decoration:none">\${(p.category || 'Apparel').toUpperCase()}</a> <span style="margin:0 6px">/</span>
+              <span style="color:#555">\${p.design}</span>
+            </nav>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px;align-items:start">
+              <div style="background:#f8f9fa;border-radius:12px;padding:24px;text-align:center;border:1px solid #e9ecef">
+                <img src="\${p.image}" alt="\${p.name || p.design}" style="max-width:100%;height:auto;border-radius:8px;object-fit:contain;max-height:480px">
+              </div>
+              <div class="detail-info" style="padding:10px 0">
+                <span style="display:inline-block;background:#d5fa42;color:#000;font-weight:800;font-size:0.75rem;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;margin-bottom:12px">⚡ OFFICIAL MARKET EXCLUSIVE</span>
+                <h1 style="font-size:2rem;line-height:1.2;margin:0 0 8px 0;font-weight:900">\${p.design}</h1>
+                <div style="font-size:1.1rem;color:#666;margin-bottom:16px">\${p.productType || 'Original Graphic Wear'}</div>
+                <div style="background:#f4f4f5;border-radius:8px;padding:16px;margin-bottom:24px">
+                  <div style="font-size:1.8rem;font-weight:900;color:#111">$\${price}</div>
+                  <div style="font-size:0.85rem;color:#16a34a;font-weight:600;margin-top:4px">✓ In Stock · Made-to-Order in 2-3 Business Days</div>
+                </div>
+                <p style="font-size:0.95rem;line-height:1.6;color:#444;margin-bottom:24px">\${p.description || 'Premium original graphic merchandise crafted with high-density print technology. Tailored for comfort, durability, and bold personal expression.'}</p>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <a href="\${buyUrl}" class="btn acid" target="_blank" rel="noopener" style="display:block;text-align:center;padding:16px 24px;font-size:1.15rem;font-weight:900;text-decoration:none;border-radius:8px;background:#d5fa42;color:#000;border:none">
+                    Select Size &amp; Order on Official Store ↗
+                  </a>
+                  <a href="/" class="btn dark" style="display:block;text-align:center;padding:14px;border-radius:8px;background:#18181b;color:#fff;text-decoration:none;font-weight:700">
+                    ← Explore 100,000+ Graphic Items
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        \`;
+      }
+    });
+  }).catch(err => {
+    console.warn('Could not dynamically load product:', err);
+  });
+})();
+</script>`;
+write('404.html',shell({title:'Page not found',description:'Find your next favorite at Urban Clothes Market.',path:'/404.html',meta,robots:'noindex,follow',body:'<div class="legal wrap"><h1>THIS WAY TO THE MARKET.</h1><p>That page could not be found.</p><a class="btn dark" href="/">Back to the market ↗</a></div>' + fallbackScript}));
 write('_headers','/catalog/*\n  Cache-Control: public, max-age=3600\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
 
 fs.writeFileSync('data/build-report.json',JSON.stringify({count:products.length,designs:designs.length,types:meta.typeCounts,themes:meta.themeCounts,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size},null,2));
