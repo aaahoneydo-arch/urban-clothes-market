@@ -5,3 +5,5 @@ google-merchant-feed.xml
 products/
 collections/*/page/
 types/*/page/
+
+facebook-catalog-feed.csv
