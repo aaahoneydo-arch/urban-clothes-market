@@ -1,10 +1,10 @@
 {
-  "count": 103203,
+  "count": 103216,
   "designs": 67802,
   "types": {
     "hoodies": 9385,
     "jackets": 748,
-    "tees": 37610,
+    "tees": 37623,
     "hats": 2469,
     "mugs": 8608,
     "art": 9750,
@@ -35,8 +35,8 @@
     "fantasy": 538,
     "diy": 2300,
     "kids": 4458,
-    "all": 103203
+    "all": 103216
   },
-  "pages": 113736,
-  "indexBytes": 19277144
+  "pages": 113749,
+  "indexBytes": 19278699
 }
