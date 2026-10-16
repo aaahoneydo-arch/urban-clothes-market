@@ -110,17 +110,6 @@ const themeShowcase = (id, title, subtitle) => {
 
 const homeBody = `
 <div class="wrap">
-  <!-- TOP QUICK-JUMP CATEGORY PILLS BAR -->
-  <div class="top-nav-strip">
-    <div class="top-strip-left">
-      <span class="live-indicator">⚡ <strong>${products.length.toLocaleString()}+</strong> Original Graphic Items Across <strong>15</strong> Departments</span>
-    </div>
-    <div class="top-strip-right">
-      <button type="button" class="btn-surprise-pill" data-surprise aria-label="Surprise me with random picks">${icon('shuffle')} Surprise Me</button>
-    </div>
-  </div>
-  ${categoryChips(meta)}
-
   <!-- ALL 15 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
   ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and heavyweight zip sweatshirts built for cold weather.')}
   ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip streetwear layers.')}
