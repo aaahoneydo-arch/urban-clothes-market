@@ -1,0 +1,471 @@
+{
+  "lastAgent": "Agent Alpha — Visual Fidelity Inspector",
+  "currentAgent": "Agent Beta — Metadata & Title Integrity Auditor",
+  "cycleCount": 10,
+  "lastRun": "2026-10-17T08:49:20.433Z",
+  "history": [
+    {
+      "auditor": "Agent Beta — Metadata & Title Integrity Auditor",
+      "timestamp": "2026-10-17T08:49:20.827Z",
+      "totalAudited": 102364,
+      "cleanTitles": 102363,
+      "crossContaminatedTitles": 1,
+      "corruptedCharacterEncodings": 0,
+      "missingDesignNames": 0,
+      "complianceScore": 99.5,
+      "sampleViolations": [
+        {
+          "id": "zazzle-256621911343312435",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "Vikings Runic Shirt Graphic Design on Classic Two-Tone Coffee Mug"
+        }
+      ]
+    },
+    {
+      "auditor": "Agent Alpha — Visual Fidelity Inspector",
+      "timestamp": "2026-10-17T08:49:07.052Z",
+      "totalAudited": 102364,
+      "physicalMockups": 32937,
+      "transparentArtifacts": 0,
+      "flatArtworkArtifacts": 69427,
+      "localhostArtifacts": 0,
+      "missingImages": 0,
+      "complianceScore": 0,
+      "sampleViolations": [
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-hoodie",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-mug",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "disp-hld-engraved-monarch-butterfly-ivory-peonies-metal-poster",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-howling-wolf-angular-rock-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/003_Wolves_C.png"
+        }
+      ]
+    },
+    {
+      "auditor": "Agent Delta — Adversarial Cross-Examiner",
+      "timestamp": "2026-10-17T08:49:06.571Z",
+      "totalSampleTested": 180,
+      "sampleViolationsFound": 0,
+      "independentVerificationRate": "100%",
+      "categoryBreakdown": [
+        {
+          "category": "tees",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "hoodies",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "mugs",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "art",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "hats",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "bags",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "stickers",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "home",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "tech",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "kids",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "pets",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "bottoms",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "jackets",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "accessories",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "stationery",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "Apparel",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "Accessories",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "apparel",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        }
+      ],
+      "complianceScore": 100
+    },
+    {
+      "auditor": "Agent Gamma — Outbound Store Journey & Conversion Auditor",
+      "timestamp": "2026-10-17T08:49:06.071Z",
+      "totalAudited": 102364,
+      "activeLiveStoreUrls": 101518,
+      "jasonTvLegacyUrls": 0,
+      "localhostUrlLeaks": 0,
+      "brokenUrls": 0,
+      "complianceScore": 100,
+      "sampleViolations": []
+    },
+    {
+      "auditor": "Agent Beta — Metadata & Title Integrity Auditor",
+      "timestamp": "2026-10-17T08:49:05.620Z",
+      "totalAudited": 102364,
+      "cleanTitles": 102345,
+      "crossContaminatedTitles": 19,
+      "corruptedCharacterEncodings": 0,
+      "missingDesignNames": 0,
+      "complianceScore": 90.5,
+      "sampleViolations": [
+        {
+          "id": "ucm-flow-gen-0741-mug-white",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "The Lawn Committee Has Concerns on Ceramic Coffee Mug 11oz (Glossy White)"
+        },
+        {
+          "id": "ucm-flow-gen-0741-pillow-linen",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "The Lawn Committee Has Concerns on Square Linen Throw Pillow 18x18 (Natural Linen)"
+        },
+        {
+          "id": "ucm-flow-gen-0741-sticker-diecut",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "The Lawn Committee Has Concerns on Die-Cut Matte Vinyl Sticker (4-Inch)"
+        },
+        {
+          "id": "ucm-flow-gen-0167-mug-white",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "Industrial Steel Beam Geometry on Ceramic Coffee Mug 11oz (Glossy White)"
+        },
+        {
+          "id": "ucm-flow-gen-0167-pillow-linen",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "Industrial Steel Beam Geometry on Square Linen Throw Pillow 18x18 (Natural Linen)"
+        }
+      ]
+    },
+    {
+      "auditor": "Agent Alpha — Visual Fidelity Inspector",
+      "timestamp": "2026-10-17T08:47:57.660Z",
+      "totalAudited": 104046,
+      "physicalMockups": 32937,
+      "transparentArtifacts": 1682,
+      "flatArtworkArtifacts": 69427,
+      "localhostArtifacts": 0,
+      "missingImages": 0,
+      "complianceScore": 0,
+      "sampleViolations": [
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-hoodie",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-mug",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "disp-hld-engraved-monarch-butterfly-ivory-peonies-metal-poster",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-howling-wolf-angular-rock-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/003_Wolves_C.png"
+        }
+      ]
+    },
+    {
+      "auditor": "Agent Delta — Adversarial Cross-Examiner",
+      "timestamp": "2026-10-17T08:47:51.493Z",
+      "totalSampleTested": 180,
+      "sampleViolationsFound": 1,
+      "independentVerificationRate": "99.4%",
+      "categoryBreakdown": [
+        {
+          "category": "tees",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "hoodies",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "mugs",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "art",
+          "sampleTested": 10,
+          "violationsFound": 1,
+          "categoryHealth": "90%"
+        },
+        {
+          "category": "hats",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "bags",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "stickers",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "home",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "tech",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "kids",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "pets",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "bottoms",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "jackets",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "accessories",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "stationery",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "Apparel",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "Accessories",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        },
+        {
+          "category": "apparel",
+          "sampleTested": 10,
+          "violationsFound": 0,
+          "categoryHealth": "100%"
+        }
+      ],
+      "complianceScore": 99.4
+    },
+    {
+      "auditor": "Agent Gamma — Outbound Store Journey & Conversion Auditor",
+      "timestamp": "2026-10-17T08:47:45.635Z",
+      "totalAudited": 104046,
+      "activeLiveStoreUrls": 103183,
+      "jasonTvLegacyUrls": 0,
+      "localhostUrlLeaks": 0,
+      "brokenUrls": 0,
+      "complianceScore": 100,
+      "sampleViolations": []
+    },
+    {
+      "auditor": "Agent Beta — Metadata & Title Integrity Auditor",
+      "timestamp": "2026-10-17T08:47:18.328Z",
+      "totalAudited": 104046,
+      "cleanTitles": 103553,
+      "crossContaminatedTitles": 24,
+      "corruptedCharacterEncodings": 0,
+      "missingDesignNames": 469,
+      "complianceScore": 0,
+      "sampleViolations": [
+        {
+          "id": "ucm-flow-gen-0618-mug-white",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "I Fix What You Tried to Fix Stainless Steel Water Bottle on Ceramic Coffee Mug 11oz (Glossy White)"
+        },
+        {
+          "id": "ucm-flow-gen-0618-pillow-linen",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "I Fix What You Tried to Fix Stainless Steel Water Bottle on Square Linen Throw Pillow 18x18 (Natural Linen)"
+        },
+        {
+          "id": "ucm-flow-gen-0618-sticker-diecut",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "I Fix What You Tried to Fix Stainless Steel Water Bottle on Die-Cut Matte Vinyl Sticker (4-Inch)"
+        },
+        {
+          "id": "ucm-flow-gen-0741-mug-white",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "The Lawn Committee Has Concerns on Ceramic Coffee Mug 11oz (Glossy White)"
+        },
+        {
+          "id": "ucm-flow-gen-0741-pillow-linen",
+          "type": "CROSS_CONTAMINATION",
+          "detail": "The Lawn Committee Has Concerns on Square Linen Throw Pillow 18x18 (Natural Linen)"
+        }
+      ]
+    },
+    {
+      "auditor": "Agent Alpha — Visual Fidelity Inspector",
+      "timestamp": "2026-10-17T08:46:26.916Z",
+      "totalAudited": 104046,
+      "physicalMockups": 31404,
+      "transparentArtifacts": 3362,
+      "flatArtworkArtifacts": 69280,
+      "localhostArtifacts": 1482,
+      "missingImages": 0,
+      "complianceScore": 0,
+      "sampleViolations": [
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-hoodie",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-engraved-monarch-butterfly-ivory-peonies-mug",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "disp-hld-engraved-monarch-butterfly-ivory-peonies-metal-poster",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/004_Butterflies_A.png"
+        },
+        {
+          "id": "sprd-hld-howling-wolf-angular-rock-tee",
+          "type": "FLAT_ARTWORK_NO_GARMENT",
+          "detail": "https://urbanclothesmarket.com/lookbook/003_Wolves_C.png"
+        }
+      ]
+    }
+  ]
+}

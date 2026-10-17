@@ -61,7 +61,18 @@ const uniqueByDesign = arr => {
   return res;
 };
 
-const isCleanProfessional = p => Boolean(p.image && /flow-gen-0(6[0-9]{2}|7[0-8][0-9]|79[0-6])/i.test(p.image));
+const isForce = process.argv.includes('--force');
+const isCleanProfessional = p => Boolean(
+  p.image &&
+  !p.image.includes('transparent') &&
+  !p.image.includes('master.png') &&
+  !p.image.includes('127.0.0.1') &&
+  !p.image.includes('localhost') &&
+  (
+    p.image.includes('/mockups/') ||
+    p.image.includes('spreadshirtmedia.com/image-server')
+  )
+);
 
 // Row showcase generators with memoization to avoid quadratic scans across full catalog
 const typeShowcaseCache = new Map();
@@ -365,7 +376,7 @@ function collection(id,label,kind,description,group){
   for(let page=1;page<=pages;page++){
     const pagePath=page===1?base:base+'page/'+page+'/';
     const targetFile = path.join(root, pagePath.slice(1) + 'index.html');
-    if (fs.existsSync(targetFile)) {
+    if (!isForce && fs.existsSync(targetFile)) {
       sitemap.push(pagePath);
       generatedFiles.add(targetFile);
       continue;
