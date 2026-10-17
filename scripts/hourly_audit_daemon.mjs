@@ -7,6 +7,14 @@ console.log(`[${new Date().toISOString()}] === STARTING HOURLY AUTONOMOUS MULTI-
 const cwd = path.resolve('.');
 
 try {
+  console.log('-> Executing origin shop auditor across all shops (Printify, Zazzle, Spreadshop, Threadless)...');
+  try {
+    execSync('node scripts/audit_all_shops_origin.mjs', { cwd, encoding: 'utf8', stdio: 'inherit' });
+  } catch (originErr) {
+    console.warn('[Origin Audit Note] Triggering authoritative origin healing...', originErr.message);
+    execSync('node scripts/heal_all_origins_authoritative.mjs', { cwd, encoding: 'utf8', stdio: 'inherit' });
+  }
+
   console.log('-> Executing rotating multi-agent auditor...');
   const auditOut = execSync('node scripts/rotating_multi_agent_auditor.mjs', { cwd, encoding: 'utf8' });
   console.log(auditOut);
@@ -20,6 +28,7 @@ try {
     // Self-healing trigger: if anything found or compliance below 100%
     if (latest && (latest.complianceScore < 100 || (latest.mismatchesFound && latest.mismatchesFound > 0))) {
       console.warn(`[Self-Healing Triggered] Running automatic ground-truth title, design, and mockup repair...`);
+      execSync('node scripts/heal_all_origins_authoritative.mjs', { cwd, encoding: 'utf8', stdio: 'inherit' });
       execSync('node scripts/heal_catalog_titles_and_designs.mjs', { cwd, encoding: 'utf8', stdio: 'inherit' });
       execSync('node scripts/audit-and-fix-hats.mjs', { cwd, encoding: 'utf8', stdio: 'inherit' });
       execSync('node scripts/build.mjs --home-only', { cwd, encoding: 'utf8', stdio: 'inherit' });
