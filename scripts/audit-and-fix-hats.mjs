@@ -184,8 +184,8 @@ async function run() {
   console.log(`Newly composited physical hat mockups: ${compositedMockups}`);
   console.log(`Missing local art: ${missingArtCount}`);
 
-  // Save catalog
-  fs.writeFileSync(catalogPath, JSON.stringify(catalog, null, 2), 'utf8');
+  // Save catalog as compact JSON to guarantee < 100MB Git limit
+  fs.writeFileSync(catalogPath, JSON.stringify(catalog), 'utf8');
   console.log('Successfully saved updated data/catalog.json!');
 }
 

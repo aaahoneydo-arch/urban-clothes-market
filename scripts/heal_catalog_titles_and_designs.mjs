@@ -79,16 +79,14 @@ for (const p of catalog) {
       }
     }
 
-    // Clean up description if empty or generic
-    if (!p.description || p.description.includes('Neo-Tokyo') && !trueDesign.includes('Neo-Tokyo')) {
-      p.description = `Official "${trueDesign}" ${pType} from the Urban Clothes Market collection. Premium direct-to-garment print with vibrant archival inks on durable, comfortable fabric. 100% authentic original artwork.`;
-    }
+    // Ensure no description bloat
+    if (p.description) delete p.description;
   }
 }
 
-// Write healed catalog
-fs.writeFileSync(catalogPath, JSON.stringify(catalog, null, 2), 'utf8');
-console.log(`Saved updated catalog to ${catalogPath}`);
+// Write healed catalog as compact JSON
+fs.writeFileSync(catalogPath, JSON.stringify(catalog), 'utf8');
+console.log(`Saved updated compact catalog to ${catalogPath}`);
 
 // Write updated flow-design-names.json
 fs.writeFileSync(flowDesignNamesPath, JSON.stringify(updatedFlowNames, null, 2), 'utf8');
