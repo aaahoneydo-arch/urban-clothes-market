@@ -67,6 +67,8 @@ const params=new URLSearchParams(location.search),route=location.pathname.split(
 let f={
   q:params.get('q')||'',
   type:params.get('type')||(route[0]==='types'?route[1]:''),
+  itemType:params.get('itemType')||'',
+  itemSize:params.get('size')||'',
   theme:params.get('theme')||(route[0]==='collections'?route[1]:''),
   audience:params.get('audience')||'',
   maxPrice:params.get('maxPrice')||0,
@@ -117,25 +119,44 @@ async function render({url=true}={}){
 function syncControls(){
   if(!$('#search'))return;
   $('#search').value=f.q;
-  $('#theme').value=f.theme;
-  $('#audience').value=f.audience;
-  $('#brand').value=f.brand;
-  $('#budget').value=f.maxPrice;
-  $('#sort').value=f.sort;
+  if($('#theme'))$('#theme').value=f.theme;
+  if($('#audience'))$('#audience').value=f.audience;
+  if($('#brand'))$('#brand').value=f.brand;
+  if($('#budget'))$('#budget').value=f.maxPrice;
+  if($('#sort'))$('#sort').value=f.sort;
   $$('[data-type]').forEach(a=>a.classList.toggle('active',a.dataset.type===f.type));
-  $('#active-tags').innerHTML=[['q',f.q],['type',f.type],['theme',f.theme],['audience',f.audience],['brand',f.brand],['maxPrice',Number(f.maxPrice)>0?'Under $'+f.maxPrice:''],['savedOnly',f.savedOnly?'Favorites':'']].filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="Remove filter ${esc(v)}">${esc(v)} ×</button>`).join('');
+  $$('[data-size]').forEach(b=>b.classList.toggle('active',b.dataset.size===(f.itemSize||'')));
+  $$('[data-item-type]').forEach(b=>b.classList.toggle('active',b.dataset.itemType===(f.itemType||'')));
+  $$('[data-theme]').forEach(b=>b.classList.toggle('active',b.dataset.theme===(f.theme||'')));
+  $$('[data-audience]').forEach(b=>b.classList.toggle('active',b.dataset.audience===(f.audience||'')));
+  $$('[data-budget]').forEach(b=>b.classList.toggle('active',Number(b.dataset.budget)===Number(f.maxPrice||0)));
+  $$('[data-brand]').forEach(b=>b.classList.toggle('active',b.dataset.brand===(f.brand||'')));
+  $('#active-tags').innerHTML=[
+    ['q',f.q],
+    ['type',f.type],
+    ['itemSize',f.itemSize?'Size: '+f.itemSize:''],
+    ['itemType',f.itemType],
+    ['theme',f.theme],
+    ['audience',f.audience],
+    ['brand',f.brand],
+    ['maxPrice',Number(f.maxPrice)>0?'Under $'+f.maxPrice:''],
+    ['savedOnly',f.savedOnly?'Favorites':'']
+  ].filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="Remove filter ${esc(v)}">${esc(v)} ×</button>`).join('');
 }
 
 function updateUrl(){
   let p=new URLSearchParams();
-  for(let k of ['q','type','theme','audience','brand','maxPrice','sort'])if(f[k]&&f[k]!==0&&f[k]!=='0'&&(k!=='sort'||f[k]!=='shuffle'))p.set(k,String(f[k]));
+  for(let k of ['q','type','itemType','size','theme','audience','brand','maxPrice','sort']) {
+    const val = k === 'size' ? f.itemSize : f[k];
+    if(val&&val!==0&&val!=='0'&&(k!=='sort'||val!=='shuffle')) p.set(k,String(val));
+  }
   if(f.savedOnly)p.set('saved','1');
   if(f.page>1)p.set('page',f.page);
   history.replaceState(null,'',location.pathname+(p.size?'?'+p:'')+'#catalog');
 }
 
 function reset(){
-  f={...f,q:'',type:'',theme:'',audience:'',brand:'',maxPrice:0,sort:'shuffle',seed:crypto.randomUUID(),page:1,savedOnly:false};
+  f={...f,q:'',type:'',itemType:'',itemSize:'',theme:'',audience:'',brand:'',maxPrice:0,sort:'shuffle',seed:crypto.randomUUID(),page:1,savedOnly:false};
   render();
 }
 
@@ -343,6 +364,84 @@ document.addEventListener('click', async e => {
     f.type = type.dataset.type;
     f.page = 1;
     render();
+    return;
+  }
+
+  // Select size filter pill
+  const sizePill = e.target.closest('[data-size]');
+  if(sizePill && $('#results')){
+    e.preventDefault();
+    const sz = sizePill.dataset.size;
+    f.itemSize = f.itemSize === sz ? '' : sz;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Select item type chip
+  const itemTypeChip = e.target.closest('[data-item-type]');
+  if(itemTypeChip && $('#results')){
+    e.preventDefault();
+    const it = itemTypeChip.dataset.itemType;
+    f.itemType = f.itemType === it ? '' : it;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Select theme filter button
+  const themeBtn = e.target.closest('[data-theme]');
+  if(themeBtn && $('#results')){
+    e.preventDefault();
+    const th = themeBtn.dataset.theme;
+    f.theme = f.theme === th ? '' : th;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Select audience option button
+  const audBtn = e.target.closest('[data-audience]');
+  if(audBtn && $('#results')){
+    e.preventDefault();
+    const aud = audBtn.dataset.audience;
+    f.audience = f.audience === aud ? '' : aud;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Select price budget button
+  const budgetBtn = e.target.closest('[data-budget]');
+  if(budgetBtn && $('#results')){
+    e.preventDefault();
+    const bg = Number(budgetBtn.dataset.budget);
+    f.maxPrice = Number(f.maxPrice) === bg ? 0 : bg;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Select brand button
+  const brandBtn = e.target.closest('[data-brand]');
+  if(brandBtn && $('#results')){
+    e.preventDefault();
+    const br = brandBtn.dataset.brand;
+    f.brand = f.brand === br ? '' : br;
+    f.page = 1;
+    render();
+    return;
+  }
+
+  // Toggle mobile filters drawer
+  const filterToggle = e.target.closest('[data-toggle-filters]');
+  if(filterToggle){
+    e.preventDefault();
+    const sidebar = $('#filters');
+    if(sidebar){
+      sidebar.classList.toggle('open');
+      filterToggle.setAttribute('aria-expanded', String(sidebar.classList.contains('open')));
+    }
     return;
   }
 
