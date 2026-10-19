@@ -121,6 +121,30 @@ const themeShowcase = (id, title, subtitle) => {
 
 const homeBody = `
 <div class="wrap">
+  <!-- INTERACTIVE CATALOG BROWSER & DEEP FILTERS (AT VERY TOP - WALMART SEARCH RESULTS STYLE) -->
+  <section class="catalog-head" id="catalog" style="margin-top: 10px;">
+    <div class="section-head">
+      <div>
+        <div class="sub">INSTANT INVENTORY EXPLORER · ALL ${products.length.toLocaleString()}+ ITEMS</div>
+        <h2>Explore &amp; Discover Entire Archive</h2>
+        <p>Filter by item variation, size, passion theme, budget, or brand. Click shuffle for a fresh discovery mix anytime.</p>
+      </div>
+      <div class="row-actions">
+        <button class="shuffle" data-shuffle type="button">${icon('shuffle')} Shuffle All</button>
+        <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
+      </div>
+    </div>
+    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
+  </section>
+
+  <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
+  ${discoveryBar({
+    id: 'discovery-mid1',
+    title: 'Looking for a Specific Graphic or Theme?',
+    subtitle: 'Search across all ' + products.length.toLocaleString() + '+ items or hit surprise me for an instant random discovery mix.',
+    placeholder: 'Search ' + products.length.toLocaleString() + '+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
+  })}
+
   <!-- ALL 15 ITEM VARIATION SECTIONS (SCROLLABLE TRACKS WITH LIVE SHUFFLE) -->
   ${typeShowcase('hoodies', 'Hoodies & Premium Sweatshirts', 'Cozy fleece pullovers, contrast hoodies, and heavyweight zip sweatshirts built for cold weather.')}
   ${typeShowcase('jackets', 'Jackets, Windbreakers & Outerwear', 'Weather-resistant lightweight jackets, track jackets, and zip streetwear layers.')}
@@ -130,15 +154,6 @@ const homeBody = `
   ${typeShowcase('bags', 'Bags, Backpacks & Totes', 'Canvas totes, gym duffels, drawstring bags, and travel pouches.')}
   ${typeShowcase('stickers', 'Stickers, Decals & Buttons', 'Durable vinyl die-cut stickers for laptops, water bottles, and cars.')}
   ${typeShowcase('tech', 'Phone Cases, Laptop Sleeves & Desk Mats', 'Shockproof phone cases, padded laptop sleeves, and smooth gaming desk pads.')}
-
-  <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
-  ${discoveryBar({
-    id: 'discovery-mid1',
-    title: 'Looking for a Specific Graphic or Theme?',
-    subtitle: 'Search across all 100,000+ items or hit surprise me for an instant random discovery mix.',
-    placeholder: 'Search 100,000+ items (cats, cars, gaming, dogs, sarcastic, retro...)'
-  })}
-
   ${typeShowcase('art', 'Posters, Prints & Wall Art', 'High-resolution archival paper posters, canvas wraps, and graphic art prints.')}
   ${typeShowcase('home', 'Home Decor, Pillows & Fleece Blankets', 'Decorative throw pillows, cozy fleece blankets, kitchen aprons, and wall clocks.')}
   ${typeShowcase('stationery', 'Stationery, Spiral Notebooks & Journals', 'Hardcover journals, ruled spiral notebooks, and greeting stationery.')}
@@ -146,22 +161,6 @@ const homeBody = `
   ${typeShowcase('bottoms', 'Shorts, Joggers & Activewear', 'Comfortable cotton joggers, athletic shorts, and loungewear.')}
   ${typeShowcase('pets', 'Pet Gear & Dog Bandanas', 'Graphic pet bandanas and accessories for your four-legged best friends.')}
   ${typeShowcase('accessories', 'Accessories & Keychains', 'Embroidered jet tags, novelty keychains, and everyday add-ons.')}
-
-  <!-- INTERACTIVE CATALOG BROWSER & DEEP FILTERS -->
-  <section class="catalog-head" id="catalog">
-    <div class="section-head">
-      <div>
-        <div class="sub">INSTANT INVENTORY EXPLORER · ALL 100,000+ ITEMS</div>
-        <h2>Filter &amp; Discover Entire Archive</h2>
-        <p>Narrow by item variation, passion theme, budget, or brand. Click shuffle for a brand new discovery mix anytime.</p>
-      </div>
-      <div class="row-actions">
-        <button class="shuffle" data-shuffle type="button">${icon('shuffle')} Shuffle All</button>
-        <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
-      </div>
-    </div>
-    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
-  </section>
 
   <!-- MID-PAGE SEARCH BAR #2 (Transition to Curated Themes) -->
   ${discoveryBar({
@@ -229,6 +228,7 @@ fs.copyFileSync('src/app.js', path.join(root,'app.js'));
 fs.copyFileSync('src/app.js', 'app.js');
 fs.copyFileSync('src/search-worker.js', path.join(root,'search-worker.js'));
 fs.copyFileSync('src/search-worker.js', 'search-worker.js');
+fs.cpSync(path.join(root,'catalog'), 'catalog', { recursive: true });
 
 if(isHomeOnly){
   console.log('Homepage, styles, and scripts compiled and synced to root successfully!');
@@ -491,14 +491,14 @@ for(const p of products){
     continue;
   }
   if(prodCount % 500 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
-  const isExternalPartner = p.url && !p.url.includes('urbanclothesmarket.com') && (p.url.includes('myspreadshop.com') || p.url.includes('fourthwall.com') || p.url.includes('threadless.com') || p.url.includes('zazzle.com') || p.url.includes('redbubble.com'));
+  const isExternalPartner = p.url && !p.url.includes('urbanclothesmarket.com') && (p.url.includes('myspreadshop.com') || p.url.includes('fourthwall.com') || p.url.includes('zazzle.com') || p.url.includes('redbubble.com') || p.url.includes('teepublic.com'));
 
   let purchaseActionHtml = '';
   if (isExternalPartner) {
     purchaseActionHtml = `<div class="purchase-box external-purchase-box">
       <div class="purchase-box-header">
         <span class="stock-pill in-stock">✓ Official Store In Stock</span>
-        <span class="official-partner-tag">${p.url && p.url.includes("zazzle.com") ? "Zazzle Verified" : (p.url && p.url.includes("threadless.com") ? "Threadless Artist Shop" : "Spreadshop Verified")}</span>
+        <span class="official-partner-tag">${p.url && p.url.includes("zazzle.com") ? "Zazzle Verified" : (p.url && p.url.includes("redbubble.com") ? "Redbubble Verified" : "Spreadshop Verified")}</span>
       </div>
       <a class="btn dark checkout-partner-btn" href="${esc(p.url)}" target="_blank" rel="noopener">
         <span>Pick Size &amp; Colors on Official Store</span> ${icon('arrow')}

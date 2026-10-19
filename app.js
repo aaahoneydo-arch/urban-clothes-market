@@ -117,8 +117,8 @@ async function render({url=true}={}){
 }
 
 function syncControls(){
-  if(!$('#search'))return;
-  $('#search').value=f.q;
+  if($('#search')) $('#search').value=f.q;
+  if($('#head-search-input')) $('#head-search-input').value=f.q;
   if($('#theme'))$('#theme').value=f.theme;
   if($('#audience'))$('#audience').value=f.audience;
   if($('#brand'))$('#brand').value=f.brand;
@@ -702,6 +702,19 @@ if($('#search')){
     clearTimeout(debounce);
     debounce=setTimeout(()=>{
       f.q=$('#search').value.trim();
+      if($('#head-search-input')) $('#head-search-input').value=f.q;
+      f.page=1;
+      render();
+    },250);
+  });
+}
+if($('#head-search-input')){
+  let headDebounce;
+  $('#head-search-input').addEventListener('input',()=>{
+    clearTimeout(headDebounce);
+    headDebounce=setTimeout(()=>{
+      f.q=$('#head-search-input').value.trim();
+      if($('#search')) $('#search').value=f.q;
       f.page=1;
       render();
     },250);
