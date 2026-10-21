@@ -264,16 +264,24 @@
         cart = JSON.parse(localStorage.getItem('ucm-cart') || '[]');
       } catch {}
 
+      function resolveOutboundCheckoutUrl(item) {
+        if (item && item.url && !item.url.includes('urbanclothesmarket.com') && item.url.startsWith('http') && !item.url.includes('?q=')) {
+          return item.url;
+        }
+        return 'https://urban-clothes-market.printify.me/product/33326966';
+      }
+
       // Fallback if empty (e.g. direct visit)
       if (!cart.length) {
         cart = [{
           id: 'ucm-featured-tee',
-          name: 'Urban Clothes Market Classic Graphic Tee',
+          name: 'Death Before Decaf Grim Reaper Apparel',
           price: 24.99,
           size: 'L',
           color: 'Black',
           qty: 1,
-          image: '/favicon.svg'
+          image: 'https://www.urbanclothesmarket.com/public/mockups/flow-gen-0001-tshirt.webp',
+          url: 'https://urban-clothes-market.printify.me/product/33326966'
         }];
       }
 
@@ -283,12 +291,14 @@
       listContainer.innerHTML = cart.map(item => {
         const itemTotal = (Number(item.price) || 24.99) * (item.qty || 1);
         subtotal += itemTotal;
+        const buyUrl = resolveOutboundCheckoutUrl(item);
         return `
           <div class="order-summary-item">
             <img class="order-summary-img" src="${item.image || '/favicon.svg'}" alt="${item.name}">
             <div class="order-item-info">
               <h4 class="order-item-title">${item.name}</h4>
               <p class="order-item-meta">Size: ${item.size || 'M'} • Color: ${item.color || 'Standard'} • Qty: ${item.qty || 1}</p>
+              <a href="${buyUrl}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;font-size:0.8rem;color:#d5fa42;text-decoration:underline;font-weight:700">Buy Directly on Official Store ↗</a>
             </div>
             <div class="order-item-price">$${itemTotal.toFixed(2)}</div>
           </div>
@@ -298,43 +308,29 @@
       document.getElementById('summary-subtotal').textContent = `$${subtotal.toFixed(2)}`;
       document.getElementById('summary-grand-total').textContent = `$${subtotal.toFixed(2)} USD`;
 
-      function executeOrder(email, name, method) {
-        const orderId = 'UCM-' + Math.floor(100000 + Math.random() * 900000);
-        const orderRecord = {
-          orderId,
-          email: email || 'customer@urbanclothesmarket.com',
-          name: name || 'Valued Customer',
-          items: cart,
-          total: subtotal,
-          date: new Date().toISOString(),
-          paymentMethod: method
-        };
-
-        try {
-          const history = JSON.parse(localStorage.getItem('ucm-order-history') || '[]');
-          history.unshift(orderRecord);
-          localStorage.setItem('ucm-order-history', JSON.stringify(history));
-          localStorage.removeItem('ucm-cart');
-        } catch {}
-
-        window.location.href = `/order-confirmation/?order_id=${orderId}&email=${encodeURIComponent(orderRecord.email)}`;
+      function redirectToCheckout() {
+        const first = cart[0];
+        const targetUrl = resolveOutboundCheckoutUrl(first);
+        const submitBtn = document.getElementById('submit-checkout-btn');
+        if (submitBtn) submitBtn.textContent = 'Redirecting to Official Store Checkout...';
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 300);
       }
 
       document.getElementById('checkout-main-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('cust-email').value.trim();
-        const name = document.getElementById('cust-name').value.trim();
-        executeOrder(email, name, 'Credit Card');
+        redirectToCheckout();
       });
 
       document.getElementById('checkout-gpay-btn').addEventListener('click', () => {
-        executeOrder('gpay-customer@urbanclothesmarket.com', 'Google Pay Verified', 'Google Pay');
+        redirectToCheckout();
       });
       document.getElementById('checkout-apple-btn').addEventListener('click', () => {
-        executeOrder('apple-customer@urbanclothesmarket.com', 'Apple Pay Verified', 'Apple Pay');
+        redirectToCheckout();
       });
       document.getElementById('checkout-paypal-btn').addEventListener('click', () => {
-        executeOrder('paypal-customer@urbanclothesmarket.com', 'PayPal Verified', 'PayPal');
+        redirectToCheckout();
       });
     });
   </script>

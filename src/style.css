@@ -169,6 +169,12 @@
 .kbd-hint{display:inline-flex;align-items:center;justify-content:center;background:#f0f0f0;color:#666;border:1px solid #ccc;border-radius:3px;font-family:monospace;font-size:11px;font-weight:700;padding:2px 6px;margin-right:8px;pointer-events:none;line-height:1}
 @media(max-width:760px){.kbd-hint{display:none}}
 
+/* CARD PRICE & BUY NOW ROW */
+.card-price-action{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.card-price-action .price{margin-top:0;font-size:14px;font-weight:800;color:var(--ink)}
+.btn-card-buy{display:inline-flex;align-items:center;gap:4px;background:var(--ink);color:var(--acid);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:6px 12px;border-radius:4px;text-decoration:none;transition:all 0.15s ease;white-space:nowrap}
+.btn-card-buy:hover{background:var(--acid);color:var(--ink);transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
+
 /* CARD COLOR SWATCHES */
 .card-swatches{display:flex;align-items:center;gap:5px;margin-top:6px;min-height:14px}
 .swatch{width:11px;height:11px;border-radius:50%;display:inline-block;box-shadow:0 0 0 1px rgba(0,0,0,0.06);transition:transform 0.15s ease}

@@ -27,7 +27,13 @@ function toast(message){
 function card(p){
   const isApparel = ['tees','hoodies','jackets','bottoms','kids'].includes(p.category);
   const swatchesHtml = isApparel ? `<div class="card-swatches" aria-hidden="true"><span class="swatch" style="background:#171717" title="Black"></span><span class="swatch" style="background:#f5f5f5;border:1px solid #d5d5d5" title="White"></span><span class="swatch" style="background:#9e9e9e" title="Heather Grey"></span><span class="swatch" style="background:#1b2a4a" title="Navy"></span><span class="swatch-more">+colors</span></div>` : '';
-  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div>${swatchesHtml}</article>`;
+  const buyUrl = (p.url && !p.url.includes('urbanclothesmarket.com') && p.url.startsWith('http') && !p.url.includes('?q='))
+    ? p.url
+    : (p.path && !p.path.includes('urbanclothesmarket.com') && p.path.startsWith('http') && !p.path.includes('?q='))
+      ? p.path
+      : 'https://urban-clothes-market.printify.me/product/33326966';
+  const priceVal = typeof p.price === 'number' ? p.price.toFixed(2) : (parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 24.99).toFixed(2);
+  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(buyUrl)}" target="_blank" rel="noopener" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(buyUrl)}" target="_blank" rel="noopener">${esc(p.design || p.name)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="card-price-action"><div class="price">$${priceVal}</div><a class="btn-card-buy" href="${esc(buyUrl)}" target="_blank" rel="noopener">Buy Now ↗</a></div>${swatchesHtml}</article>`;
 }
 
 let worker=new Worker('/search-worker.js',{type:'module'}),requestId=0,pending=new Map(),shards=new Map();
@@ -914,25 +920,27 @@ function closeOrderModal(){
   }
 }
 
+function resolveOutboundCheckoutUrl(item){
+  if(item && item.url && !item.url.includes('urbanclothesmarket.com') && item.url.startsWith('http') && !item.url.includes('?q=') && !item.url.endsWith('printify.me/') && !item.url.includes('zazzle.com/store/')){
+    return item.url;
+  }
+  if(item && item.path && item.path.startsWith('http') && !item.path.includes('?q=')){
+    return item.path;
+  }
+  return 'https://urban-clothes-market.printify.me/product/33326966';
+}
+
 function completeCheckout(email, name, method = 'Standard'){
-  const orderId = 'UCM-' + Math.floor(100000 + Math.random() * 900000);
-  const now = new Date();
-  const orderRecord = {
-    orderId,
-    email: email || 'customer@urbanclothesmarket.com',
-    name: name || 'Valued Customer',
-    item: activeCheckoutItem,
-    date: now.toISOString(),
-    paymentMethod: method
-  };
-  try{
-    const history = JSON.parse(localStorage.getItem('ucm-order-history') || '[]');
-    history.unshift(orderRecord);
-    localStorage.setItem('ucm-order-history', JSON.stringify(history));
-    localStorage.removeItem('ucm-cart');
-  }catch{}
-  updateCartUI();
-  location.href = `/order-confirmation/?order_id=${orderId}&email=${encodeURIComponent(orderRecord.email)}`;
+  const box = $('#product-purchase-box');
+  const targetUrl = resolveOutboundCheckoutUrl({
+    url: (activeCheckoutItem && activeCheckoutItem.url) || (box ? box.dataset.url : null),
+    path: (activeCheckoutItem && activeCheckoutItem.path) || (box ? box.dataset.path : null)
+  });
+  
+  toast('Redirecting to official partner checkout...');
+  setTimeout(() => {
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  }, 300);
 }
 
 // INIT ON-SITE VARIANT SELECTOR
@@ -945,6 +953,7 @@ function initVariantSelector(){
   const price = parseFloat(box.dataset.price) || 24.99;
   const image = box.dataset.image;
   const path = box.dataset.path;
+  const outboundUrl = resolveOutboundCheckoutUrl({ id, name, price, path, url: box.dataset.url });
 
   let selectedSize = box.querySelector('.size-pill.active')?.dataset.size || 'M';
   let selectedColor = box.querySelector('.color-pill.active')?.dataset.color || 'Default';
@@ -992,17 +1001,26 @@ function initVariantSelector(){
     });
   }
 
-  const buyNowBtn = $('#btn-instant-order');
+  const buyNowBtn = $('#btn-instant-order') || $('#btn-buy-now');
   if(buyNowBtn){
-    buyNowBtn.addEventListener('click', () => {
-      openOrderModal({ id, name, price, image, path, size: selectedSize, color: selectedColor, qty });
+    buyNowBtn.href = outboundUrl;
+    buyNowBtn.setAttribute('target', '_blank');
+    buyNowBtn.setAttribute('rel', 'noopener');
+    const span = buyNowBtn.querySelector('span');
+    if(span && span.textContent.includes('Order Now')){
+      span.textContent = span.textContent.replace('Order Now', 'Buy Now');
+    }
+    buyNowBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toast('Taking you to official shop checkout...');
+      window.open(outboundUrl, '_blank', 'noopener,noreferrer');
     });
   }
 
   const addBagBtn = $('#btn-add-bag');
   if(addBagBtn){
     addBagBtn.addEventListener('click', () => {
-      addToCart({ id, name, price, image, path, size: selectedSize, color: selectedColor, qty });
+      addToCart({ id, name, price, image, path, url: outboundUrl, size: selectedSize, color: selectedColor, qty });
     });
   }
 
@@ -1033,16 +1051,9 @@ $('#btn-checkout-cart')?.addEventListener('click', () => {
   if(!cart.length) return;
   closeCartDrawer();
   const first = cart[0];
-  const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1), 0);
-  openOrderModal({
-    id: 'cart-bundle',
-    name: `${cart.length} item(s) from Shopping Bag`,
-    price: totalAmount,
-    image: first.image,
-    size: first.size,
-    color: first.color,
-    qty: 1
-  });
+  const targetUrl = resolveOutboundCheckoutUrl(first);
+  toast('Taking you to official shop checkout...');
+  window.open(targetUrl, '_blank', 'noopener,noreferrer');
 });
 
 // Modal close

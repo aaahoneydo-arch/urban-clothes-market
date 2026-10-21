@@ -509,7 +509,7 @@ for(const p of products){
       </div>
     </div>`;
   } else {
-    purchaseActionHtml = `<div class="purchase-box on-site-purchase-box" id="product-purchase-box" data-id="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price.toFixed(2)}" data-image="${esc(p.image)}" data-path="${esc(p.path)}">
+    purchaseActionHtml = `<div class="purchase-box on-site-purchase-box" id="product-purchase-box" data-id="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price.toFixed(2)}" data-image="${esc(p.image)}" data-path="${esc(p.path)}" data-url="${esc(p.url)}">
       <div class="purchase-box-header">
         <span class="stock-pill in-stock">✓ Made to Order (2-3 Business Days)</span>
         <span class="official-partner-tag">Urban Clothes Market Exclusive</span>
@@ -545,9 +545,9 @@ for(const p of products){
       </div>
 
       <div class="purchase-btn-group">
-        <button type="button" class="btn acid btn-instant-buy" id="btn-instant-order">
-          <span>Order Now — $${p.price.toFixed(2)}</span> ${icon('arrow')}
-        </button>
+        <a class="btn acid btn-instant-buy" id="btn-instant-order" href="${esc(p.url)}" target="_blank" rel="noopener">
+          <span>Buy Now — $${p.price.toFixed(2)}</span> ${icon('arrow')}
+        </a>
         <button type="button" class="btn dark btn-add-bag" id="btn-add-bag">
           ${icon('bag')} Add to Bag
         </button>

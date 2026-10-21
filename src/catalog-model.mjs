@@ -130,7 +130,9 @@ export function normalize(raw) {
     const pathSlug = slug(design + ' ' + productType) + '-' + slug(id).slice(-15);
     const finalUrl = (p.url && !p.url.includes('urbanclothesmarket.com'))
       ? p.url
-      : `https://www.urbanclothesmarket.com/products/${pathSlug}/`;
+      : (p.path && !p.path.includes('urbanclothesmarket.com') && p.path.startsWith('http'))
+        ? p.path
+        : `https://urban-clothes-market.printify.me/product/33326966`;
 
     const cleanColors = Array.from(new Set((p.colors || ['Black', 'White', 'Heather Grey']).map(c => String(c).trim()).filter(Boolean)));
 
@@ -149,7 +151,7 @@ export function normalize(raw) {
       audience,
       kids,
       brand,
-      path: '/products/' + pathSlug + '/',
+      path: finalUrl,
       shard: Math.floor(i / 200)
     };
   });

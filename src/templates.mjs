@@ -7,7 +7,13 @@ export const icon=(name)=>'<svg aria-hidden="true" viewBox="0 0 24 24">'+({arrow
 export function card(p){
   const isApparel = ['tees','hoodies','jackets','bottoms','kids'].includes(p.category);
   const swatchesHtml = isApparel ? `<div class="card-swatches" aria-hidden="true"><span class="swatch" style="background:#171717" title="Black"></span><span class="swatch" style="background:#f5f5f5;border:1px solid #d5d5d5" title="White"></span><span class="swatch" style="background:#9e9e9e" title="Heather Grey"></span><span class="swatch" style="background:#1b2a4a" title="Navy"></span><span class="swatch-more">+colors</span></div>` : '';
-  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(p.path)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="false">${icon('heart')}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(p.path)}">${esc(p.design)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="price">$${p.price.toFixed(2)}<span>Pick size &amp; colors</span></div>${swatchesHtml}</article>`;
+  const buyUrl = (p.url && !p.url.includes('urbanclothesmarket.com') && p.url.startsWith('http') && !p.url.includes('?q='))
+    ? p.url
+    : (p.path && !p.path.includes('urbanclothesmarket.com') && p.path.startsWith('http') && !p.path.includes('?q='))
+      ? p.path
+      : 'https://urban-clothes-market.printify.me/product/33326966';
+  const priceVal = typeof p.price === 'number' ? p.price.toFixed(2) : (parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 24.99).toFixed(2);
+  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(buyUrl)}" target="_blank" rel="noopener" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="false">${icon('heart')}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(buyUrl)}" target="_blank" rel="noopener">${esc(p.design || p.name)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="card-price-action"><div class="price">$${priceVal}</div><a class="btn-card-buy" href="${esc(buyUrl)}" target="_blank" rel="noopener">Buy Now ↗</a></div>${swatchesHtml}</article>`;
 }
 
 export function header(){
