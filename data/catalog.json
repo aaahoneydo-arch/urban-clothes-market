@@ -448437,7 +448437,7 @@
   },
   {
     "id": "printify-33163221",
-    "name": "Neon Horizon Circuit Beast Canvas Tote Bag",
+    "name": "Lowrider Classic Canvas Tote Bag",
     "url": "https://urban-clothes-market.printify.me/product/33163221",
     "image": "https://images-api.printify.com/mockup/6ad17afa47ecba5cc40b9948/103599/100877/neon-horizon-circuit-beast-canvas-tote-bag.jpg?camera_label=front&s=2048",
     "price": "$21.00",
@@ -448450,7 +448450,9 @@
       "Default"
     ],
     "brand": "Printify",
-    "channel": "Printify"
+    "channel": "Printify",
+    "design": "Lowrider Classic",
+    "productType": "Canvas Tote Bag"
   },
   {
     "id": "printify-33163213",
@@ -448602,7 +448604,7 @@
   },
   {
     "id": "printify-33163187",
-    "name": "Neo-Tokyo Cyber Ronin Spiral Notebook - Ruled Line",
+    "name": "Death Before Decaf Hardcover Journal / Notebook",
     "url": "https://urban-clothes-market.printify.me/product/33163187",
     "image": "https://images-api.printify.com/mockup/6ad17acfd86cb99a470fd975/119677/145720/neo-tokyo-cyber-ronin-spiral-notebook-ruled-line.jpg?camera_label=front&s=2048",
     "price": "$26.05",
@@ -448613,7 +448615,9 @@
       "Default"
     ],
     "brand": "Printify",
-    "channel": "Printify"
+    "channel": "Printify",
+    "design": "Death Before Decaf",
+    "productType": "Hardcover Journal / Notebook"
   },
   {
     "id": "printify-33163183",

@@ -1,18 +1,18 @@
 {
   "count": 21269,
-  "designs": 4299,
+  "designs": 4298,
   "types": {
     "hoodies": 2849,
     "jackets": 869,
-    "tees": 10272,
+    "tees": 10270,
     "hats": 1015,
     "mugs": 878,
-    "art": 108,
+    "art": 109,
     "tech": 863,
     "home": 237,
     "stickers": 518,
     "bags": 1080,
-    "stationery": 71,
+    "stationery": 72,
     "kids": 2284,
     "bottoms": 273,
     "pets": 235,
@@ -29,14 +29,14 @@
     "dogs": 202,
     "cars": 1610,
     "humor": 1928,
-    "streetwear": 824,
-    "cyber": 2354,
-    "tarot": 2744,
+    "streetwear": 823,
+    "cyber": 2352,
+    "tarot": 2745,
     "fantasy": 4304,
     "diy": 817,
     "kids": 2284,
     "all": 21269
   },
-  "pages": 24231,
-  "indexBytes": 2546696
+  "pages": 24230,
+  "indexBytes": 2546681
 }
