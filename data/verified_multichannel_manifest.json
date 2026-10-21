@@ -1,0 +1,466 @@
+{
+  "updatedAt": "2026-10-21T08:25:10.489Z",
+  "summary": {
+    "zazzle": 645,
+    "teepublic": 47,
+    "redbubble": 129,
+    "printify": 4613,
+    "spreadshop": 6331,
+    "total": 11765
+  },
+  "sampleZazzle": [
+    {
+      "id": "zazzle-256167119024305948",
+      "name": "Diver Helmet With Serpent Graphic T-Shirt",
+      "url": "https://www.zazzle.com/pd-256167119024305948",
+      "image": "https://rlv.zcache.com/svc/getImage?bg_pattern=checker&id=e30c297e-77b3-4fed-aba4-6c6ce4319e46&max_dim=600",
+      "price": "$24.95",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Navy"
+      ],
+      "brand": "Zazzle",
+      "channel": "Zazzle"
+    },
+    {
+      "id": "zazzle-256713265446038958",
+      "name": "Cleveland Football Mascot Head D Pullover Hoodie",
+      "url": "https://www.zazzle.com/pd-256713265446038958",
+      "image": "https://rlv.zcache.com/svc/getImage?bg_pattern=checker&id=f0833b7b-082e-491f-81e3-5ea0c83098e6&max_dim=600",
+      "price": "$48.95",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Navy"
+      ],
+      "brand": "Zazzle",
+      "channel": "Zazzle"
+    },
+    {
+      "id": "zazzle-256132517282081400",
+      "name": "Broncos  Mustang Graphic T-Shirt",
+      "url": "https://www.zazzle.com/pd-256132517282081400",
+      "image": "https://rlv.zcache.com/svc/getImage?bg_pattern=checker&id=1df18d56-0f48-4b8b-ae4d-5b0757f7556b&max_dim=600",
+      "price": "$24.95",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Navy"
+      ],
+      "brand": "Zazzle",
+      "channel": "Zazzle"
+    },
+    {
+      "id": "zazzle-256175426515928823",
+      "name": "Rams Streetwear Hoodie Design Pullover Hoodie",
+      "url": "https://www.zazzle.com/pd-256175426515928823",
+      "image": "https://rlv.zcache.com/svc/getImage?bg_pattern=checker&id=aa3249ed-440f-4c34-a285-7b11f126e63d&max_dim=600",
+      "price": "$48.95",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Navy"
+      ],
+      "brand": "Zazzle",
+      "channel": "Zazzle"
+    },
+    {
+      "id": "zazzle-256677728905653952",
+      "name": "Packers Fan Art Hoodie Design Coffee Mug",
+      "url": "https://www.zazzle.com/pd-256677728905653952",
+      "image": "https://rlv.zcache.com/svc/getImage?bg_pattern=checker&id=ca7e16af-58ee-41fa-beda-e84ef181533e&max_dim=600",
+      "price": "$16.95",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Navy"
+      ],
+      "brand": "Zazzle",
+      "channel": "Zazzle"
+    }
+  ],
+  "sampleTeePublic": [
+    {
+      "id": "teepublic-100602521",
+      "name": "Insert Coin Continue Arcade Gaming Vintage",
+      "url": "https://www.teepublic.com/t-shirt/100602521-insert-coin-continue-arcade-gaming-vintage?store_id=4669662",
+      "image": "https://images.teepublic.com/derived/production/designs/100602521_0/1792469748/i_p:c_ffffff,s_313,q_90.jpg",
+      "price": "$22.00",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Vintage Heather",
+        "Navy",
+        "Royal Blue"
+      ],
+      "brand": "TeePublic",
+      "channel": "TeePublic"
+    },
+    {
+      "id": "teepublic-100602505",
+      "name": "Vintage Gothic Cathedral Stained Rose Window",
+      "url": "https://www.teepublic.com/t-shirt/100602505-gothic-cathedral-spires-and-medieval-architecture?store_id=4669662",
+      "image": "https://images.teepublic.com/derived/production/designs/100602505_0/1792469718/i_p:c_ffffff,s_313,q_90.jpg",
+      "price": "$22.00",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Vintage Heather",
+        "Navy",
+        "Royal Blue"
+      ],
+      "brand": "TeePublic",
+      "channel": "TeePublic"
+    },
+    {
+      "id": "teepublic-100602479",
+      "name": "Vapor Glitch Cyberwave Retro Graphic",
+      "url": "https://www.teepublic.com/t-shirt/100602479-vapor-glitch-cyberwave-retro-graphic?store_id=4669662",
+      "image": "https://images.teepublic.com/derived/production/designs/100602479_0/1792469689/i_p:c_ffffff,s_313,q_90.jpg",
+      "price": "$22.00",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Vintage Heather",
+        "Navy",
+        "Royal Blue"
+      ],
+      "brand": "TeePublic",
+      "channel": "TeePublic"
+    },
+    {
+      "id": "teepublic-100494777",
+      "name": "Spirit Kitsune Fox Japanese Art",
+      "url": "https://www.teepublic.com/t-shirt/100494777-spirii-kitsung?store_id=4669662",
+      "image": "https://images.teepublic.com/derived/production/designs/100494777_0/1792291588/i_p:c_ffffff,s_313,q_90.jpg",
+      "price": "$22.00",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Vintage Heather",
+        "Navy",
+        "Royal Blue"
+      ],
+      "brand": "TeePublic",
+      "channel": "TeePublic"
+    },
+    {
+      "id": "teepublic-100494766",
+      "name": "Mecha Pilot System Active HUD Helmet",
+      "url": "https://www.teepublic.com/t-shirt/100494766-mecha-pilot-system-active-hud-helmet?store_id=4669662",
+      "image": "https://images.teepublic.com/derived/production/designs/100494766_0/1792291566/i_p:c_ffffff,s_313,q_90.jpg",
+      "price": "$22.00",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Vintage Heather",
+        "Navy",
+        "Royal Blue"
+      ],
+      "brand": "TeePublic",
+      "channel": "TeePublic"
+    }
+  ],
+  "sampleRedbubble": [
+    {
+      "id": "redbubble-184606271",
+      "name": "The Moon Knows My Secrets Extra Soft T-Shirt",
+      "url": "https://www.redbubble.com/i/t-shirt/The-Moon-Knows-My-Secrets-by-UrbanClothesMKT/184606271/4d7w",
+      "image": "https://ih1.redbubble.net/image.6254528183.6271/aps,504x498,small,transparent-pad,600x600,f8f8f8.jpg",
+      "price": "$20.61",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Dark Blue"
+      ],
+      "brand": "Redbubble",
+      "channel": "Redbubble"
+    },
+    {
+      "id": "redbubble-184606364",
+      "name": "Dark Hearts Still Beat Classic T-Shirt",
+      "url": "https://www.redbubble.com/i/t-shirt/Dark-Hearts-Still-Beat-by-UrbanClothesMKT/184606364/lrcw",
+      "image": "https://ih1.redbubble.net/image.6254528963.6364/ssrco,kids_tee,flatlay_01,FFFFFF:97ab1c12de,front,product_square,x600.jpg",
+      "price": "$16.49",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Dark Blue"
+      ],
+      "brand": "Redbubble",
+      "channel": "Redbubble"
+    },
+    {
+      "id": "redbubble-184606434",
+      "name": "Flowers for the Forgotten Essential T-Shirt",
+      "url": "https://www.redbubble.com/i/t-shirt/Flowers-for-the-Forgotten-by-UrbanClothesMKT/184606434/z5wf",
+      "image": "https://ih1.redbubble.net/image.6254529582.6434/st,small,507x507-pad,600x600,f8f8f8.jpg",
+      "price": "$16.49",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Dark Blue"
+      ],
+      "brand": "Redbubble",
+      "channel": "Redbubble"
+    },
+    {
+      "id": "redbubble-184606475",
+      "name": "Elegance After Midnight Journal",
+      "url": "https://www.redbubble.com/i/notebook/Elegance-After-Midnight-by-UrbanClothesMKT/184606475/fxz2",
+      "image": "https://ih1.redbubble.net/image.6254530296.6475/ssrco,lightweight_hoodie,flatlay_01,heather_mid_grey,front,square_product,x600.jpg",
+      "price": "$18.47",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Dark Blue"
+      ],
+      "brand": "Redbubble",
+      "channel": "Redbubble"
+    },
+    {
+      "id": "redbubble-184606496",
+      "name": "Roses and Ruins Sticker",
+      "url": "https://www.redbubble.com/i/sticker/Roses-and-Ruins-by-UrbanClothesMKT/184606496/7sgk",
+      "image": "https://ih1.redbubble.net/image.6254531598.6496/st,small,507x507-pad,600x600,f8f8f8.jpg",
+      "price": "$2.32",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        "White",
+        "Black",
+        "Heather Grey",
+        "Dark Blue"
+      ],
+      "brand": "Redbubble",
+      "channel": "Redbubble"
+    }
+  ],
+  "samplePrintify": [
+    {
+      "id": "printify-33355907",
+      "name": "Lucky Cat Maneki Neko Retro Vaporwave Graphic Unisex Crewneck Sweatshirt",
+      "url": "https://urban-clothes-market.printify.me/product/33355907",
+      "image": "https://images-api.printify.com/mockup/6ad7f22ff9cd664119079649/25458/98502/lucky-cat-maneki-neko-retro-vaporwave-graphic-unisex-crewneck-sweatshirt.jpg?camera_label=front&s=2048",
+      "price": "$29.99",
+      "sizes": [
+        "2XL",
+        "S",
+        "M",
+        "XL",
+        "L",
+        "3XL",
+        "5XL",
+        "4XL"
+      ],
+      "colors": [
+        "Default"
+      ],
+      "brand": "Printify",
+      "channel": "Printify"
+    },
+    {
+      "id": "printify-33355902",
+      "name": "Lucky Cat Maneki Neko Retro Vaporwave Graphic Heavyweight Unisex Pullover Hoodie",
+      "url": "https://urban-clothes-market.printify.me/product/33355902",
+      "image": "https://images-api.printify.com/mockup/6ad7f227aaf6dcefb6024aab/109419/104654/lucky-cat-maneki-neko-retro-vaporwave-graphic-heavyweight-unisex-pullover-hoodie.jpg?camera_label=front&s=2048",
+      "price": "$37.99",
+      "sizes": [
+        "Red",
+        "Sky",
+        "Cocoa",
+        "Paragon",
+        "White",
+        "Black",
+        "Tangerine",
+        "Sand"
+      ],
+      "colors": [
+        "Default"
+      ],
+      "brand": "Printify",
+      "channel": "Printify"
+    },
+    {
+      "id": "printify-33355898",
+      "name": "Lucky Cat Maneki Neko Retro Vaporwave Graphic Classic Unisex Heavy Cotton T-Shirt",
+      "url": "https://urban-clothes-market.printify.me/product/33355898",
+      "image": "https://images-api.printify.com/mockup/6ad7f21bf2ea03930f04987c/12124/102005/lucky-cat-maneki-neko-retro-vaporwave-graphic-classic-unisex-heavy-cotton-t-shirt.jpg?camera_label=front-2&s=2048",
+      "price": "$24.99",
+      "sizes": [
+        "Tropical Blue",
+        "Cardinal Red",
+        "Light Blue",
+        "Natural",
+        "Purple",
+        "Charcoal",
+        "Black",
+        "Carolina Blue"
+      ],
+      "colors": [
+        "Default"
+      ],
+      "brand": "Printify",
+      "channel": "Printify"
+    },
+    {
+      "id": "printify-33355891",
+      "name": "Overland Explorer Trail Proven All-Terrain 4x4 Hardcover Journal Notebook",
+      "url": "https://urban-clothes-market.printify.me/product/33355891",
+      "image": "https://images-api.printify.com/mockup/6ad7f20fb0c1203caf05e586/119677/145720/overland-explorer-trail-proven-all-terrain-4x4-hardcover-journal-notebook.jpg?camera_label=front&s=2048",
+      "price": "$26.05",
+      "sizes": [
+        "5.5\" x 8.5\""
+      ],
+      "colors": [
+        "Default"
+      ],
+      "brand": "Printify",
+      "channel": "Printify"
+    },
+    {
+      "id": "printify-33355886",
+      "name": "Overland Explorer Trail Proven All-Terrain 4x4 Extended Desk Mat Mouse Pad",
+      "url": "https://urban-clothes-market.printify.me/product/33355886",
+      "image": "https://images-api.printify.com/mockup/6ad7f208c7280d399b0053b1/81075/100926/overland-explorer-trail-proven-all-terrain-4x4-extended-desk-mat-mouse-pad.jpg?camera_label=front&s=2048",
+      "price": "$38.99",
+      "sizes": [
+        "31.5\" × 15.5\"",
+        "14.4\" × 12.1\""
+      ],
+      "colors": [
+        "Default"
+      ],
+      "brand": "Printify",
+      "channel": "Printify"
+    }
+  ]
+}
