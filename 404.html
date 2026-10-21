@@ -103,27 +103,22 @@
   }
   fetch('/catalog/index.json').then(r => r.json()).then(idx => {
     const slugLower = slug.toLowerCase();
+    const cleanSlug = slugLower.replace(/[^a-z0-9]+/g, '-');
     let foundRow = null;
     for (let i = 0; i < idx.rows.length; i++) {
       const r = idx.rows[i];
-      if (r[0] === slug || r[0].toLowerCase() === slugLower) {
+      const rId = String(r[0]).toLowerCase();
+      const rSlug = rId.replace(/[^a-z0-9]+/g, '-');
+      const rSuffix = rSlug.slice(-15);
+      if (rId === slugLower || rSlug === cleanSlug || cleanSlug.endsWith(rSuffix) || cleanSlug.includes(rSuffix)) {
         foundRow = r;
         break;
-      }
-    }
-    if (!foundRow) {
-      for (let i = 0; i < idx.rows.length; i++) {
-        const r = idx.rows[i];
-        if (slugLower.includes(r[0].toLowerCase()) || r[0].toLowerCase().includes(slugLower)) {
-          foundRow = r;
-          break;
-        }
       }
     }
     if (!foundRow) return;
     const shardId = foundRow[8];
     return fetch('/catalog/shards/' + shardId + '.json').then(r => r.json()).then(items => {
-      const p = items.find(x => x.id === foundRow[0] || (x.path && x.path.includes(slug)));
+      const p = items.find(x => x.id === foundRow[0] || (x.path && (x.path.includes(slug) || x.path.includes(cleanSlug))));
       if (!p) return;
       document.title = (p.design || p.name) + ' | Urban Clothes Market';
       const buyUrl = p.url || ('https://urbanclothesmarket.myspreadshop.com/' + encodeURIComponent(p.design || ''));
