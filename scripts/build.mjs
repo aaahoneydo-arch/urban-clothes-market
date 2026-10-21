@@ -219,8 +219,136 @@ write('index.html', shell({
   }
 }));
 
-// Copy index.html, style.css, app.js directly from source to dist and root
+const fallbackScript = `<script id="dynamic-product-fallback">
+(function() {
+  const pth = window.location.pathname;
+  if (!pth.startsWith('/products/')) return;
+  const slug = pth.replace(/^\\/products\\//, '').replace(/\\/$/, '').trim();
+  if (!slug) return;
+  const main = document.querySelector('main');
+  if (main) {
+    main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
+  }
+  fetch('/catalog/index.json').then(r => r.json()).then(idx => {
+    const slugLower = slug.toLowerCase();
+    let foundRow = null;
+    for (let i = 0; i < idx.rows.length; i++) {
+      const r = idx.rows[i];
+      if (r[0] === slug || r[0].toLowerCase() === slugLower) {
+        foundRow = r;
+        break;
+      }
+    }
+    if (!foundRow) {
+      for (let i = 0; i < idx.rows.length; i++) {
+        const r = idx.rows[i];
+        if (slugLower.includes(r[0].toLowerCase()) || r[0].toLowerCase().includes(slugLower)) {
+          foundRow = r;
+          break;
+        }
+      }
+    }
+    if (!foundRow) return;
+    const shardId = foundRow[8];
+    return fetch('/catalog/shards/' + shardId + '.json').then(r => r.json()).then(items => {
+      const p = items.find(x => x.id === foundRow[0] || (x.path && x.path.includes(slug)));
+      if (!p) return;
+      document.title = (p.design || p.name) + ' | Urban Clothes Market';
+      const buyUrl = p.url || ('https://urbanclothesmarket.myspreadshop.com/' + encodeURIComponent(p.design || ''));
+      const price = Number(p.price || 24.99).toFixed(2);
+      if (main) {
+        main.innerHTML = \`
+          <div class="wrap pdp-wrap">
+            <nav class="breadcrumb pdp-breadcrumb" aria-label="Breadcrumb">
+              <a href="/">Home</a>
+              <span class="crumb-sep">/</span>
+              <a href="/types/\${p.category || 'tees'}/">\${(p.category || 'Apparel').toUpperCase()}</a>
+              <span class="crumb-sep">/</span>
+              <span class="current-crumb">\${p.design}</span>
+            </nav>
+            <section class="detail pdp-showcase">
+              <div class="pdp-gallery-col">
+                <div class="pdp-main-image-wrap">
+                  <img class="pdp-main-image" src="\${p.image}" alt="\${p.name || p.design}" width="600" height="600" loading="eager" decoding="async">
+                  <div class="pdp-image-badge">⚡ OFFICIAL STORE VERIFIED</div>
+                </div>
+              </div>
+              <div class="detail-info pdp-action-col">
+                <div class="pdp-top-badge-row">
+                  <span class="pdp-category-pill">\${(p.category || 'Apparel').toUpperCase()}</span>
+                  <span class="pdp-stock-pill">✓ Made to Order · In Stock</span>
+                </div>
+                <h1 class="pdp-title">\${p.design}</h1>
+                <div class="pdp-subtitle">\${p.productType || 'Original Graphic Wear'}</div>
+                <div class="pdp-price-box">
+                  <div class="pdp-price-amount">$\${price}</div>
+                  <div class="pdp-shipping-note">Free shipping on orders $75+ · Dispatched in 2-3 business days</div>
+                </div>
+                <div class="pdp-cta-container">
+                  <a class="btn-pdp-buy" href="\${buyUrl}" target="_blank" rel="noopener">
+                    <span>Buy Now on Official Store — $\${price}</span>
+                    <span class="cta-arrow">↗</span>
+                  </a>
+                  <div class="pdp-cta-subtext">
+                    <span>🔒 Direct to Official Shop</span>
+                    <span>⚡ Select Size &amp; Color at Checkout</span>
+                    <span>↩️ 30-Day Guarantee</span>
+                  </div>
+                </div>
+                <div class="pdp-quick-options">
+                  <div class="pdp-opt-row">
+                    <span class="pdp-opt-label">Available Sizes:</span>
+                    <div class="pdp-size-badges">
+                      \${(p.sizes && p.sizes.length ? p.sizes : ['S','M','L','XL','2XL','3XL']).map(s => \`<span class="opt-badge">\${s}</span>\`).join('')}
+                    </div>
+                  </div>
+                  <div class="pdp-opt-row">
+                    <span class="pdp-opt-label">Available Colors:</span>
+                    <div class="pdp-color-badges">
+                      \${(p.colors && p.colors.length ? p.colors : ['Black','White']).map(c => \`<span class="opt-badge">\${c}</span>\`).join('')}
+                    </div>
+                  </div>
+                </div>
+                <div class="pdp-mini-trust">
+                  <span class="trust-badge-pill">🛡️ Guaranteed Secure Checkout</span>
+                  <span class="trust-badge-pill">📦 Tracked Door-to-Door</span>
+                  <span class="trust-badge-pill">★ Google Reviews Partner</span>
+                </div>
+              </div>
+            </section>
+            <section class="pdp-bottom-details">
+              <div class="pdp-details-grid">
+                <div class="pdp-detail-card">
+                  <h3>About This Graphic Design</h3>
+                  <p>\${p.description || 'Premium original graphic merchandise crafted with high-density print technology. Tailored for comfort, durability, and bold personal expression.'}</p>
+                </div>
+                <div class="pdp-detail-card">
+                  <h3>Product Specifications</h3>
+                  <p>Eco-friendly high-density print on pre-shrunk premium materials. Double-stitched seams with retail streetwear finish.</p>
+                </div>
+                <div class="pdp-detail-card">
+                  <h3>Satisfaction &amp; Returns</h3>
+                  <p>Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p>
+                  <a class="pdp-policy-link" href="/returns/">Read Full Return Policy ↗</a>
+                </div>
+              </div>
+            </section>
+          </div>
+        \`;
+      }
+    });
+  }).catch(err => {
+    console.warn('Could not dynamically load product:', err);
+  });
+})();
+</script>`;
+write('404.html',shell({title:'Page not found',description:'Find your next favorite at Urban Clothes Market.',path:'/404.html',meta,robots:'noindex,follow',body:'<div class="legal wrap"><h1>THIS WAY TO THE MARKET.</h1><p>That page could not be found.</p><a class="btn dark" href="/">Back to the market ↗</a></div>' + fallbackScript}));
+write('_headers','/catalog/*\n  Cache-Control: public, max-age=3600\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
+
+// Copy index.html, 404.html, style.css, app.js directly from source to dist and root
 fs.copyFileSync(path.join(root,'index.html'), 'index.html');
+fs.copyFileSync(path.join(root,'404.html'), '404.html');
+fs.copyFileSync(path.join(root,'_headers'), '_headers');
 fs.copyFileSync('src/style.css', path.join(root,'style.css'));
 fs.copyFileSync('src/style.css', 'style.css');
 fs.copyFileSync('src/app.js', path.join(root,'app.js'));
@@ -230,7 +358,7 @@ fs.copyFileSync('src/search-worker.js', 'search-worker.js');
 fs.cpSync(path.join(root,'catalog'), 'catalog', { recursive: true });
 
 if(isHomeOnly){
-  console.log('Homepage, styles, and scripts compiled and synced to root successfully!');
+  console.log('Homepage, 404, styles, and scripts compiled and synced to root successfully!');
   process.exit(0);
 }
 
@@ -646,131 +774,7 @@ for(let i=0;i<sitemap.length;i+=40000){
   write(filename,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+sitemap.slice(i,i+40000).map(p=>'<url><loc>'+ORIGIN+esc(p)+'</loc></url>').join('')+'</urlset>');
 }
 write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+chunks.map(file=>'<sitemap><loc>'+ORIGIN+'/'+file+'</loc></sitemap>').join('')+'</sitemapindex>');
-const fallbackScript = `<script id="dynamic-product-fallback">
-(function() {
-  const pth = window.location.pathname;
-  if (!pth.startsWith('/products/')) return;
-  const slug = pth.replace(/^\\/products\\//, '').replace(/\\/$/, '').trim();
-  if (!slug) return;
-  const main = document.querySelector('main');
-  if (main) {
-    main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
-  }
-  fetch('/catalog/index.json').then(r => r.json()).then(idx => {
-    const slugLower = slug.toLowerCase();
-    let foundRow = null;
-    for (let i = 0; i < idx.rows.length; i++) {
-      const r = idx.rows[i];
-      if (r[0] === slug || r[0].toLowerCase() === slugLower) {
-        foundRow = r;
-        break;
-      }
-    }
-    if (!foundRow) {
-      for (let i = 0; i < idx.rows.length; i++) {
-        const r = idx.rows[i];
-        if (slugLower.includes(r[0].toLowerCase()) || r[0].toLowerCase().includes(slugLower)) {
-          foundRow = r;
-          break;
-        }
-      }
-    }
-    if (!foundRow) return;
-    const shardId = foundRow[8];
-    return fetch('/catalog/shards/' + shardId + '.json').then(r => r.json()).then(items => {
-      const p = items.find(x => x.id === foundRow[0] || (x.path && x.path.includes(slug)));
-      if (!p) return;
-      document.title = (p.design || p.name) + ' | Urban Clothes Market';
-      const buyUrl = p.url || ('https://urbanclothesmarket.myspreadshop.com/' + encodeURIComponent(p.design || ''));
-      const price = Number(p.price || 24.99).toFixed(2);
-      if (main) {
-        main.innerHTML = \`
-          <div class="wrap pdp-wrap">
-            <nav class="breadcrumb pdp-breadcrumb" aria-label="Breadcrumb">
-              <a href="/">Home</a>
-              <span class="crumb-sep">/</span>
-              <a href="/types/\${p.category || 'tees'}/">\${(p.category || 'Apparel').toUpperCase()}</a>
-              <span class="crumb-sep">/</span>
-              <span class="current-crumb">\${p.design}</span>
-            </nav>
-            <section class="detail pdp-showcase">
-              <div class="pdp-gallery-col">
-                <div class="pdp-main-image-wrap">
-                  <img class="pdp-main-image" src="\${p.image}" alt="\${p.name || p.design}" width="600" height="600" loading="eager" decoding="async">
-                  <div class="pdp-image-badge">⚡ OFFICIAL STORE VERIFIED</div>
-                </div>
-              </div>
-              <div class="detail-info pdp-action-col">
-                <div class="pdp-top-badge-row">
-                  <span class="pdp-category-pill">\${(p.category || 'Apparel').toUpperCase()}</span>
-                  <span class="pdp-stock-pill">✓ Made to Order · In Stock</span>
-                </div>
-                <h1 class="pdp-title">\${p.design}</h1>
-                <div class="pdp-subtitle">\${p.productType || 'Original Graphic Wear'}</div>
-                <div class="pdp-price-box">
-                  <div class="pdp-price-amount">$\${price}</div>
-                  <div class="pdp-shipping-note">Free shipping on orders $75+ · Dispatched in 2-3 business days</div>
-                </div>
-                <div class="pdp-cta-container">
-                  <a class="btn-pdp-buy" href="\${buyUrl}" target="_blank" rel="noopener">
-                    <span>Buy Now on Official Store — $\${price}</span>
-                    <span class="cta-arrow">↗</span>
-                  </a>
-                  <div class="pdp-cta-subtext">
-                    <span>🔒 Direct to Official Shop</span>
-                    <span>⚡ Select Size &amp; Color at Checkout</span>
-                    <span>↩️ 30-Day Guarantee</span>
-                  </div>
-                </div>
-                <div class="pdp-quick-options">
-                  <div class="pdp-opt-row">
-                    <span class="pdp-opt-label">Available Sizes:</span>
-                    <div class="pdp-size-badges">
-                      \${(p.sizes && p.sizes.length ? p.sizes : ['S','M','L','XL','2XL','3XL']).map(s => \`<span class="opt-badge">\${s}</span>\`).join('')}
-                    </div>
-                  </div>
-                  <div class="pdp-opt-row">
-                    <span class="pdp-opt-label">Available Colors:</span>
-                    <div class="pdp-color-badges">
-                      \${(p.colors && p.colors.length ? p.colors : ['Black','White']).map(c => \`<span class="opt-badge">\${c}</span>\`).join('')}
-                    </div>
-                  </div>
-                </div>
-                <div class="pdp-mini-trust">
-                  <span class="trust-badge-pill">🛡️ Guaranteed Secure Checkout</span>
-                  <span class="trust-badge-pill">📦 Tracked Door-to-Door</span>
-                  <span class="trust-badge-pill">★ Google Reviews Partner</span>
-                </div>
-              </div>
-            </section>
-            <section class="pdp-bottom-details">
-              <div class="pdp-details-grid">
-                <div class="pdp-detail-card">
-                  <h3>About This Graphic Design</h3>
-                  <p>\${p.description || 'Premium original graphic merchandise crafted with high-density print technology. Tailored for comfort, durability, and bold personal expression.'}</p>
-                </div>
-                <div class="pdp-detail-card">
-                  <h3>Product Specifications</h3>
-                  <p>Eco-friendly high-density print on pre-shrunk premium materials. Double-stitched seams with retail streetwear finish.</p>
-                </div>
-                <div class="pdp-detail-card">
-                  <h3>Satisfaction &amp; Returns</h3>
-                  <p>Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p>
-                  <a class="pdp-policy-link" href="/returns/">Read Full Return Policy ↗</a>
-                </div>
-              </div>
-            </section>
-          </div>
-        \`;
-      }
-    });
-  }).catch(err => {
-    console.warn('Could not dynamically load product:', err);
-  });
-})();
-</script>`;
-write('404.html',shell({title:'Page not found',description:'Find your next favorite at Urban Clothes Market.',path:'/404.html',meta,robots:'noindex,follow',body:'<div class="legal wrap"><h1>THIS WAY TO THE MARKET.</h1><p>That page could not be found.</p><a class="btn dark" href="/">Back to the market ↗</a></div>' + fallbackScript}));
-write('_headers','/catalog/*\n  Cache-Control: public, max-age=3600\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
+
 
 fs.writeFileSync('data/build-report.json',JSON.stringify({count:products.length,designs:designs.length,types:meta.typeCounts,themes:meta.themeCounts,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size},null,2));
 console.log(JSON.stringify({products:products.length,designs:designs.length,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size}));
