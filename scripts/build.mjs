@@ -277,7 +277,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
                 <div class="pdp-subtitle">\${p.productType || 'Original Graphic Wear'}</div>
                 <div class="pdp-price-box">
                   <div class="pdp-price-amount">$\${price}</div>
-                  <div class="pdp-shipping-note">Free shipping on orders $75+ · Dispatched in 2-3 business days</div>
+                  <div class="pdp-shipping-note">Made to order. See the seller's current delivery estimates and return policy.</div>
                 </div>
                 <div class="pdp-cta-container">
                   <a class="btn-pdp-buy" href="\${buyUrl}" target="_blank" rel="noopener">
@@ -287,7 +287,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
                   <div class="pdp-cta-subtext">
                     <span>🔒 Direct to Official Shop</span>
                     <span>⚡ Select Size &amp; Color at Checkout</span>
-                    <span>↩️ 30-Day Guarantee</span>
+                    <span>✓ Order Directly with Supplier</span>
                   </div>
                 </div>
                 <div class="pdp-quick-options">
@@ -305,9 +305,8 @@ const fallbackScript = `<script id="dynamic-product-fallback">
                   </div>
                 </div>
                 <div class="pdp-mini-trust">
-                  <span class="trust-badge-pill">🛡️ Guaranteed Secure Checkout</span>
-                  <span class="trust-badge-pill">📦 Tracked Door-to-Door</span>
-                  <span class="trust-badge-pill">★ Google Reviews Partner</span>
+                  <span class="trust-badge-pill">🛡️ Guaranteed Secure Partner Checkout</span>
+                  <span class="trust-badge-pill">📦 Direct Supplier Fulfillment</span>
                 </div>
               </div>
             </section>
@@ -319,12 +318,12 @@ const fallbackScript = `<script id="dynamic-product-fallback">
                 </div>
                 <div class="pdp-detail-card">
                   <h3>Product Specifications</h3>
-                  <p>Eco-friendly high-density print on pre-shrunk premium materials. Double-stitched seams with retail streetwear finish.</p>
+                  <p>Custom printed made to order. Confirm material and sizing details with the supplier at checkout.</p>
                 </div>
                 <div class="pdp-detail-card">
-                  <h3>Satisfaction &amp; Returns</h3>
-                  <p>Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p>
-                  <a class="pdp-policy-link" href="/returns/">Read Full Return Policy ↗</a>
+                  <h3>Returns &amp; Terms</h3>
+                  <p>Made to order. See the seller's current delivery estimates and return policy on the checkout page.</p>
+                  <a class="pdp-policy-link" href="/returns/">Read Store Help &amp; Policies ↗</a>
                 </div>
               </div>
             </section>
@@ -639,7 +638,7 @@ for(const p of products){
 
         <div class="pdp-price-box">
           <div class="pdp-price-amount">$${p.price.toFixed(2)}</div>
-          <div class="pdp-shipping-note">Free shipping on orders $75+ · Dispatched in 2-3 business days</div>
+          <div class="pdp-shipping-note">Made to order. See the seller's current delivery estimates and return policy.</div>
         </div>
 
         <div class="pdp-cta-container">
@@ -650,7 +649,7 @@ for(const p of products){
           <div class="pdp-cta-subtext">
             <span>🔒 Direct to Official Shop</span>
             <span>⚡ Select Size &amp; Color at Checkout</span>
-            <span>↩️ 30-Day Guarantee</span>
+            <span>✓ Order Directly with Supplier</span>
           </div>
         </div>
 
@@ -670,9 +669,8 @@ for(const p of products){
         </div>
 
         <div class="pdp-mini-trust">
-          <span class="trust-badge-pill">🛡️ Guaranteed Secure Checkout</span>
-          <span class="trust-badge-pill">📦 Tracked Door-to-Door</span>
-          <span class="trust-badge-pill">★ Google Reviews Partner</span>
+          <span class="trust-badge-pill">🛡️ Guaranteed Secure Partner Checkout</span>
+          <span class="trust-badge-pill">📦 Direct Supplier Fulfillment</span>
         </div>
       </div>
     </section>
@@ -692,15 +690,15 @@ for(const p of products){
           <p>${details.specValue}</p>
           <dl class="pdp-specs-list">
             <dt>Fit &amp; Audience:</dt><dd>${esc(p.audience)}</dd>
-            <dt>Production Method:</dt><dd>Eco-friendly high-density digital print</dd>
-            <dt>Handling Time:</dt><dd>Custom printed &amp; dispatched in 2-3 business days</dd>
+            <dt>Production Method:</dt><dd>Custom printed made to order</dd>
+            <dt>Delivery &amp; Shipping:</dt><dd>Confirmed during checkout on official partner store</dd>
           </dl>
         </div>
 
         <div class="pdp-detail-card">
-          <h3>Satisfaction &amp; Returns</h3>
-          <p>Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p>
-          <a class="pdp-policy-link" href="/returns/">Read Full Return Policy ↗</a>
+          <h3>Returns &amp; Terms</h3>
+          <p>Made to order. See the seller's current delivery estimates and return policy on the checkout page.</p>
+          <a class="pdp-policy-link" href="/returns/">Read Store Help &amp; Policies ↗</a>
         </div>
       </div>
     </section>
