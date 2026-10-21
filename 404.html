@@ -130,35 +130,81 @@
       const price = Number(p.price || 24.99).toFixed(2);
       if (main) {
         main.innerHTML = `
-          <div class="product-detail wrap" style="padding:32px 16px;max-width:1100px;margin:0 auto">
-            <nav class="breadcrumb" style="margin-bottom:20px;font-size:0.9rem;color:#777">
-              <a href="/" style="color:#111;text-decoration:none">Home</a> <span style="margin:0 6px">/</span>
-              <a href="/types/${p.category || 'tees'}/" style="color:#111;text-decoration:none">${(p.category || 'Apparel').toUpperCase()}</a> <span style="margin:0 6px">/</span>
-              <span style="color:#555">${p.design}</span>
+          <div class="wrap pdp-wrap">
+            <nav class="breadcrumb pdp-breadcrumb" aria-label="Breadcrumb">
+              <a href="/">Home</a>
+              <span class="crumb-sep">/</span>
+              <a href="/types/${p.category || 'tees'}/">${(p.category || 'Apparel').toUpperCase()}</a>
+              <span class="crumb-sep">/</span>
+              <span class="current-crumb">${p.design}</span>
             </nav>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px;align-items:start">
-              <div style="background:#f8f9fa;border-radius:12px;padding:24px;text-align:center;border:1px solid #e9ecef">
-                <img src="${p.image}" alt="${p.name || p.design}" style="max-width:100%;height:auto;border-radius:8px;object-fit:contain;max-height:480px">
-              </div>
-              <div class="detail-info" style="padding:10px 0">
-                <span style="display:inline-block;background:#d5fa42;color:#000;font-weight:800;font-size:0.75rem;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;margin-bottom:12px">⚡ OFFICIAL MARKET EXCLUSIVE</span>
-                <h1 style="font-size:2rem;line-height:1.2;margin:0 0 8px 0;font-weight:900">${p.design}</h1>
-                <div style="font-size:1.1rem;color:#666;margin-bottom:16px">${p.productType || 'Original Graphic Wear'}</div>
-                <div style="background:#f4f4f5;border-radius:8px;padding:16px;margin-bottom:24px">
-                  <div style="font-size:1.8rem;font-weight:900;color:#111">$${price}</div>
-                  <div style="font-size:0.85rem;color:#16a34a;font-weight:600;margin-top:4px">✓ In Stock · Made-to-Order in 2-3 Business Days</div>
-                </div>
-                <p style="font-size:0.95rem;line-height:1.6;color:#444;margin-bottom:24px">${p.description || 'Premium original graphic merchandise crafted with high-density print technology. Tailored for comfort, durability, and bold personal expression.'}</p>
-                <div style="display:flex;flex-direction:column;gap:12px">
-                  <a href="${buyUrl}" class="btn acid" target="_blank" rel="noopener" style="display:block;text-align:center;padding:16px 24px;font-size:1.15rem;font-weight:900;text-decoration:none;border-radius:8px;background:#d5fa42;color:#000;border:none">
-                    Select Size &amp; Order on Official Store ↗
-                  </a>
-                  <a href="/" class="btn dark" style="display:block;text-align:center;padding:14px;border-radius:8px;background:#18181b;color:#fff;text-decoration:none;font-weight:700">
-                    ← Explore 100,000+ Graphic Items
-                  </a>
+            <section class="detail pdp-showcase">
+              <div class="pdp-gallery-col">
+                <div class="pdp-main-image-wrap">
+                  <img class="pdp-main-image" src="${p.image}" alt="${p.name || p.design}" width="600" height="600" loading="eager" decoding="async">
+                  <div class="pdp-image-badge">⚡ OFFICIAL STORE VERIFIED</div>
                 </div>
               </div>
-            </div>
+              <div class="detail-info pdp-action-col">
+                <div class="pdp-top-badge-row">
+                  <span class="pdp-category-pill">${(p.category || 'Apparel').toUpperCase()}</span>
+                  <span class="pdp-stock-pill">✓ Made to Order · In Stock</span>
+                </div>
+                <h1 class="pdp-title">${p.design}</h1>
+                <div class="pdp-subtitle">${p.productType || 'Original Graphic Wear'}</div>
+                <div class="pdp-price-box">
+                  <div class="pdp-price-amount">$${price}</div>
+                  <div class="pdp-shipping-note">Free shipping on orders $75+ · Dispatched in 2-3 business days</div>
+                </div>
+                <div class="pdp-cta-container">
+                  <a class="btn-pdp-buy" href="${buyUrl}" target="_blank" rel="noopener">
+                    <span>Buy Now on Official Store — $${price}</span>
+                    <span class="cta-arrow">↗</span>
+                  </a>
+                  <div class="pdp-cta-subtext">
+                    <span>🔒 Direct to Official Shop</span>
+                    <span>⚡ Select Size &amp; Color at Checkout</span>
+                    <span>↩️ 30-Day Guarantee</span>
+                  </div>
+                </div>
+                <div class="pdp-quick-options">
+                  <div class="pdp-opt-row">
+                    <span class="pdp-opt-label">Available Sizes:</span>
+                    <div class="pdp-size-badges">
+                      ${(p.sizes && p.sizes.length ? p.sizes : ['S','M','L','XL','2XL','3XL']).map(s => `<span class="opt-badge">${s}</span>`).join('')}
+                    </div>
+                  </div>
+                  <div class="pdp-opt-row">
+                    <span class="pdp-opt-label">Available Colors:</span>
+                    <div class="pdp-color-badges">
+                      ${(p.colors && p.colors.length ? p.colors : ['Black','White']).map(c => `<span class="opt-badge">${c}</span>`).join('')}
+                    </div>
+                  </div>
+                </div>
+                <div class="pdp-mini-trust">
+                  <span class="trust-badge-pill">🛡️ Guaranteed Secure Checkout</span>
+                  <span class="trust-badge-pill">📦 Tracked Door-to-Door</span>
+                  <span class="trust-badge-pill">★ Google Reviews Partner</span>
+                </div>
+              </div>
+            </section>
+            <section class="pdp-bottom-details">
+              <div class="pdp-details-grid">
+                <div class="pdp-detail-card">
+                  <h3>About This Graphic Design</h3>
+                  <p>${p.description || 'Premium original graphic merchandise crafted with high-density print technology. Tailored for comfort, durability, and bold personal expression.'}</p>
+                </div>
+                <div class="pdp-detail-card">
+                  <h3>Product Specifications</h3>
+                  <p>Eco-friendly high-density print on pre-shrunk premium materials. Double-stitched seams with retail streetwear finish.</p>
+                </div>
+                <div class="pdp-detail-card">
+                  <h3>Satisfaction &amp; Returns</h3>
+                  <p>Custom printed with vibrant archival clarity. If you are not 100% satisfied with your order, we will replace it or issue a full refund within 30 days.</p>
+                  <a class="pdp-policy-link" href="/returns/">Read Full Return Policy ↗</a>
+                </div>
+              </div>
+            </section>
           </div>
         `;
       }

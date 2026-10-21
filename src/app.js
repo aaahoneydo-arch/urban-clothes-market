@@ -31,9 +31,10 @@ function card(p){
     ? p.url
     : (p.path && !p.path.includes('urbanclothesmarket.com') && p.path.startsWith('http') && !p.path.includes('?q='))
       ? p.path
-      : 'https://urban-clothes-market.printify.me/product/33326966';
+      : 'https://urbanclothesmarket.myspreadshop.com/';
+  const pdpUrl = p.path || buyUrl;
   const priceVal = typeof p.price === 'number' ? p.price.toFixed(2) : (parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 24.99).toFixed(2);
-  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(buyUrl)}" target="_blank" rel="noopener" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(buyUrl)}" target="_blank" rel="noopener">${esc(p.design || p.name)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="card-price-action"><div class="price">$${priceVal}</div><a class="btn-card-buy" href="${esc(buyUrl)}" target="_blank" rel="noopener">Buy Now ↗</a></div>${swatchesHtml}</article>`;
+  return `<article class="product-card" data-id="${esc(p.id)}"><div class="product-image"><a href="${esc(pdpUrl)}" aria-label="${esc(p.name)}"><img loading="lazy" decoding="async" width="400" height="400" src="${esc(p.image)}" alt="${esc(p.name)}"></a><button class="heart" data-save="${esc(p.id)}" aria-label="Save ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button></div><div class="product-category">${esc(p.audience)}</div><h3><a class="product-link" href="${esc(pdpUrl)}">${esc(p.design || p.name)}</a></h3><div class="product-type">${esc(p.productType)}</div><div class="card-price-action"><div class="price">$${priceVal}</div><a class="btn-card-buy" href="${esc(buyUrl)}" target="_blank" rel="noopener">Buy Now ↗</a></div>${swatchesHtml}</article>`;
 }
 
 let worker=new Worker('/search-worker.js',{type:'module'}),requestId=0,pending=new Map(),shards=new Map();

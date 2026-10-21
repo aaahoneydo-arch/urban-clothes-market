@@ -132,7 +132,7 @@ export function normalize(raw) {
       ? p.url
       : (p.path && !p.path.includes('urbanclothesmarket.com') && p.path.startsWith('http'))
         ? p.path
-        : `https://urban-clothes-market.printify.me/product/33326966`;
+        : `https://urbanclothesmarket.myspreadshop.com/`;
 
     const cleanColors = Array.from(new Set((p.colors || ['Black', 'White', 'Heather Grey']).map(c => String(c).trim()).filter(Boolean)));
 
