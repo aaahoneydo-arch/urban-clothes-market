@@ -151,7 +151,7 @@ export function normalize(raw) {
       audience,
       kids,
       brand,
-      path: finalUrl,
+      path: '/products/' + pathSlug + '/',
       shard: Math.floor(i / 200)
     };
   });
