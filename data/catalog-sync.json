@@ -1,74 +1,11 @@
 {
-  "source": "https://urbanclothesmarket.myspreadshop.com/all",
-  "checkedAt": "2026-10-15T03:30:00.000Z",
-  "checkedDate": "2026-10-17",
-  "publicPages": 1077,
-  "previousListings": 100500,
-  "listings": 103358,
-  "addedListings": 1615,
-  "removedListings": 0,
-  "changedListings": 0,
-  "addedDesigns": [
-    {
-      "name": "Introverted But Willing to Discuss Dogs",
-      "listings": 212
-    },
-    {
-      "name": "Easily Distracted by Cats",
-      "listings": 212
-    },
-    {
-      "name": "Mountains Are Calling I Must Go Badge",
-      "listings": 212
-    },
-    {
-      "name": "Dogs Over People Vintage Canine Badge",
-      "listings": 212
-    },
-    {
-      "name": "Neon Social Battery 1 Percent",
-      "listings": 212
-    },
-    {
-      "name": "Tech Bee Halo: Not a Bug, Feature",
-      "listings": 212
-    },
-    {
-      "name": "Neon Eat Sleep Game Repeat",
-      "listings": 212
-    },
-    {
-      "name": "DM Dragon Dice Crest",
-      "listings": 212
-    },
-    {
-      "name": "Golden Retriever Energy Burst",
-      "listings": 212
-    },
-    {
-      "name": "Tell Your Dog I Said Hi",
-      "listings": 212
-    },
-    {
-      "name": "Cat Hair Don’t Care",
-      "listings": 212
-    },
-    {
-      "name": "Sassy Cat Talk Smack Tee",
-      "listings": 212
-    },
-    {
-      "name": "Pause Not: Pixel Skull Warning",
-      "listings": 212
-    },
-    {
-      "name": "Chaos Coordinator Athletic Badge",
-      "listings": 212
-    },
-    {
-      "name": "Bold Retro Starburst Victory Patch",
-      "listings": 212
-    }
-  ],
-  "removedDesigns": []
+  "updatedAt": "2026-10-28T06:04:56.691Z",
+  "totalProducts": 18622,
+  "channels": {
+    "spreadshop": 15835,
+    "printify": 2215,
+    "zazzle": 398,
+    "redbubble": 129,
+    "teepublic": 45
+  }
 }

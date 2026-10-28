@@ -13,7 +13,7 @@ fs.mkdirSync(root,{recursive:true});
 const raw = JSON.parse(fs.readFileSync('data/catalog.json'));
 const products = normalize(raw);
 const sync = JSON.parse(fs.readFileSync('data/catalog-sync.json','utf8'));
-const meta = {count:products.length,updated:sync.checkedDate,typeCounts:{},themeCounts:{},themeHero:{}};
+const meta = {count:products.length,updated:sync.checkedDate||(sync.updatedAt||'').slice(0,10)||'2026-10-28',typeCounts:{},themeCounts:{},themeHero:{}};
 
 for(const [id,,r] of TYPES) meta.typeCounts[id]=products.filter(p=>id==='kids'?p.kids:p.category===id).length;
 for(const [id] of THEMES){
@@ -69,7 +69,11 @@ const isCleanProfessional = p => Boolean(
   !p.image.includes('localhost') &&
   (
     p.image.includes('/mockups/') ||
-    p.image.includes('spreadshirtmedia.com/image-server')
+    p.image.includes('spreadshirtmedia.com/image-server') ||
+    p.image.includes('images-api.printify.com') ||
+    p.image.includes('rlv.zcache.com') ||
+    p.image.includes('ih1.redbubble.net') ||
+    p.image.includes('images.teepublic.com')
   )
 );
 
@@ -608,7 +612,17 @@ for(const p of products){
   if(prodCount % 1000 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
   const details = getProductDetails(p);
   const typeLabel = TYPES.find(x => x[0] === p.category)?.[1] || 'Graphic Apparel';
-  const partnerName = p.url && p.url.includes("myspreadshop.com") ? "Spreadshop Verified" : (p.url && p.url.includes("printify.me") ? "Printify Verified" : "Official Store Verified");
+  const partnerName = p.url && p.url.includes("myspreadshop.com")
+    ? "Spreadshop Verified"
+    : p.url && p.url.includes("printify.me")
+      ? "Printify Verified"
+      : p.url && p.url.includes("zazzle.com")
+        ? "Zazzle Verified"
+        : p.url && p.url.includes("redbubble.com")
+          ? "Redbubble Verified"
+          : p.url && p.url.includes("teepublic.com")
+            ? "TeePublic Verified"
+            : "Official Store Verified";
 
   const body = `<div class="wrap pdp-wrap">
     <nav class="breadcrumb pdp-breadcrumb" aria-label="Breadcrumb">
@@ -706,7 +720,9 @@ for(const p of products){
     ${themeShowcase(p.themes[0]||'urban','Related Designs & Styles','')}
   </div>`;
 
-  write(p.path.slice(1)+'index.html',shell({title:p.design+' — '+p.productType,description:p.name+'. Pick your size and color and shop this graphic design at Urban Clothes Market.',path:p.path,body,meta,structured:{'@context':'https://schema.org','@type':'Product',name:p.name,image:[p.image],sku:p.id,description:p.name,brand:{'@type':'Brand',name:p.brand||'Urban Clothes Market'},offers:{'@type':'Offer',price:p.price.toFixed(2),priceCurrency:'USD',availability:'https://schema.org/InStock',url:ORIGIN+p.path,itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'Urban Clothes Market'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'6.99',currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'},deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:1,maxValue:3,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:3,maxValue:6,unitCode:'DAY'}}},hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'US',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:30,returnMethod:'https://schema.org/ReturnByMail',returnFees:'https://schema.org/FreeReturn',merchantReturnLink:'https://www.urbanclothesmarket.com/returns/'}}}}));
+  const seoDesc = p.description || `${p.name}. Shop the official "${p.design}" ${p.productType} at Urban Clothes Market with direct verified checkout.`;
+  const seoKeywords = Array.isArray(p.tags) && p.tags.length ? p.tags.join(', ') : `${p.design}, ${p.productType}, Urban Clothes Market`;
+  write(p.path.slice(1)+'index.html',shell({title:p.design+' — '+p.productType,description:seoDesc,path:p.path,body,meta,structured:{'@context':'https://schema.org','@type':'Product',name:p.name,image:[p.image],sku:p.id,description:seoDesc,keywords:seoKeywords,category:typeLabel,brand:{'@type':'Brand',name:p.brand||'Urban Clothes Market'},offers:{'@type':'Offer',price:p.price.toFixed(2),priceCurrency:'USD',availability:'https://schema.org/InStock',url:p.url,itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:p.storeLabel||'Urban Clothes Market'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'6.99',currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'},deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:1,maxValue:3,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:3,maxValue:6,unitCode:'DAY'}}},hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'US',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:30,returnMethod:'https://schema.org/ReturnByMail',returnFees:'https://schema.org/FreeReturn',merchantReturnLink:'https://www.urbanclothesmarket.com/returns/'}}}}));
   sitemap.push(p.path);
 }
 
@@ -714,50 +730,6 @@ write('about/index.html',shell({title:'About the Market',description:'Meet Urban
 write('privacy/index.html',shell({title:'Privacy',description:'How Urban Clothes Market handles local favorites and third-party checkout.',path:'/privacy/',meta,body:`<article class="legal wrap"><h1>PRIVACY</h1><p>This storefront does not require an account or collect payment information. Favorites are stored in your browser on this device. You can remove them by clearing your browser’s site data.</p><h2>Images and fonts</h2><p>Product images load from our production partner’s image service. Fonts load from Google Fonts. These providers receive ordinary web requests, including your IP address. Your browser may use local caching to improve performance.</p><h2>Checkout</h2><p>Product and checkout links open our checkout partner’s site to choose options and complete your purchase. The checkout provider handles payment, fulfillment, and its own privacy policy. Hosting providers process ordinary access logs to serve and protect this site.</p><h2>Search</h2><p>Your storefront searches run in your browser. Google Search Console is used to understand search visibility; it does not add a visitor analytics tracker to this site.</p></article>`}));
 write('returns/index.html',shell({title:'Returns & exchanges',description:'Find the current return and exchange terms for your Urban Clothes Market order.',path:'/returns/',meta,body:`<article class="legal wrap"><h1>RETURNS & EXCHANGES</h1><p>Your order is handled by our checkout partner. Visit the order help center for the current return policy, eligibility and instructions.</p><p>Keep your order confirmation so support can find your purchase. Available return or exchange options depend on your order and the applicable terms.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000984869?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Returns & exchanges help ↗</a></article>`}));
 write('shipping/index.html',shell({title:'Shipping & delivery',description:'Confirm delivery estimates and shipping costs for Urban Clothes Market items before checkout.',path:'/shipping/',meta,body:`<article class="legal wrap"><h1>SHIPPING & DELIVERY</h1><p>Your items are made to order. Shipping costs and estimated delivery dates depend on the items, destination and delivery option you choose.</p><h2>Confirm your delivery details</h2><p>Choose your items, sizes and colors, then review the current shipping cost and estimated delivery date at checkout before ordering.</p><h2>After placing your order</h2><p>Use your order confirmation and our checkout partner’s help center for order updates and tracking information.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000993925?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Shipping & delivery help ↗</a></article>`}));
-
-const optInScript = `
-<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
-<script>
-  window.renderOptIn = function() {
-    window.gapi.load('surveyoptin', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const orderId = urlParams.get('order_id') || 'UCM-' + Math.floor(100000 + Math.random() * 900000);
-      const customerEmail = urlParams.get('email') || '';
-      const countryCode = urlParams.get('country') || 'US';
-
-      const deliveryDate = new Date();
-      deliveryDate.setDate(deliveryDate.getDate() + 5);
-      const yyyy = deliveryDate.getFullYear();
-      const mm = String(deliveryDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(deliveryDate.getDate()).padStart(2, '0');
-      const estDeliveryDate = urlParams.get('delivery_date') || (yyyy + '-' + mm + '-' + dd);
-
-      window.gapi.surveyoptin.render({
-        "merchant_id": 5871199587,
-        "order_id": orderId,
-        "email": customerEmail,
-        "delivery_country": countryCode,
-        "estimated_delivery_date": estDeliveryDate,
-        "opt_in_style": "CENTER_DIALOG"
-      });
-    });
-  };
-</script>
-`;
-
-const confirmationBody = `<article class="legal wrap"><div class="eyebrow" style="color:var(--accent,#d5fa42);font-weight:700">Order Confirmed</div><h1 style="margin-top:8px">THANK YOU FOR YOUR ORDER!</h1><p>Your order has been received and is being prepared with our production partners. You will receive an email confirmation with tracking information once your package ships.</p><div style="background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:24px;margin:24px 0"><h3 style="margin-top:0">Order Status &amp; Delivery</h3><ul style="line-height:1.8;padding-left:20px;color:#ccc"><li><strong>Production:</strong> Your items are custom made to order (typically 2-3 business days).</li><li><strong>Estimated Delivery:</strong> 3-5 business days after fulfillment.</li><li><strong>Google Customer Reviews:</strong> We value your genuine feedback. A Google Customer Review survey will appear to let you rate your shopping experience.</li></ul></div><p><a class="btn dark" href="/#catalog">Continue Shopping ↗</a> &nbsp; <a class="btn" href="/shipping/">Shipping Details</a></p></article>` + optInScript;
-
-for(const p of ['/order-confirmation/','/checkout/confirmation/','/confirmation/']){
-  write(p.slice(1)+'index.html', shell({
-    title: 'Order Confirmation',
-    description: 'Thank you for your order at Urban Clothes Market.',
-    path: p,
-    meta,
-    robots: 'noindex,follow',
-    body: confirmationBody
-  }));
-  sitemap.push(p);
-}
 
 write('robots.txt','User-agent: *\nAllow: /\nDisallow: /catalog/\nSitemap: '+ORIGIN+'/sitemap.xml\n');
 const chunks=[];
