@@ -2,17 +2,17 @@
   "count": 18622,
   "designs": 663,
   "types": {
-    "hoodies": 3166,
+    "hoodies": 3169,
     "jackets": 798,
-    "tees": 5048,
+    "tees": 5050,
     "hats": 1026,
     "mugs": 1266,
-    "art": 742,
-    "tech": 1207,
-    "home": 332,
-    "stickers": 905,
+    "art": 739,
+    "tech": 1198,
+    "home": 335,
+    "stickers": 904,
     "bags": 1111,
-    "stationery": 411,
+    "stationery": 416,
     "kids": 2295,
     "bottoms": 273,
     "pets": 235,
@@ -38,5 +38,5 @@
     "all": 18622
   },
   "pages": 21465,
-  "indexBytes": 2124382
+  "indexBytes": 2124465
 }

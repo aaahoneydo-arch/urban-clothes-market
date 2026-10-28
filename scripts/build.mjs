@@ -139,7 +139,7 @@ const homeBody = `
         <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
       </div>
     </div>
-    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
+    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
   </section>
 
   <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
@@ -241,7 +241,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
   if (main) {
     main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
   }
-  fetch('/catalog/index.json').then(r => r.json()).then(idx => {
+  fetch('/catalog/index.json?v=20261028-live-sync-v4').then(r => r.json()).then(idx => {
     const slugLower = slug.toLowerCase();
     const cleanSlug = slugLower.replace(/[^a-z0-9]+/g, '-');
     let foundRow = null;
@@ -257,7 +257,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
     }
     if (!foundRow) return;
     const shardId = foundRow[8];
-    return fetch('/catalog/shards/' + shardId + '.json').then(r => r.json()).then(items => {
+    return fetch('/catalog/shards/' + shardId + '.json?v=20261028-live-sync-v4').then(r => r.json()).then(items => {
       const p = items.find(x => x.id === foundRow[0] || (x.path && (x.path.includes(slug) || x.path.includes(cleanSlug))));
       if (!p) return;
       document.title = (p.design || p.name) + ' | Urban Clothes Market';
