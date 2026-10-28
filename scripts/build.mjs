@@ -241,7 +241,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
   if (main) {
     main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
   }
-  fetch('/catalog/index.json?v=20261028-live-sync-v4').then(r => r.json()).then(idx => {
+  fetch('/catalog/index.json?v=20261028-live-sync-v5').then(r => r.json()).then(idx => {
     const slugLower = slug.toLowerCase();
     const cleanSlug = slugLower.replace(/[^a-z0-9]+/g, '-');
     let foundRow = null;
@@ -257,7 +257,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
     }
     if (!foundRow) return;
     const shardId = foundRow[8];
-    return fetch('/catalog/shards/' + shardId + '.json?v=20261028-live-sync-v4').then(r => r.json()).then(items => {
+    return fetch('/catalog/shards/' + shardId + '.json?v=20261028-live-sync-v5').then(r => r.json()).then(items => {
       const p = items.find(x => x.id === foundRow[0] || (x.path && (x.path.includes(slug) || x.path.includes(cleanSlug))));
       if (!p) return;
       document.title = (p.design || p.name) + ' | Urban Clothes Market';
@@ -369,7 +369,7 @@ if(isHomeOnly){
 }
 
 // Full build continued:
-let sitemap=['/','/about/'];
+let sitemap=['/','/about/','/privacy/','/returns/','/shipping/','/gifts/cars/','/gifts/cats/','/gifts/dogs/','/gifts/gamers/','/gifts/humor/','/gifts/trades/'];
 
 const TYPE_SEO = {
   tees: {
@@ -691,23 +691,24 @@ for(const p of products){
 
   const seoDesc = p.description || `${p.name}. Shop the official "${p.design}" ${p.productType} at Urban Clothes Market with direct verified checkout.`;
   const seoKeywords = Array.isArray(p.tags) && p.tags.length ? p.tags.join(', ') : `${p.design}, ${p.productType}, Urban Clothes Market`;
-  write(p.path.slice(1)+'index.html',shell({title:p.design+' — '+p.productType,description:seoDesc,path:p.path,body,meta,structured:{'@context':'https://schema.org','@type':'Product',name:p.name,image:[p.image],sku:p.id,description:seoDesc,keywords:seoKeywords,category:typeLabel,brand:{'@type':'Brand',name:p.brand||'Urban Clothes Market'},offers:{'@type':'Offer',price:p.price.toFixed(2),priceCurrency:'USD',availability:'https://schema.org/InStock',url:p.url,itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:p.storeLabel||'Urban Clothes Market'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'6.99',currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'},deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:1,maxValue:3,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:3,maxValue:6,unitCode:'DAY'}}},hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'US',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:30,returnMethod:'https://schema.org/ReturnByMail',returnFees:'https://schema.org/FreeReturn',merchantReturnLink:'https://www.urbanclothesmarket.com/returns/'}}}}));
+  write(p.path.slice(1)+'index.html',shell({title:p.design+' — '+p.productType,description:seoDesc,path:p.path,body,meta,structured:{'@context':'https://schema.org','@type':'Product',name:p.name,image:[p.image],sku:p.id,description:seoDesc,keywords:seoKeywords,category:typeLabel,brand:{'@type':'Brand',name:p.brand||'Urban Clothes Market'},offers:{'@type':'Offer',price:p.price.toFixed(2),priceCurrency:'USD',availability:'https://schema.org/InStock',url:p.url,itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:p.storeLabel||'Urban Clothes Market'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'6.99',currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'},deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:1,maxValue:3,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:3,maxValue:6,unitCode:'DAY'}}},hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'US',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:30,returnMethod:'https://schema.org/ReturnByMail',returnFees:'https://schema.org/FreeReturn',merchantReturnLink:ORIGIN+'/returns/'}}}}));
   sitemap.push(p.path);
 }
 
 write('about/index.html',shell({title:'About the Market',description:'Meet Urban Clothes Market, a collection of original graphic apparel, gifts and accessories.',path:'/about/',meta,body:`<article class="legal wrap"><div class="eyebrow">Original designs. Everyday personality.</div><h1>WELCOME TO YOUR MARKET.</h1><p>Urban Clothes Market brings our original designs together in a growing collection of graphic clothing, accessories, and gifts for people with passions.</p><h2>Find your people.</h2><p>Whether your world revolves around cats, dogs, games, cars, or making things with your own hands, there’s a corner of this market for you. Browse by theme, narrow it by product type, or hit shuffle for a fresh discovery.</p><h2>From design to your door.</h2><p>Choose a design, pick your size and color, and complete checkout. Your items are made to order and shipped to your door. Shipping costs, delivery estimates, returns, taxes and promotions are confirmed during checkout.</p><h2>A collection that keeps growing.</h2><p>The current catalog contains ${products.length.toLocaleString()} unique listings, checked ${meta.updated}. This website uses a catalog snapshot. The newest arrivals and current availability are confirmed during checkout.</p><a class="btn dark" href="/#catalog">Explore the market ↗</a></article>`}));
-write('privacy/index.html',shell({title:'Privacy',description:'How Urban Clothes Market handles local favorites and third-party checkout.',path:'/privacy/',meta,body:`<article class="legal wrap"><h1>PRIVACY</h1><p>This storefront does not require an account or collect payment information. Favorites are stored in your browser on this device. You can remove them by clearing your browser’s site data.</p><h2>Images and fonts</h2><p>Product images load from our production partner’s image service. Fonts load from Google Fonts. These providers receive ordinary web requests, including your IP address. Your browser may use local caching to improve performance.</p><h2>Checkout</h2><p>Product and checkout links open our checkout partner’s site to choose options and complete your purchase. The checkout provider handles payment, fulfillment, and its own privacy policy. Hosting providers process ordinary access logs to serve and protect this site.</p><h2>Search</h2><p>Your storefront searches run in your browser. Google Search Console is used to understand search visibility; it does not add a visitor analytics tracker to this site.</p></article>`}));
+write('privacy/index.html',shell({title:'Privacy',description:'How Urban Clothes Market handles local favorites and third-party checkout.',path:'/privacy/',meta,body:`<article class="legal wrap"><h1>PRIVACY</h1><p>This storefront does not require an account or collect payment information. Favorites are stored in your browser on this device. You can remove them by clearing your browser’s site data.</p><h2>Images and fonts</h2><p>Product images load from our production partner’s image service. Fonts load from Google Fonts. These providers receive ordinary web requests, including your IP address. Your browser may use local caching to improve performance.</p><h2>Checkout</h2><p>Product and checkout links open our checkout partner’s site to choose options and complete your purchase. The checkout provider handles payment, fulfillment, and its own privacy policy. Hosting providers process ordinary access logs to serve and protect this site.</p><h2>Search</h2><p>Your storefront searches run in your browser. Google Search Console and Google Analytics are used to understand search visibility and storefront performance.</p></article>`}));
 write('returns/index.html',shell({title:'Returns & exchanges',description:'Find the current return and exchange terms for your Urban Clothes Market order.',path:'/returns/',meta,body:`<article class="legal wrap"><h1>RETURNS & EXCHANGES</h1><p>Your order is handled by our checkout partner. Visit the order help center for the current return policy, eligibility and instructions.</p><p>Keep your order confirmation so support can find your purchase. Available return or exchange options depend on your order and the applicable terms.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000984869?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Returns & exchanges help ↗</a></article>`}));
 write('shipping/index.html',shell({title:'Shipping & delivery',description:'Confirm delivery estimates and shipping costs for Urban Clothes Market items before checkout.',path:'/shipping/',meta,body:`<article class="legal wrap"><h1>SHIPPING & DELIVERY</h1><p>Your items are made to order. Shipping costs and estimated delivery dates depend on the items, destination and delivery option you choose.</p><h2>Confirm your delivery details</h2><p>Choose your items, sizes and colors, then review the current shipping cost and estimated delivery date at checkout before ordering.</p><h2>After placing your order</h2><p>Use your order confirmation and our checkout partner’s help center for order updates and tracking information.</p><a class="btn dark" href="https://service.spreadshirt.com/hc/en-us/articles/115000993925?shop_name=urbanclothesmarket&shop_id=2047529&platform=na">Shipping & delivery help ↗</a></article>`}));
 
-write('robots.txt','User-agent: *\nAllow: /\nDisallow: /catalog/\nSitemap: '+ORIGIN+'/sitemap.xml\n');
+write('robots.txt','User-agent: *\nAllow: /\nAllow: /catalog/\nSitemap: '+ORIGIN+'/sitemap.xml\n');
+const uniqueSitemap = [...new Set(sitemap)];
 const chunks=[];
-for(let i=0;i<sitemap.length;i+=40000){
+for(let i=0;i<uniqueSitemap.length;i+=40000){
   const filename='sitemap-'+(chunks.length+1)+'.xml';
   chunks.push(filename);
-  write(filename,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+sitemap.slice(i,i+40000).map(p=>'<url><loc>'+ORIGIN+esc(p)+'</loc></url>').join('')+'</urlset>');
+  write(filename,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+uniqueSitemap.slice(i,i+40000).map(p=>'<url><loc>'+ORIGIN+esc(p)+'</loc><lastmod>2026-10-28</lastmod></url>').join('')+'</urlset>');
 }
-write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+chunks.map(file=>'<sitemap><loc>'+ORIGIN+'/'+file+'</loc></sitemap>').join('')+'</sitemapindex>');
+write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+chunks.map(file=>'<sitemap><loc>'+ORIGIN+'/'+file+'</loc><lastmod>2026-10-28</lastmod></sitemap>').join('')+'</sitemapindex>');
 
 
 fs.writeFileSync('data/build-report.json',JSON.stringify({count:products.length,designs:designs.length,types:meta.typeCounts,themes:meta.themeCounts,pages:sitemap.length,indexBytes:fs.statSync(path.join(root,'catalog/index.json')).size},null,2));
