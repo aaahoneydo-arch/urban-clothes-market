@@ -4,7 +4,8 @@ if(fs.existsSync('public') && !fs.existsSync('dist/mockups')) fs.cpSync('public'
 
 import {productGallery} from '../src/lookbook.mjs';
 import {normalize,TYPES,THEMES} from '../src/catalog-model.mjs';
-import {shell,card,header,footer,themeTiles,filters,categoryChips,discoveryBar,showcaseRow,esc,icon,ORIGIN,SHOP} from '../src/templates.mjs';
+import {shell,card,header,footer,themeTiles,filters,categoryChips,discoveryBar,showcaseRow,esc,icon,ORIGIN,SHOP,booksShowcaseSection,matchBooksForProduct,productPageHtml} from '../src/templates.mjs';
+import {NICHE_GUIDES,guidesPreviewSectionHtml,buildBooksHubPage,buildSingleBookPage,buildGuidesHubPage,buildSingleGuidePage} from '../src/books-and-guides.mjs';
 
 const isHomeOnly = process.argv.includes('--home-only');
 const root = path.resolve('dist');
@@ -12,6 +13,7 @@ fs.mkdirSync(root,{recursive:true});
 
 const raw = JSON.parse(fs.readFileSync('data/catalog.json'));
 const products = normalize(raw);
+const booksData = JSON.parse(fs.readFileSync('data/books.json', 'utf8'));
 const sync = JSON.parse(fs.readFileSync('data/catalog-sync.json','utf8'));
 const meta = {count:products.length,updated:sync.checkedDate||(sync.updatedAt||'').slice(0,10)||'2026-10-28',typeCounts:{},themeCounts:{},themeHero:{}};
 
@@ -139,6 +141,12 @@ const homeBody = `
     </div>
     ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
   </section>
+
+  <!-- OFFICIAL PUBLISHED BOOKS ON AMAZON SHOWCASE (18 LIVE TITLES • 2 NEW BOOKS WEEKLY) -->
+  ${booksShowcaseSection(booksData, { includePipeline: false })}
+
+  <!-- CURATED BUYER'S GIFT GUIDES PREVIEW -->
+  ${guidesPreviewSectionHtml(booksData, 6)}
 
   <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
   ${discoveryBar({
@@ -606,6 +614,59 @@ function getColorHex(c) {
   return '#444444';
 }
 
+// Compile /books/index.html and /books/<slug>/index.html (18 books)
+const booksHub = buildBooksHubPage(booksData);
+write('books/index.html', shell({
+  title: booksHub.title,
+  description: booksHub.description,
+  path: booksHub.path,
+  body: booksHub.body,
+  meta,
+  structured: booksHub.structured,
+  ogImage: booksHub.ogImage
+}));
+sitemap.push('/books/');
+
+for (const book of (booksData.books || [])) {
+  const bPage = buildSingleBookPage(book, booksData, products, isCleanProfessional);
+  write(`books/${book.slug}/index.html`, shell({
+    title: bPage.title,
+    description: bPage.description,
+    path: bPage.path,
+    body: bPage.body,
+    meta,
+    structured: bPage.structured,
+    ogImage: bPage.ogImage
+  }));
+  sitemap.push(bPage.path);
+}
+
+// Compile /guides/index.html and 15 niche /guides/<slug>/index.html pages
+const guidesHub = buildGuidesHubPage(booksData);
+write('guides/index.html', shell({
+  title: guidesHub.title,
+  description: guidesHub.description,
+  path: guidesHub.path,
+  body: guidesHub.body,
+  meta,
+  structured: guidesHub.structured
+}));
+sitemap.push('/guides/');
+
+for (const guide of NICHE_GUIDES) {
+  const gPage = buildSingleGuidePage(guide, booksData, products, isCleanProfessional);
+  write(`guides/${guide.slug}/index.html`, shell({
+    title: gPage.title,
+    description: gPage.description,
+    path: gPage.path,
+    body: gPage.body,
+    meta,
+    structured: gPage.structured,
+    ogImage: gPage.ogImage
+  }));
+  sitemap.push(gPage.path);
+}
+
 let prodCount=0;
 for(const p of products){
   prodCount++;
@@ -624,101 +685,9 @@ for(const p of products){
             ? "TeePublic Verified"
             : "Official Store Verified";
 
-  const body = `<div class="wrap pdp-wrap">
-    <nav class="breadcrumb pdp-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
-      <span class="crumb-sep">/</span>
-      <a href="/types/${p.category}/">${esc(typeLabel)}</a>
-      <span class="crumb-sep">/</span>
-      <span class="current-crumb">${esc(p.design)}</span>
-    </nav>
-
-    <section class="detail pdp-showcase">
-      <div class="pdp-gallery-col">
-        <div class="pdp-main-image-wrap">
-          <img class="pdp-main-image" src="${esc(p.image)}" alt="${esc(p.name)}" width="600" height="600" loading="eager" decoding="async">
-          <div class="pdp-image-badge">⚡ ${esc(partnerName)}</div>
-        </div>
-      </div>
-
-      <div class="detail-info pdp-action-col">
-        <div class="pdp-top-badge-row">
-          <span class="pdp-category-pill">${esc(typeLabel)}</span>
-          <span class="pdp-stock-pill">✓ Made to Order · In Stock</span>
-        </div>
-
-        <h1 class="pdp-title">${esc(p.design)}</h1>
-        <div class="pdp-subtitle">${esc(p.productType)}</div>
-
-        <div class="pdp-price-box">
-          <div class="pdp-price-amount">$${p.price.toFixed(2)}</div>
-          <div class="pdp-shipping-note">Made to order. See the seller's current delivery estimates and return policy.</div>
-        </div>
-
-        <div class="pdp-cta-container">
-          <a class="btn-pdp-buy" href="${esc(p.url)}" target="_blank" rel="noopener">
-            <span>Buy Now on Official Store — $${p.price.toFixed(2)}</span>
-            <span class="cta-arrow">↗</span>
-          </a>
-          <div class="pdp-cta-subtext">
-            <span>🔒 Direct to Official Shop</span>
-            <span>⚡ Select Size &amp; Color at Checkout</span>
-            <span>✓ Order Directly with Supplier</span>
-          </div>
-        </div>
-
-        <div class="pdp-quick-options">
-          <div class="pdp-opt-row">
-            <span class="pdp-opt-label">Available Sizes:</span>
-            <div class="pdp-size-badges">
-              ${(p.sizes.length ? p.sizes : ['S','M','L','XL','2XL','3XL']).map(s => `<span class="opt-badge">${esc(s)}</span>`).join('')}
-            </div>
-          </div>
-          <div class="pdp-opt-row">
-            <span class="pdp-opt-label">Available Colors:</span>
-            <div class="pdp-color-badges">
-              ${(p.colors.length ? p.colors : ['Black','White']).map(c => `<span class="opt-badge">${esc(c)}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-
-        <div class="pdp-mini-trust">
-          <span class="trust-badge-pill">🛡️ Guaranteed Secure Partner Checkout</span>
-          <span class="trust-badge-pill">📦 Direct Supplier Fulfillment</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="pdp-bottom-details">
-      <div class="pdp-details-grid">
-        <div class="pdp-detail-card">
-          <h3>About This Graphic Design</h3>
-          <p>${details.desc}</p>
-          <div class="detail-tags">
-            ${p.themes.map(id => `<a href="/collections/${id}/">${THEMES.find(t => t[0] === id)?.[1] || 'Urban'}</a>`).join('')}
-          </div>
-        </div>
-
-        <div class="pdp-detail-card">
-          <h3>${details.specLabel}</h3>
-          <p>${details.specValue}</p>
-          <dl class="pdp-specs-list">
-            <dt>Fit &amp; Audience:</dt><dd>${esc(p.audience)}</dd>
-            <dt>Production Method:</dt><dd>Custom printed made to order</dd>
-            <dt>Delivery &amp; Shipping:</dt><dd>Confirmed during checkout on official partner store</dd>
-          </dl>
-        </div>
-
-        <div class="pdp-detail-card">
-          <h3>Returns &amp; Terms</h3>
-          <p>Made to order. See the seller's current delivery estimates and return policy on the checkout page.</p>
-          <a class="pdp-policy-link" href="/returns/">Read Store Help &amp; Policies ↗</a>
-        </div>
-      </div>
-    </section>
-
-    ${themeShowcase(p.themes[0]||'urban','Related Designs & Styles','')}
-  </div>`;
+  const matchedBooks = matchBooksForProduct(p, booksData.books);
+  const relatedRowHtml = themeShowcase(p.themes[0]||'urban','Related Designs & Styles','');
+  const body = productPageHtml({ p, details, typeLabel, partnerName, matchedBooks, relatedRowHtml });
 
   const seoDesc = p.description || `${p.name}. Shop the official "${p.design}" ${p.productType} at Urban Clothes Market with direct verified checkout.`;
   const seoKeywords = Array.isArray(p.tags) && p.tags.length ? p.tags.join(', ') : `${p.design}, ${p.productType}, Urban Clothes Market`;
