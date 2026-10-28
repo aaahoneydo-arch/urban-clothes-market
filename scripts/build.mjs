@@ -142,12 +142,6 @@ const homeBody = `
     ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(p=>p.category==='hoodies').filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
   </section>
 
-  <!-- OFFICIAL PUBLISHED BOOKS ON AMAZON SHOWCASE (18 LIVE TITLES • 2 NEW BOOKS WEEKLY) -->
-  ${booksShowcaseSection(booksData, { includePipeline: false })}
-
-  <!-- CURATED BUYER'S GIFT GUIDES PREVIEW -->
-  ${guidesPreviewSectionHtml(booksData, 6)}
-
   <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
   ${discoveryBar({
     id: 'discovery-mid1',
@@ -214,6 +208,12 @@ const homeBody = `
     subtitle: 'Search across 100,000+ items or hit surprise me to discover something unexpected.',
     placeholder: 'Search 100,000+ items or enter a theme...'
   })}
+
+  <!-- CURATED BUYER'S GIFT GUIDES PREVIEW (AT VERY BOTTOM OF PAGE) -->
+  ${guidesPreviewSectionHtml(booksData, 6)}
+
+  <!-- OFFICIAL PUBLISHED BOOKS ON AMAZON SHOWCASE (AT VERY BOTTOM OF PAGE) -->
+  ${booksShowcaseSection(booksData, { includePipeline: false })}
 </div>
 `;
 

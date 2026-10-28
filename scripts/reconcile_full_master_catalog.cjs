@@ -47,7 +47,7 @@ for (const item of liveSpreadshop) {
     name: item.name || prev?.name || 'Urban Clothes Market Apparel',
     url: item.url,
     image: item.image || prev?.image || '',
-    price: item.price || prev?.price || '$30.99',
+    price: (prev?.price && prev.price !== '$30.99') ? prev.price : (item.price || '$21.99'),
     sizes: (prev && prev.sizes && prev.sizes.length) ? prev.sizes : item.sizes,
     colors: (prev && prev.colors && prev.colors.length) ? prev.colors : item.colors,
     brand: 'Spreadshop',
