@@ -4,10 +4,10 @@ export const TYPES = [
   ['tees', 'Tees & Tanks', /shirt|tank|tee|jersey|polo|henley/i],
   ['hats', 'Hats & Beanies', /cap|hat|beanie|visor/i],
   ['mugs', 'Mugs & Drinkware', /mug|bottle|tumbler|cup|flask|coaster|can cooler|bowl|teapot|jar/i],
-  ['art', 'Wall Art & Canvas', /art print|canvas|poster|tapestry|wall print|wall art|framed print|photographic print|metal sign|plaque/i],
-  ['tech', 'Phone Cases & Tech', /phone|iphone|samsung|galaxy|case|laptop|sleeve|desk mat|mouse pad/i],
+  ['art', 'Wall Art & Canvas', /art print|canvas(?!.*(?:bag|tote|shirt))|poster|tapestry|wall print|wall art|framed print|photographic print|metal sign|plaque/i],
+  ['tech', 'Phone Cases & Tech', /phone|iphone|samsung|galaxy|laptop|tablet|desk mat|mouse ?pad|(?:phone|laptop|tablet) (?:case|sleeve)/i],
   ['home', 'Home & Living', /pillow|blanket|shower curtain|wall clock|clock|apron|towel|candle|napkin|ornament|wrapping paper/i],
-  ['stickers', 'Stickers, Pins & Magnets', /sticker|magnet|pin|badge|button/i],
+  ['stickers', 'Stickers, Pins & Magnets', /sticker|magnet|\bpin(?:s)?\b|badge|(?:^|\s)buttons?$/i],
   ['bags', 'Bags & Backpacks', /bag|tote|pouch|backpack|fanny pack|duffel|luggage/i],
   ['stationery', 'Stationery & Journals', /notebook|journal|pad|postcard|greeting card|holiday card/i],
   ['kids', 'Kids & Baby', /kid|baby|babies|toddler|youth|infant|bodysuit|bib/i],
@@ -157,7 +157,7 @@ export function normalize(raw) {
       storeLabel: p.storeLabel || p.channel || brand,
       description: p.description || '',
       tags: Array.isArray(p.tags) ? p.tags : [],
-      path: '/products/' + pathSlug + '/',
+      path: p.directOnly ? finalUrl : '/products/' + pathSlug + '/',
       shard: Math.floor(i / 200)
     };
   });
