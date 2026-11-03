@@ -11,7 +11,7 @@ const isHomeOnly = process.argv.includes('--home-only');
 const root = path.resolve('dist');
 fs.mkdirSync(root,{recursive:true});
 
-const raw = JSON.parse(fs.readFileSync('data/catalog.json'));
+const raw = [...JSON.parse(fs.readFileSync('data/catalog.json')), ...JSON.parse(fs.readFileSync('data/catalog-additions.json'))];
 const products = normalize(raw);
 const booksData = JSON.parse(fs.readFileSync('data/books.json', 'utf8'));
 const sync = JSON.parse(fs.readFileSync('data/catalog-sync.json','utf8'));
@@ -669,6 +669,7 @@ for (const guide of NICHE_GUIDES) {
 
 let prodCount=0;
 for(const p of products){
+  if (!p.path.startsWith('/products/')) continue;
   prodCount++;
   if(prodCount % 1000 === 0) console.log(`  ... compiled ${prodCount} / ${products.length} product pages`);
   const details = getProductDetails(p);
