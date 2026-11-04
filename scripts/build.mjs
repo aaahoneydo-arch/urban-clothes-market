@@ -75,7 +75,8 @@ const isCleanProfessional = p => Boolean(
     p.image.includes('images-api.printify.com') ||
     p.image.includes('rlv.zcache.com') ||
     p.image.includes('ih1.redbubble.net') ||
-    p.image.includes('images.teepublic.com')
+    p.image.includes('images.teepublic.com') ||
+    p.image.includes('imgproxy.fourthwall.dev')
   )
 );
 
@@ -241,7 +242,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
   if (main) {
     main.innerHTML = '<div class="wrap" style="padding:80px 20px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--text,#111)">⚡ Connecting to Urban Clothes Market Catalog...</div><p style="color:#666;margin-top:8px">Loading authentic item details...</p></div>';
   }
-  fetch('/catalog/index.json?v=20261028-live-sync-v5').then(r => r.json()).then(idx => {
+  fetch('/catalog/index.json?v=20261029-bags-sync-v6').then(r => r.json()).then(idx => {
     const slugLower = slug.toLowerCase();
     const cleanSlug = slugLower.replace(/[^a-z0-9]+/g, '-');
     let foundRow = null;
@@ -257,7 +258,7 @@ const fallbackScript = `<script id="dynamic-product-fallback">
     }
     if (!foundRow) return;
     const shardId = foundRow[8];
-    return fetch('/catalog/shards/' + shardId + '.json?v=20261028-live-sync-v5').then(r => r.json()).then(items => {
+    return fetch('/catalog/shards/' + shardId + '.json?v=20261029-bags-sync-v6').then(r => r.json()).then(items => {
       const p = items.find(x => x.id === foundRow[0] || (x.path && (x.path.includes(slug) || x.path.includes(cleanSlug))));
       if (!p) return;
       document.title = (p.design || p.name) + ' | Urban Clothes Market';
@@ -586,6 +587,13 @@ function getProductDetails(p) {
       desc: `High-quality ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Smooth writing surface with durable binding for journaling, planning, sketching, and notes.`,
       specLabel: 'Stationery Specs',
       specValue: '120 ruled archival pages • 90gsm acid-free paper • Sturdy protective cover'
+    };
+  } else if (cat === 'bags') {
+    return {
+      eyebrow: 'Everyday Carry & Travel Gear',
+      desc: `Durable made-to-order ${esc(p.productType.toLowerCase())} featuring the “${esc(p.design)}” graphic. Built for daily errands, commuting, gym sessions, and weekend trips with bold centered print placement.`,
+      specLabel: 'Bag & Carry Specs',
+      specValue: 'Heavy-duty cotton canvas or woven polyester • Reinforced carry straps & seams • Vivid fade-resistant graphic print'
     };
   } else {
     return {

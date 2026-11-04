@@ -3,17 +3,17 @@ export const TYPES = [
   ['jackets', 'Jackets & Outerwear', /jacket|windbreaker|command.*zip|medalist.*pullover/i],
   ['tees', 'Tees & Tanks', /shirt|tank|tee|jersey|polo|henley/i],
   ['hats', 'Hats & Beanies', /cap|hat|beanie|visor/i],
-  ['mugs', 'Mugs & Drinkware', /mug|bottle|tumbler|cup|flask|coaster|can cooler|bowl|teapot|jar/i],
-  ['art', 'Wall Art & Canvas', /art print|canvas(?!.*(?:bag|tote|shirt))|poster|tapestry|wall print|wall art|framed print|photographic print|metal sign|plaque/i],
-  ['tech', 'Phone Cases & Tech', /phone|iphone|samsung|galaxy|laptop|tablet|desk mat|mouse ?pad|(?:phone|laptop|tablet) (?:case|sleeve)/i],
-  ['home', 'Home & Living', /pillow|blanket|shower curtain|wall clock|clock|apron|towel|candle|napkin|ornament|wrapping paper/i],
+  ['mugs', 'Mugs & Drinkware', /mug|bottle|tumbler|cup|flask|coaster|can cooler|bowl|teapot|jar|stein/i],
+  ['art', 'Wall Art & Canvas', /art print|\bcanvas\b(?!\s*(?:tote|bag|pouch|backpack))|poster|tapestry|wall print|wall art|framed print|photographic print|metal sign|plaque/i],
+  ['tech', 'Phone Cases & Tech', /phone|iphone|samsung|galaxy|\bcase\b|laptop|laptop sleeve|desk mat|mouse\s*pad/i],
+  ['home', 'Home & Living', /pillow|blanket|shower curtain|wall clock|clock|apron|towel|candle|napkin|ornament|wrapping paper|stocking/i],
   ['stickers', 'Stickers, Pins & Magnets', /sticker|magnet|\bpin(?:s)?\b|badge|(?:^|\s)buttons?$/i],
-  ['bags', 'Bags & Backpacks', /bag|tote|pouch|backpack|fanny pack|duffel|luggage/i],
-  ['stationery', 'Stationery & Journals', /notebook|journal|pad|postcard|greeting card|holiday card/i],
+  ['bags', 'Bags & Backpacks', /\bbag\b|tote|pouch|backpack|fanny pack|duffel|luggage/i],
+  ['stationery', 'Stationery & Journals', /notebook|journal|(?<!mouse|mouse\s|desk\s)\bpad\b|postcard|greeting card|holiday card/i],
   ['kids', 'Kids & Baby', /kid|baby|babies|toddler|youth|infant|bodysuit|bib/i],
   ['bottoms', 'Shorts & Joggers', /short$|jogger|socks|espadrille|sneaker|flip flop/i],
   ['pets', 'Pet Gear', /dog|bandana|pet blanket/i],
-  ['accessories', 'Accessories', /keychain|jet tag|umbrella|watch|tie|mirror|puzzle|playing cards|golf|paddle|skate/i]
+  ['accessories', 'Accessories', /keychain|jet tag|umbrella|watch|\btie\b|mirror|puzzle|playing cards|golf|paddle|skate|teddy bear|plush/i]
 ];
 
 export const THEMES = [
@@ -43,8 +43,8 @@ export function slug(s) {
 export function normalize(raw) {
   const seen = new Set();
   const priority = [
-    'hoodies', 'jackets', 'hats', 'mugs', 'art', 'tech',
-    'bags', 'stickers', 'stationery', 'pets', 'home', 'accessories',
+    'hoodies', 'jackets', 'hats', 'mugs', 'bags', 'art', 'tech',
+    'stickers', 'stationery', 'pets', 'home', 'accessories',
     'tees', 'bottoms'
   ];
 
@@ -61,7 +61,7 @@ export function normalize(raw) {
     p._key = key;
     return true;
   }).map((p, i) => {
-    const parts = (p.name || '').split(' - ');
+    const parts = (p.name || '').split(/\s+(?:-|—|–)\s+/);
     const rawType = (p.productType && p.productType.trim()) || (parts.length > 1 ? parts.pop().trim() : 'Apparel');
     const productType = rawType
       .replace(/\s+by\s+[A-Za-z0-9\s\+\/]+/i, '')
@@ -153,7 +153,7 @@ export function normalize(raw) {
       audience,
       kids,
       brand,
-      store: p.store || (finalUrl.includes('myspreadshop.com') ? 'spreadshop' : finalUrl.includes('printify.me') ? 'printify' : finalUrl.includes('zazzle.com') ? 'zazzle' : finalUrl.includes('redbubble.com') ? 'redbubble' : finalUrl.includes('teepublic.com') ? 'teepublic' : 'spreadshop'),
+      store: p.store || (finalUrl.includes('myspreadshop.com') ? 'spreadshop' : finalUrl.includes('printify.me') ? 'printify' : finalUrl.includes('zazzle.com') ? 'zazzle' : finalUrl.includes('redbubble.com') ? 'redbubble' : finalUrl.includes('teepublic.com') ? 'teepublic' : finalUrl.includes('fourthwall.com') ? 'fourthwall' : 'spreadshop'),
       storeLabel: p.storeLabel || p.channel || brand,
       description: p.description || '',
       tags: Array.isArray(p.tags) ? p.tags : [],

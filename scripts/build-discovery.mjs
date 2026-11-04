@@ -309,6 +309,9 @@ for (const guide of GIFT_GUIDES) {
   });
 
   fs.writeFileSync(path.join(guideDir, 'index.html'), finalHtml, 'utf8');
+  const rootGuideDir = path.join(rootDir, 'gifts', guide.slug);
+  fs.mkdirSync(rootGuideDir, { recursive: true });
+  fs.writeFileSync(path.join(rootGuideDir, 'index.html'), finalHtml, 'utf8');
   console.log(`  ✓ Built gift guide: ${guidePath}`);
   newSitemapUrls.push(guidePath);
 }
@@ -325,6 +328,7 @@ if (fs.existsSync(sitemap1Path)) {
     }
   }
   fs.writeFileSync(sitemap1Path, sitemapContent, 'utf8');
+  fs.writeFileSync(path.join(rootDir, 'sitemap-1.xml'), sitemapContent, 'utf8');
   console.log('  ✓ Added new gift guide routes to dist/sitemap-1.xml');
 }
 
