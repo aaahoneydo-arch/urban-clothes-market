@@ -69,7 +69,7 @@ for (const comp of d30) {
       directOnly: true,
       sizes: meta.sizes || [],
       colors: meta.colors || [],
-      description: comp.description || 'Choose available sizes, colors and delivery options on the linked Spreadshop product page.'
+      description: comp.descriptionText || (Array.isArray(comp.description) ? comp.description[0]?.value : comp.description) || 'Choose available sizes, colors and delivery options on the linked Spreadshop product page.'
     };
     newRecords.push(rec);
     if (ptId === '20') {
@@ -82,7 +82,7 @@ for (const comp of d30) {
 const existingMap = new Map();
 for (const r of newRecords) existingMap.set(r.id, r);
 for (const r of additions) {
-  if (!existingMap.has(r.id)) existingMap.set(r.id, r);
+  if (!existingMap.has(r.id) && r.name && !r.name.startsWith('undefined')) existingMap.set(r.id, r);
 }
 const mergedAdditions = [...existingMap.values()];
 
@@ -93,7 +93,7 @@ const prevGothic = JSON.parse(fs.readFileSync(path.join(ucmRoot, 'data/gothic-la
 const gothicMap = new Map();
 for (const r of featuredHoodies) gothicMap.set(r.id, r);
 for (const r of prevGothic) {
-  if (!gothicMap.has(r.id)) gothicMap.set(r.id, r);
+  if (!gothicMap.has(r.id) && r.name && !r.name.startsWith('undefined')) gothicMap.set(r.id, r);
 }
 const allGothicFeatured = [...gothicMap.values()];
 fs.writeFileSync(path.join(ucmRoot, 'data/gothic-launch-verified.json'), JSON.stringify(allGothicFeatured, null, 2) + '\n');

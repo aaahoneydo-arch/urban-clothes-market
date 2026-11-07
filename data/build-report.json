@@ -1,6 +1,6 @@
 {
   "count": 24912,
-  "designs": 943,
+  "designs": 758,
   "types": {
     "hoodies": 4283,
     "jackets": 1098,
@@ -19,24 +19,24 @@
     "accessories": 554
   },
   "themes": {
-    "love": 924,
-    "gothic": 4663,
-    "sports": 542,
-    "relationships": 1073,
+    "love": 1489,
+    "gothic": 9021,
+    "sports": 302,
+    "relationships": 1702,
     "inspirational": 125,
-    "gamers": 1458,
-    "cats": 1324,
-    "dogs": 1203,
-    "cars": 1725,
+    "gamers": 1428,
+    "cats": 1533,
+    "dogs": 1352,
+    "cars": 2349,
     "humor": 2139,
-    "streetwear": 1566,
-    "cyber": 2690,
-    "tarot": 2883,
-    "fantasy": 4417,
-    "diy": 842,
+    "streetwear": 3023,
+    "cyber": 2630,
+    "tarot": 3450,
+    "fantasy": 8569,
+    "diy": 1051,
     "kids": 3194,
     "all": 24912
   },
-  "pages": 22072,
-  "indexBytes": 2778354
+  "pages": 22593,
+  "indexBytes": 2894462
 }
