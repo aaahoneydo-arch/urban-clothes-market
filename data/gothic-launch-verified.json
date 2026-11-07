@@ -1,62 +1,1247 @@
 [
   {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1247DPV1D30589655626273X-38Y2W1631H1786/views/1/undefined.png?width=600&height=600&appearanceId=1247",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187d539aa5da2?sellable=rnee4cmwbsma-20&appearance=1247",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee4cmwbsma-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "An armored silver Pegasus with rainbow stained-glass wings rears inside an ornate gothic cathedral arch surrounded by stars and dark roses in a celebration of pride.",
+        "manual": true,
+        "autoTranslated": false
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589751192077X-39Y5W1634H1785/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187d31592313d?sellable=rnee48etkchp-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee48etkchp-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A golden vinyl record turntable topped with a jeweled royal crown, flanked by winged studio microphones, diamond stars, and crimson roses in a bold gothic streetwear crest.",
+        "manual": true,
+        "autoTranslated": false
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589752951710X-39Y5W1378H1781/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187d01c785d73?sellable=rnee42jn527n-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee42jn527n-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "An ornate silver gothic chalice overflowing with a glowing ruby elixir, wrapped in thorny vines, crimson roses, and twin skeleton keys symbolizing eternal devotion and love.",
+        "manual": true,
+        "autoTranslated": false
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589754989955X-40Y4W1282H1783/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187cff306452c?sellable=rnee42855fzg-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee42855fzg-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A crowned gothic phoenix rises in crimson and gold flames above an iron blacksmith anvil, crossed hammers, and dark roses in a bold emblem of self-made resilience.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un phénix gothique couronné s’élève en flammes cramoisies et dorées au-dessus d’une enclume de forgeron en fer, de marteaux croisés et de roses sombres dans un emblème audacieux de résilience autodidacte.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1265DPV1D30589757066887X-39Y4W1652H1774/views/1/undefined.png?width=600&height=600&appearanceId=1265",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187cf3db215b3?sellable=rnee40ttwomr-20&appearance=1265",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee40ttwomr-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A cracked porcelain nine-tailed kitsune mask with glowing crimson eyes, crossed katana blades, purple lightning, and red spider lilies in a dark anime ninja crest.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un masque de kitsune en porcelaine fissuré à neuf queues avec des yeux cramoisis brillants, des lames de katana croisées, des éclairs violets et des lys araignées rouges dans un sombre blason ninja d’anime.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1274DPV1D30589759058207X-39Y4W1311H1769/views/1/undefined.png?width=600&height=600&appearanceId=1274",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187cf3d5b0436?sellable=rnee40tqidrq-20&appearance=1274",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee40tqidrq-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A fierce armored rottweiler wearing a spiked gold collar, framed by crossed medieval broadswords, heavy silver chains, and dark red roses in a tribute to pure loyalty.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un rottweiler blindé féroce portant un collier doré à pointes, encadré de larges épées médiévales croisées, de lourdes chaînes en argent et de roses rouge foncé en hommage à la pure loyauté.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589761071788X-38Y2W1653H1782/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187ce3ed3004f?sellable=rnee3yv42gjz-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee3yv42gjz-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Twin silver-furred guardian direwolves stand beneath an ancient glowing tree of life framed by celtic knots, crescent moons, and blood-red roses for unbreakable family bonds.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux loups-garous gardiens jumeaux à fourrure argentée se tiennent sous un arbre ancien lumineux de la vie, encadré de nœuds celtiques, de croissants de lune et de roses rouge sang pour des liens familiaux indestructibles.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589762969306X-39Y4W1304H1788/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187ce3e236aca?sellable=rnee3yux7tmy-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee3yux7tmy-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A porcelain venetian opera mask with glowing magenta eyes, a crystal diamond chandelier, black lace fan, and velvet roses in a glamorous gothic diva streetwear emblem.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un masque d’opéra vénitien en porcelaine avec des yeux magenta brillants, un lustre en diamant en cristal, un éventail en dentelle noire, et des roses en velours dans un emblème gothique glamour de diva streetwear.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1247DPV1D30589764548452X-39Y4W1297H1780/views/1/undefined.png?width=600&height=600&appearanceId=1247",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187ce112e1b70?sellable=rnee3yig53zk-20&appearance=1247",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee3yig53zk-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A chrome-trimmed midnight lowrider impala framed by towering palm trees, a crescent moon, starry tarot arch, and crimson roses in a Los Angeles gothic streetwear emblem.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Une Impala lowrider nuit bordée de chrome, encadrée par de hauts palmiers, un croissant de lune, une arche de tarot étoilée et des roses cramoisies arborant un emblème gothique streetwear de Los Angeles.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589766465681X-39Y4W1250H1782/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A328187ce18344b00?sellable=rnee3ykeaygw-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnee3ykeaygw-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A winged stone gargoyle perched atop an Art Deco skyscraper spire against a glowing full moon, vintage subway tokens, and dark roses in a New York City gothic crest.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Une gargouille en pierre ailée perché au sommet d’une flèche de gratte-ciel Art déco contre une pleine lune lumineuse, des jetons vintage de métro et des roses sombres arborant un blason gothique new-yorkais.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1DPV1D30538932535049X-38Y3W2043H1867/views/1/undefined.png?width=600&height=600&appearanceId=1",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800ec014d2d0ef?sellable=rnab5ky6awhb-20&appearance=1",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnab5ky6awhb-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A brindle pit bull gently holds a thorned red rose. Cream highlights trace the quiet profile in a tattoo inspired portrait of loyalty.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un pitbull bringé tient doucement une rose rouge épineuse. Des reflets crème suivent le profil discret d’un portrait de loyauté inspiré par les tatouages.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538693710274X-41Y-197W2162H1467/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800cad9491f138?sellable=rnaaci87io1k-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaaci87io1k-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A raven shelters two young birds beneath her wings. Burgundy feathers and ivory ink make a gothic portrait of a family looking after its own.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un corbeau abrite deux jeunes oiseaux sous ses ailes. Des plumes bordeaux et de l’encre ivoire forment un portrait gothique d’une famille prenant soin des siens.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1DPV1D30538754468203X-33Y6W962H1862/views/1/undefined.png?width=600&height=600&appearanceId=1",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800cacf31dccbd?sellable=rnaacgzeswcd-20&appearance=1",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaacgzeswcd-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A ruby ring catches the stage light as a magenta gloved hand grips a vintage microphone. A gothic print for singers who love a dramatic entrance.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un anneau de rubis capte la lumière de la scène tandis qu’une main gantée de magenta saisit un micro vintage. Un imprimé gothique pour les chanteurs qui aiment une entrée dramatique.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538832917995X-53Y9W1689H1859/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800cac91b69733?sellable=rnaacg8dvb5f-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaacg8dvb5f-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A vintage film projector unspools a strip of Los Angeles boulevard lined with palms. A print for movie lovers with an eye for old Hollywood.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un projecteur de films vintage déroule une bande du boulevard de Los Angeles bordée de palmiers. Une copie pour les cinéphiles qui ont l’œil pour le vieux Hollywood.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538803425301X-42Y12W1134H1852/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800caa975df246?sellable=rnaaccbw48xy-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaaccbw48xy-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Two pigeons share a New York rooftop water tower. Weathered copper tones and gothic NYC lettering turn a familiar city silhouette into streetwear.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux pigeons partagent une tour d’eau sur le toit de New York. Les tons cuivrés usés et les lettres gothiques new-yorkaises transforment une silhouette citadine familière en vêtements de rue.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538661209220X-49Y8W1626H1849/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800caa953f4056?sellable=rnaaccbaxxzq-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaaccbaxxzq-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A scarred lion carries his head high above bold Pride lettering. Warm bronze and ivory give his weathered mane the look of a vintage tattoo print.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "A scarred lion carries his head high above bold Pride lettering. Warm bronze and ivory give his weathered mane the look of a vintage tattoo print.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538722631379X-37Y5W1694H1855/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800caa50c73a7a?sellable=rnaacbsb0ynu-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaacbsb0ynu-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Two swallows circle a crimson heart pierced by a dagger and wrapped in thorns. Blue black wings and ivory highlights echo traditional tattoo flash.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux hirondelles entourent un cœur cramoisi percé par un poignard et enveloppé d’épines. Des ailes bleues noires et des reflets ivoire rappellent le tatouage traditionnel.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538741559249X-39Y5W2006H1849/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800caa13cc77c5?sellable=rnaacbbdx39h-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaacbbdx39h-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A watchful eye peers through a vintage press camera as its flashbulb fires. A crimson strap curls beneath the ivory and charcoal camera body.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un œil attentif scrute à travers un appareil photo de presse vintage alors que son flash s’allume. Une sangle cramoisie s’enroule sous le boîtier ivoire et fusain.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538777731353X-37Y4W1694H1865/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800caa11913dc1?sellable=rnaacbarmpj5-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaacbarmpj5-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A masked courier leaps forward with a bronze bell at his waist and an indigo scarf streaming behind him. A manga inspired portrait in motion.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un coursier masqué bondit en avant avec une clochette en bronze à la taille et une écharpe indigo flottant derrière lui. Un portrait inspiré du manga en mouvement.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30538602969595X-34Y-195W2137H1457/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A32800c40180680b9?sellable=rnaa6i7a7649-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rnaa6i7a7649-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Two anime drivers lean against their graphite sports coupe. Racing red accents, gold wheels and bold Self Made lettering give this street racing print its vintage manga look.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux pilotes d’anime s’adossent à leur coupé sport en graphite. Des accents rouges de course, des roues dorées et des lettres Self Made audacieuses donnent à cette série de courses de rue son aspect manga vintage.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452640952363X-40Y2W1773H1859/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4ed7b2cf10?sellable=rn3cdkn9cis0-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cdkn9cis0-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "An antique microphone becomes a shooting star inside gold gothic thorns and silver laurel. Vintage stage glamour for performers, music lovers, and anyone ready to make their name.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un micro ancien devient une étoile filante dans des épines gothiques dorées et des lauriers argentés. Un glamour de scène vintage pour les artistes, les mélomanes et tous ceux qui veulent se faire un nom.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452816135256X-39Y4W1402H1869/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4d98ee9aab?sellable=rn3cdi6ta1ez-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cdi6ta1ez-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Rough fragments transform into a golden diamond inside a silver gothic hourglass. Thorn vines and clockwork details honor patience, persistence, and building a life through your own effort.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Des fragments bruts se transforment en un diamant doré à l’intérieur d’un sablier gothique en argent. Les vignes épineuses et les détails mécaniques honorent la patience, la persévérance et la construction d’une vie par ses propres efforts.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452578095824X-39Y4W1557H1869/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4c923a8565?sellable=rn3cdg5x7gpx-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cdg5x7gpx-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A silver stag beetle spreads rainbow stained glass wings beneath gothic tracery. A vivid celebration of pride, individuality, and belonging for lovers of dark alternative style.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un scarabée cerf argenté déploie des ailes de vitrail arc-en-ciel sous une tracerie gothique. Une célébration vivante de la fierté, de l’individualité et de l’appartenance pour les amateurs de style sombre alternatif.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452757276906X-39Y4W1355H1869/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b9b0ee727?sellable=rn3cde9cahif-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cde9cahif-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "The Manhattan skyline lives inside an ornate silver lantern above sweeping Brooklyn Bridge arches. Emerald accents and bold NYC lettering celebrate New York with a gothic twist.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "La silhouette de Manhattan vit à l’intérieur d’une lanterne argentée ornée au-dessus des arches imposantes du pont de Brooklyn. Les accents émeraude et les lettres audacieuses de New York célèbrent New York avec une touche gothique.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1DPV1D30452788928319X-93Y0W1574H1859/views/1/undefined.png?width=600&height=600&appearanceId=1",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b795cd662?sellable=rn3cddzzprhe-20&appearance=1",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cddzzprhe-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A silver angel wing wraps an ornate steering wheel framing the Los Angeles skyline. Orange California poppies and engraved chrome detail create a gothic tribute to LA street style.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Une aile d’ange argentée enveloppe un volant orné encadrant la skyline de Los Angeles. Des coquelicots orange californiens et des détails chromés gravés créent un hommage gothique au style urbain de LA.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452698382165X-38Y2W1398H1865/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b7f9115fb?sellable=rn3cde1popvf-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cde1popvf-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "A confident black cat wears a dramatic magenta ruff and pearl inside ornate silver framing. Gothic roses and jewel tones bring theatrical diva attitude to this feline portrait.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un chat noir confiant porte une coupe magenta dramatique et des perles à l’intérieur d’un cadre argenté orné. Des roses gothiques et des tons précieux apportent une attitude de diva théâtrale à ce portrait félin.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452670113015X-39Y4W1644H1869/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b725854d3?sellable=rn3cddy1m9xv-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cddy1m9xv-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Two silver armored hands seal a pact over a sapphire compass rose. A gothic symbol of loyalty, trust, and staying true, finished with an indigo ribbon and engraved ornament.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux mains en armure argentée scellent un pacte autour d’une rose des vents saphir. Un symbole gothique de loyauté, de confiance et de fidélité, terminé par un ruban indigo et un ornement gravé.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452727540492X-38Y4W1694H1863/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b77679375?sellable=rn3cddzg5nqt-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cddzg5nqt-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "An original masked anime ninja wears ornate silver armor and a teal sash beneath a cathedral shaped hood. Crossed swords and paper cranes complete this dark fantasy character emblem.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Un ninja masqué d’anime original porte une armure argentée ornée et une écharpe bleu sarcelle sous une capuche en forme de cathédrale. Des épées croisées et des grues en papier complètent cet emblème de personnage de dark fantasy.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30452614618154X-39Y1W1829H1849/views/1/undefined.png?width=600&height=600&appearanceId=1271",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8b4b5b344251?sellable=rn3cddrmgy1d-20&appearance=1271",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3cddrmgy1d-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Silver skeletal hands tie a crimson ribbon heart among night blooming flowers. Dark romantic artwork celebrating an enduring bond, with ornate gothic detail and bold LOVE lettering.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Des mains squelettiques argentées attachent un ruban cramoisi en forme de cœur parmi des fleurs nocturnes. Œuvres romantiques sombres célébrant un lien durable, avec des détails gothiques ornés et des lettres LOVE audacieuses.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
+    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1DPV1D30452486032535X-38Y4W1470H1866/views/1/undefined.png?width=600&height=600&appearanceId=1",
+    "name": "undefined - Men's Premium Hoodie",
+    "url": "https://urbanclothesmarket.myspreadshop.com/-A327d8aa59a22d3cf?sellable=rn3c4apydrrj-20&appearance=1",
+    "price": "$30.99",
+    "store": "spreadshop",
+    "storeLabel": "Spreadshop",
+    "productType": "Men's Premium Hoodie",
+    "id": "spreadshop-rn3c4apydrrj-20",
+    "brand": "Spreadshop",
+    "directOnly": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Navy",
+      "Heather Grey"
+    ],
+    "description": [
+      {
+        "language": "en",
+        "country": "*",
+        "value": "Two ravens shelter their young beneath a silver gothic arch with garnet ivy. A dark romantic tribute to family, belonging, and the people you protect.",
+        "manual": true,
+        "autoTranslated": false
+      },
+      {
+        "language": "fr",
+        "country": "*",
+        "value": "Deux corbeaux abritent leurs petits sous une arche gothique argentée avec du lierre grenat. Un hommage romantique sombre à la famille, à l’appartenance et aux personnes que l’on protège.",
+        "manual": false,
+        "autoTranslated": true
+      }
+    ]
+  },
+  {
     "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144425W14956H18688/views/1/Loyalty%20Gothic%20Pit%20Bull%20Cathedral%20Chain%20Crest.png?width=2000&height=2000&appearanceId=1",
     "name": "Loyalty Gothic Pit Bull Cathedral Chain Crest - Men's Premium Hoodie",
     "url": "https://urbanclothesmarket.myspreadshop.com/loyalty+gothic+pit+bull+cathedral+chain+crest-A327bfe8ed6e284a2?sellable=rmz1qurx2xsy-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144481W14956H18688/views/1/Famous%20Gothic%20Gold%20Masquerade%20and%20Spotlight.png?width=2000&height=2000&appearanceId=1",
-    "name": "Famous Gothic Gold Masquerade and Spotlight - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/famous+gothic+gold+masquerade+and+spotlight-A327bfe8ed5771391?sellable=rmz1quriwfbl-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144385W14956H18688/views/1/Pride%20Gothic%20Rainbow%20Stained%20Glass%20Luna%20Moth.png?width=2000&height=2000&appearanceId=1",
-    "name": "Pride Gothic Rainbow Stained Glass Luna Moth - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/pride+gothic+rainbow+stained+glass+luna+moth-A327bfe8efabf0d67?sellable=rmz1qv1vai5j-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144386W14956H18688/views/1/Anime%20Ninja%20Gothic%20Crimson%20Moon%20Warrior.png?width=2000&height=2000&appearanceId=1",
-    "name": "Anime Ninja Gothic Crimson Moon Warrior - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/anime+ninja+gothic+crimson+moon+warrior-A327bfe8f54293dd1?sellable=rmz1qvqofiz5-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144482W14956H18688/views/1/LA%20Gothic%20Eclipse%20Palms%20and%20Observatory.png?width=2000&height=2000&appearanceId=1",
-    "name": "LA Gothic Eclipse Palms and Observatory - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/la+gothic+eclipse+palms+and+observatory-A327bfe8f55ef708e?sellable=rmz1qvr65itq-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144387W14956H18688/views/1/Self%20Made%20Gothic%20Stone%20Carver%20and%20Chisel.png?width=2000&height=2000&appearanceId=1",
-    "name": "Self Made Gothic Stone Carver and Chisel - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/self+made+gothic+stone+carver+and+chisel-A327bfe8f7e058b06?sellable=rmz1qw2akbuu-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144483W14956H18688/views/1/Diva%20Gothic%20Black%20Swan%20and%20Amethyst%20Fan.png?width=2000&height=2000&appearanceId=1",
-    "name": "Diva Gothic Black Swan and Amethyst Fan - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/diva+gothic+black+swan+and+amethyst+fan-A327bfe8f746a024f?sellable=rmz1qvzmlidr-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30399397596426X-39Y4W1421H1849/views/1/Love%20Gothic%20Heart%20Keys%20and%20Black%20Calla%20Lilies.png?width=2000&height=2000&appearanceId=1271",
-    "name": "Love Gothic Heart Keys and Black Calla Lilies - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/love+gothic+heart+keys+and+black+calla+lilies-A327bfe8fffb9fa59?sellable=rmz1qx2a5eft-20&appearance=1271",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144484W14956H18688/views/1/NYC%20Gothic%20Gargoyle%20Clock%20and%20Skyline.png?width=2000&height=2000&appearanceId=1",
-    "name": "NYC Gothic Gargoyle Clock and Skyline - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/nyc+gothic+gargoyle+clock+and+skyline-A327bfe919b0f3909?sellable=rmz1r08eu9e1-20&appearance=1",
-    "price": 30.99
-  },
-  {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1254DPV1D30399121965748X-36Y4W1488H1866/views/1/Family%20Gothic%20Oak%20Tree%20Cathedral.png?width=2000&height=2000&appearanceId=1254",
-    "name": "Family Gothic Oak Tree Cathedral - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/family+gothic+oak+tree+cathedral-A327bfc9551651193?sellable=rmz0z5c9t0nn-20&appearance=1254",
     "price": 30.99
   }
 ]

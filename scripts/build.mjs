@@ -125,8 +125,23 @@ const themeShowcase = (id, title, subtitle) => {
   return res;
 };
 
+const gothicLaunchItems = fs.existsSync('data/gothic-launch-verified.json')
+  ? normalize(JSON.parse(fs.readFileSync('data/gothic-launch-verified.json', 'utf8')))
+  : [];
+
 const homeBody = `
 <div class="wrap">
+  <!-- NEW DAILY GOTHIC DROP SHOWCASE (DIRECT TO SPREADSHOP CHECKOUT) -->
+  ${gothicLaunchItems.length ? showcaseRow({
+    id: 'new-daily-drop',
+    title: '🔥 New Daily Gothic Streetwear Drop — Live on Spreadshop',
+    subtitle: 'Ten brand-new transparent-background graphic designs with 2,061+ product variations published today. Click Buy Now to go directly to Spreadshop checkout.',
+    count: 2061,
+    link: '/spreadshop.html',
+    isType: false,
+    products: gothicLaunchItems.slice(0, 10)
+  }) : ''}
+
   <!-- INTERACTIVE CATALOG BROWSER & DEEP FILTERS (AT VERY TOP - WALMART SEARCH RESULTS STYLE) -->
   <section class="catalog-head" id="catalog" style="margin-top: 10px;">
     <div class="section-head">
@@ -140,7 +155,7 @@ const homeBody = `
         <a class="text-link" href="/collections/all/">Browse Full Archive ↗</a>
       </div>
     </div>
-    ${filters(meta).replace('__CARDS__', uniqueByDesign(products.filter(isCleanProfessional).sort(()=>Math.random()-0.5)).slice(0, 24).map(card).join(''))}
+    ${filters(meta).replace('__CARDS__', uniqueByDesign([...gothicLaunchItems.slice(0, 10), ...products.filter(isCleanProfessional).sort(()=>Math.random()-0.5)]).slice(0, 24).map(card).join(''))}
   </section>
 
   <!-- MID-PAGE SEARCH & DISCOVERY BAR #1 -->
