@@ -112,34 +112,6 @@
     "description": "An ornate silver gothic chalice overflowing with a glowing ruby elixir, wrapped in thorny vines, crimson roses, and twin skeleton keys symbolizing eternal devotion and love."
   },
   {
-    "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589751192077X-39Y5W1634H1785/views/1/Famous%20Gothic%20Crowned%20Turntable%20and%20Winged%20Mic.png?width=600&height=600&appearanceId=1271",
-    "name": "Famous Gothic Crowned Turntable and Winged Mic - Men's Premium Hoodie",
-    "url": "https://urbanclothesmarket.myspreadshop.com/famous+gothic+crowned+turntable+and+winged+mic-A328187d31592313d?sellable=rnee48etkchp-20&appearance=1271",
-    "price": "$30.99",
-    "store": "spreadshop",
-    "storeLabel": "Spreadshop",
-    "productType": "Men's Premium Hoodie",
-    "id": "spreadshop-rnee48etkchp-20",
-    "design": "Famous Gothic Crowned Turntable and Winged Mic",
-    "brand": "Spreadshop",
-    "directOnly": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL",
-      "3XL"
-    ],
-    "colors": [
-      "Black",
-      "White",
-      "Navy",
-      "Heather Grey"
-    ],
-    "description": "A golden vinyl record turntable topped with a jeweled royal crown, flanked by winged studio microphones, diamond stars, and crimson roses in a bold gothic streetwear crest."
-  },
-  {
     "image": "https://image.spreadshirtmedia.com/image-server/v1/products/DPT20A1271DPV1D30589762969306X-39Y4W1304H1788/views/1/Diva%20Gothic%20Diamond%20Crowned%20Opera%20Mask%20and%20Mirror.png?width=600&height=600&appearanceId=1271",
     "name": "Diva Gothic Diamond Crowned Opera Mask and Mirror - Men's Premium Hoodie",
     "url": "https://urbanclothesmarket.myspreadshop.com/diva+gothic+diamond+crowned+opera+mask+and+mirror-A328187ce3e236aca?sellable=rnee3yux7tmy-20&appearance=1271",
@@ -843,6 +815,7 @@
     "image": "https://image.spreadshirtmedia.com/image-server/v1/products/T20A1PA5227PT17X89Y10D1059144425W14956H18688/views/1/Loyalty%20Gothic%20Pit%20Bull%20Cathedral%20Chain%20Crest.png?width=2000&height=2000&appearanceId=1",
     "name": "Loyalty Gothic Pit Bull Cathedral Chain Crest - Men's Premium Hoodie",
     "url": "https://urbanclothesmarket.myspreadshop.com/loyalty+gothic+pit+bull+cathedral+chain+crest-A327bfe8ed6e284a2?sellable=rmz1qurx2xsy-20&appearance=1",
-    "price": 30.99
+    "price": 30.99,
+    "directOnly": true
   }
 ]

@@ -157,7 +157,7 @@ export function normalize(raw) {
       storeLabel: p.storeLabel || p.channel || brand,
       description: p.description || '',
       tags: Array.isArray(p.tags) ? p.tags : [],
-      path: p.directOnly ? finalUrl : '/products/' + pathSlug + '/',
+      path: finalUrl,
       shard: Math.floor(i / 200)
     };
   });
