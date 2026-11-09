@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { lookupMarketplaceOffer } from './marketplace-offer.mjs';
 
-const ucmRoot = 'C:/Users/aaaho/Documents/Codex/2026-10-08/what/work/urban-clothes-market';
+const ucmRoot = fileURLToPath(new URL('../', import.meta.url));
 const cat = JSON.parse(fs.readFileSync(path.join(ucmRoot, 'data/catalog.json'), 'utf8'));
 const additions = JSON.parse(fs.readFileSync(path.join(ucmRoot, 'data/catalog-additions.json'), 'utf8'));
-const d30 = JSON.parse(fs.readFileSync('C:/Users/aaaho/Documents/Codex/2026-11-07/spreadshop-batch/spreadshop_recent_30_all_sellables_v2.json', 'utf8'));
+const d30 = JSON.parse(fs.readFileSync(process.argv[2] || 'C:/Users/aaaho/Documents/Codex/2026-11-07/spreadshop-batch/spreadshop_recent_30_all_sellables_v2.json', 'utf8'));
 
 // Build productTypeId lookup from existing Spreadshop catalog
 const byPt = {
@@ -29,54 +31,35 @@ for (const p of cat) {
   }
 }
 
-function toSlugPluses(title) {
-  return String(title || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '+')
-    .replace(/^\+|\+$/g, '');
-}
-
-const newRecords = [];
-const featuredHoodies = [];
-
-for (const comp of d30) {
-  const title = comp.title;
-  const slugPluses = toSlugPluses(title);
-  for (const s of (comp.sellables || [])) {
-    const ptId = String(s.productTypeId);
-    const meta = byPt[ptId] || {
-      productType: 'Unisex Graphic Apparel',
-      price: '$24.99',
-      sizes: ['S', 'M', 'L', 'XL', '2XL'],
-      colors: ['Black', 'White']
-    };
-    const firstApp = (s.appearanceIds && s.appearanceIds.length) ? s.appearanceIds[0] : 1;
-    const sellableId = s.sellableId || `${comp.uid36}-${ptId}`;
-    const id = `spreadshop-${sellableId}`;
-    const url = `https://urbanclothesmarket.myspreadshop.com/${slugPluses}-A${comp.id}?sellable=${sellableId}&appearance=${firstApp}`;
-    const image = `https://image.spreadshirtmedia.com/image-server/v1/products/${s.vpString}/views/${s.defaultViewId || 1}/${encodeURIComponent(title)}.png?width=600&height=600&appearanceId=${firstApp}`;
-    const rec = {
-      image,
-      name: `${title} - ${meta.productType}`,
-      url,
-      price: meta.price,
-      store: 'spreadshop',
-      storeLabel: 'Spreadshop',
-      productType: meta.productType,
-      id,
-      design: title,
-      brand: 'Spreadshop',
-      directOnly: true,
-      sizes: meta.sizes || [],
-      colors: meta.colors || [],
-      description: comp.descriptionText || (Array.isArray(comp.description) ? comp.description[0]?.value : comp.description) || 'Choose available sizes, colors and delivery options on the linked Spreadshop product page.'
-    };
-    newRecords.push(rec);
-    if (ptId === '20') {
-      featuredHoodies.push(rec);
+const jobs = d30.flatMap(comp => (comp.sellables || []).map(item => ({comp, item})));
+const checked = new Array(jobs.length);
+const withheld = [];
+let next = 0;
+async function checkBatch() {
+  while (next < jobs.length) {
+    const i = next++;
+    const {comp, item} = jobs[i];
+    const typeId = String(item.productTypeId);
+    const appearance = item.appearanceIds?.[0];
+    try {
+      if (!item.vpString || appearance == null) throw new Error('Missing variant image or appearance');
+      const offer = await lookupMarketplaceOffer(comp, item, typeId, appearance, byPt[typeId]?.productType || '');
+      const image = 'https://image.spreadshirtmedia.com/image-server/v1/products/'+item.vpString+'/views/'+(item.defaultViewId || 1)+'/'+encodeURIComponent(offer.design)+'.png?width=600&height=600&appearanceId='+appearance;
+      checked[i] = {id:'spreadshop-'+item.sellableId, image, name:offer.name, design:offer.design,
+        productType:offer.productType || byPt[typeId]?.productType, price:'$'+offer.price.toFixed(2),
+        url:offer.url, buyUrl:offer.url, store:'spreadshop', storeLabel:'Spreadshirt', brand:'Spreadshirt',
+        verifiedAt:offer.verifiedAt, directOnly:true, description:comp.descriptionText || ''};
+    } catch (error) {
+      withheld.push({designId:comp.id, sellable:item.sellableId || null, reason:error.message});
     }
   }
 }
+await Promise.all(Array.from({length:4}, () => checkBatch()));
+fs.mkdirSync(path.join(ucmRoot, 'checkout'), {recursive:true});
+fs.writeFileSync(path.join(ucmRoot, 'checkout/batch-review.json'), JSON.stringify(withheld, null, 2)+'\n');
+const newRecords = checked.filter(Boolean);
+if (!newRecords.length) throw new Error('No exact merchant offers verified. Existing catalog retained.');
+const featuredHoodies = newRecords.filter(row => row.id.endsWith('-20'));
 
 // Deduplicate additions by id (keep existing Fourthwall + Nov 2 Gothic, prepend newRecords)
 const existingMap = new Map();
@@ -95,7 +78,7 @@ for (const r of featuredHoodies) gothicMap.set(r.id, r);
 for (const r of prevGothic) {
   if (!gothicMap.has(r.id) && r.name && !r.name.startsWith('undefined')) gothicMap.set(r.id, r);
 }
-const allGothicFeatured = [...gothicMap.values()];
+const allGothicFeatured = [...gothicMap.values()].filter(row => row.url?.startsWith('https://www.spreadshirt.com/shop/design/'));
 fs.writeFileSync(path.join(ucmRoot, 'data/gothic-launch-verified.json'), JSON.stringify(allGothicFeatured, null, 2) + '\n');
 
 // Update spreadshop.html with all 40 featured Gothic hoodies (Today's 10 Nov 7 designs at the very top!)
@@ -103,12 +86,12 @@ const spreadshopHtmlPath = path.join(ucmRoot, 'spreadshop.html');
 let spHtml = fs.readFileSync(spreadshopHtmlPath, 'utf8');
 const articlesHtml = allGothicFeatured.map(p => {
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  return `<article><a href="${esc(p.url)}" target="_blank" rel="noopener"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" width="600" height="600"></a><h3>${esc(p.name)}</h3><p>${esc(p.price)} USD · Direct Spreadshop Checkout</p><a class="launch-buy" href="${esc(p.url)}" target="_blank" rel="noopener">Buy Now on Spreadshop →</a></article>`;
+  return `<article><a href="${esc(p.url)}" target="_blank" rel="noopener"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" width="600" height="600"></a><h3>${esc(p.name)}</h3><p>${esc(p.price)} USD · Spreadshirt</p><a class="launch-buy" href="${esc(p.url)}" target="_blank" rel="noopener">Buy now on Spreadshirt →</a></article>`;
 }).join('');
 
 spHtml = spHtml.replace(
   /<section class="launch-collection">[\s\S]*?<\/section>/,
-  `<section class="launch-collection"><h2>New Daily Gothic Streetwear Drops (Live on Spreadshop)</h2><p>Featuring today's 10 brand-new Gothic designs (${newRecords.length.toLocaleString()}+ total new product variations published in Spreadshop). Every Buy Now button below links directly to its Spreadshop checkout page.</p><div class="launch-grid">${articlesHtml}</div><p style="margin-top:20px"><a class="launch-buy" href="https://urbanclothesmarket.myspreadshop.com/all" target="_blank" rel="noopener">Browse all Spreadshop products and styles →</a></p></section>`
+  () => `<section class="launch-collection"><h2>Gothic hoodies</h2><div class="launch-grid">${articlesHtml}</div></section>`
 );
 fs.writeFileSync(spreadshopHtmlPath, spHtml);
 if (fs.existsSync(path.join(ucmRoot, 'dist'))) {
