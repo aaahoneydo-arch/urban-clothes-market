@@ -1,0 +1,67 @@
+name: Check all additional seller listings
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/check-public-seller.yml']
+permissions: {}
+jobs:
+  audit:
+    if: github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        start: [0, 2800]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: checkout
+          persist-credentials: false
+      - name: Read and validate the exact public seller candidates
+        env:
+          START: ${{ matrix.start }}
+          CHECKOUT_ALLOW_SELLER_COLOR: '1'
+        run: |
+          set -euo pipefail
+          base64 -d checkout/public-seller-checks.b64 > "$RUNNER_TEMP/seller.zip"
+          echo '9dd6a067c6414bc380633a8101e4fe8e997690719f90aec422bbb6c6941d4bb9  '"$RUNNER_TEMP/seller.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/seller.zip" -d "$RUNNER_TEMP/seller"
+          python3 "$RUNNER_TEMP/seller/verify.py" --source "$RUNNER_TEMP/seller/candidates.json" --output "$RUNNER_TEMP/public-$START.ndjson" --start "$START" --stop "$((START+2800))" --workers 5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-${{ matrix.start }}
+          path: ${{ runner.temp }}/public-*.ndjson
+          retention-days: 7
+  record:
+    needs: audit
+    if: always() && github.actor == github.repository_owner && !cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            checkout
+            .github/workflows
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: public-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/seller-results
+      - name: Save public seller offer evidence
+        run: |
+          set -euo pipefail
+          cat "$RUNNER_TEMP"/seller-results/*.ndjson | gzip -n > checkout/public-seller-evidence.ndjson.gz
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add checkout/public-seller-evidence.ndjson.gz
+          git rm -- .github/workflows/check-public-seller.yml
+          git commit -m 'Save verified supplemental public catalog offers'
+          git fetch --depth=10 origin main
+          git rebase origin/main
+          git push origin HEAD:refs/heads/main
