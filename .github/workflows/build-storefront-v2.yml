@@ -1,0 +1,71 @@
+name: Build and validate the new storefront v2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/build-storefront-v2.yml']
+permissions: {}
+jobs:
+  build:
+    if: github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Load the reviewed source and seller records
+        run: |
+          set -euo pipefail
+          test "$(tr -d '\r\n' < CNAME)" = "urbanclothesmarket.com"
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/aaahoneydo-arch/urban-clothes-market/a0534a561db4a73742ad28673c5a631b5fdaeb0e/checkout/storefront-v2.b64 | base64 -d > "$RUNNER_TEMP/storefront.zip"
+          echo '7182a59eb0f66460ed07e1b92094ccde5370821a03182d75105fba069579ad41  '"$RUNNER_TEMP/storefront.zip" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/storefront-source"
+          unzip -q "$RUNNER_TEMP/storefront.zip" -d "$RUNNER_TEMP/storefront-source"
+      - name: Generate the complete static site and advertising landing pages
+        run: |
+          python3 "$RUNNER_TEMP/storefront-source/build.py" --target urban --legacy "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/storefront-output"
+          python3 "$RUNNER_TEMP/storefront-source/check.py" --source "$RUNNER_TEMP/storefront-source" --out "$RUNNER_TEMP/storefront-output" --domain urbanclothesmarket.com
+      - name: Stage the verified publication folder on main
+        run: |
+          set -euo pipefail
+          python3 - <<'PYTHON'
+          import gzip,json,os,pathlib,shutil
+          root=pathlib.Path('.');temp=pathlib.Path(os.environ['RUNNER_TEMP']);src=temp/'storefront-source';out=temp/'storefront-output'
+          designs=json.loads(gzip.decompress((src/'merch.json.gz').read_bytes()))
+          books=json.loads((src/'books.json').read_text());videos=json.loads(gzip.decompress((src/'archive.json.gz').read_bytes()))
+          metadata={'sourceRepo':'aaahoneydo-arch/urban-clothes-market','sourceCommit':'a0534a561db4a73742ad28673c5a631b5fdaeb0e','archiveSha256':'7182a59eb0f66460ed07e1b92094ccde5370821a03182d75105fba069579ad41','domain':'urbanclothesmarket.com','merchandise':sum(len(d['items']) for d in designs),'designs':len(designs),'books':len(books),'amazonEditions':sum(len(b['formats']) for b in books),'youtubeUploads':len(videos)}
+          (out/'release.json').write_text(json.dumps(metadata,indent=2)+'\n')
+          if (root/'docs').exists():shutil.rmtree(root/'docs')
+          shutil.move(out,root/'docs')
+          if 'urban'=='urban':
+              shutil.copytree(src,root/'storefront',dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+          guidance=(src/'AGENTS-storefront.md').read_text()
+          agents=root/'AGENTS.md'
+          earlier=agents.read_text() if agents.is_file() else ''
+          if '# Production storefront' not in earlier:
+              agents.write_text(guidance+'\n'+earlier)
+          if 'urban'=='urban':
+              shutil.copy2(src/'build-storefront.mjs',root/'scripts/build.mjs')
+              shutil.copy2(src/'import-storefront.mjs',root/'scripts/sync-daily-spreadshop-batch.mjs')
+              package=root/'package.json'; config=json.loads(package.read_text())
+              config.setdefault('scripts',{}).update(build='node scripts/build.mjs',test='node scripts/build.mjs --check')
+              package.write_text(json.dumps(config,indent=2)+'\n')
+          else:
+              shutil.copy2(src/'import-storefront.mjs',root/'sync-daily-spreadshop-batch.mjs')
+          (root/'storefront-source.json').write_text(json.dumps(metadata,indent=2)+'\n')
+          print(metadata)
+          PYTHON
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- docs storefront-source.json AGENTS.md
+          if test 'urban' = urban; then
+            git add -f -- storefront scripts/build.mjs scripts/sync-daily-spreadshop-batch.mjs package.json
+            git rm --ignore-unmatch -- checkout/storefront-v1.b64 checkout/storefront-v2.b64
+          else
+            git add -- sync-daily-spreadshop-batch.mjs
+          fi
+          git rm -- .github/workflows/build-storefront-v2.yml
+          git commit -m 'Build validated merchandise, bookstore and complete YouTube archive for urbanclothesmarket.com'
+          git fetch --depth=10 origin main
+          git rebase origin/main
+          git push origin HEAD:refs/heads/main
