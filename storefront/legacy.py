@@ -103,4 +103,6 @@ def install(store,old):
     if (old/'search-worker.js').exists():(store.out/'search-worker.js').write_text("self.onmessage=({data})=>self.postMessage({requestId:data.requestId,total:0,pages:1,page:1,rows:[]});\n")
     if (old/'style.css').exists():(store.out/'style.css').write_text("@import url('/assets/shop.css');\n")
     (store.out/'CNAME').write_text(urlsplit(store.host).hostname+'\n')
+    from ad_aliases import build_aliases
+    build_aliases(old,store.out,store.designs,urlsplit(store.host).hostname)
     print('Legacy route reconciliation',count)
