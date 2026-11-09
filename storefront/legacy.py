@@ -103,6 +103,12 @@ def install(store,old):
     if (old/'search-worker.js').exists():(store.out/'search-worker.js').write_text("self.onmessage=({data})=>self.postMessage({requestId:data.requestId,total:0,pages:1,page:1,rows:[]});\n")
     if (old/'style.css').exists():(store.out/'style.css').write_text("@import url('/assets/shop.css');\n")
     (store.out/'CNAME').write_text(urlsplit(store.host).hostname+'\n')
+    if store.target == 'jason':
+        # Search Console still receives the previous gaming collection sitemap.
+        gaming_title = re.compile(r'\b(gameplay|gaming|video games?|VR combat|Batman.? Arkham|Blade (?:and|&) Sorcery)\b', re.I)
+        gaming_urls = sorted({store.host + '/watch/' + row['id'] + '/' for row in store.archive if gaming_title.search(row['title'])})
+        nodes = ''.join('<url><loc>' + escape(url) + '</loc></url>' for url in gaming_urls)
+        store.write('/gamedev/sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + nodes + '</urlset>')
     from ad_aliases import build_aliases
     build_aliases(old,store.out,store.designs,urlsplit(store.host).hostname)
     print('Legacy route reconciliation',count)
