@@ -1,0 +1,20 @@
+{
+  "catalogSha256": "e9a71fb4fe3b39924c80bf3050d2aa05e8c50b1af59d81529e1d9e04add8749e",
+  "designs": 227,
+  "offers": 24796,
+  "checkedOn": "2026-11-09",
+  "evidence": [
+    {
+      "file": "spreadshirt-checkout-evidence.ndjson.gz",
+      "sha256": "caed66d542589496380e179ed3ccc62686a941efc8c5053701ca3b7a23bb7a45"
+    },
+    {
+      "file": "public-seller-evidence.ndjson.gz",
+      "sha256": "a04fbb2b806dd2628814fa0c1eeb1a522fb72d888c2a5c3ebd12a4f897f805a5"
+    },
+    {
+      "file": "initial-supplement.ndjson.gz",
+      "sha256": "1a9e6c7830a0a0787911aebabb5f08340cdb2a056c72f718fd10d596d04f2a31"
+    }
+  ]
+}

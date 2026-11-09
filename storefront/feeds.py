@@ -15,7 +15,7 @@ def write_feeds(store,old):
     for g in store.designs:
         reference=re.search(r'DPV\d+D(\d+)X',g.get('image',''))
         for o in g['items']:
-            img=g.get('image','') if o['sku']==g['primary'] else ''
+            img=o.get('image') or (g.get('image','') if o['sku']==g['primary'] else '')
             if not img:
                 p=raw.get(o['sku'],{});source=p.get('image') or p.get('img') or '';parts=urlsplit(source);offer=parse_qs(urlsplit(o['url']).query)
                 m=re.search(r'/DPT(\d+)A(\d+)DPV\d+D(\d+)X',parts.path)

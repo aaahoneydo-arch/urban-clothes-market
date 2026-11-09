@@ -4,13 +4,14 @@ from pathlib import Path
 CHANNEL='UC5EY2rDVHdIOskfZcwR8t3Q'
 p=argparse.ArgumentParser();p.add_argument('--dir',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
 seen={}
+old={v['id']:v for v in json.loads(gzip.decompress(a.out.read_bytes()))} if a.out.exists() else {}
 for kind in ('videos','shorts','streams'):
     feed=json.loads((a.dir/('yt-'+kind+'.json')).read_text());assert feed.get('channel_id')==CHANNEL,kind
     for item in feed['entries']:
         id=item.get('id');name=item.get('title')
         if not re.fullmatch(r'[A-Za-z0-9_-]{11}',id or '') or not name or name in ['[Private video]','[Deleted video]']:continue
         if id in seen:continue
-        row={'id':id,'title':name,'kind':kind}
+        row={**{f:old[id][f] for f in ['date','seconds','desc','embeddable'] if id in old and f in old[id]},'id':id,'title':name,'kind':kind}
         if item.get('duration') is not None:row['seconds']=int(item['duration'])
         if item.get('description'):row['desc']=item['description'][:500]
         if item.get('upload_date') and re.fullmatch(r'\d{8}',item['upload_date']):row['date']=datetime.datetime.strptime(item['upload_date'],'%Y%m%d').date().isoformat()

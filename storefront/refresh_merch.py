@@ -32,10 +32,12 @@ def refresh(evidence,existing,out):
     for sku,r in rows.items():
         if r.get('status')!='verified':continue
         original=urlsplit(r['original']);u=urlsplit(r['url']);q=parse_qs(u.query);oq=parse_qs(original.query);d=re.search(r'-[AD]([a-z0-9]+)$',original.path)
-        if not d or u.scheme!='https' or u.hostname!='www.spreadshirt.com' or not u.path.endswith('-D'+d[1]) or q.get('sellable')!=[sku.removeprefix('spreadshop-')] or q.get('appearance')!=oq.get('appearance') or not q.get('appearance') or r.get('currency')!='USD':raise ValueError('Conflicting seller evidence for '+sku)
+        if not d or u.scheme!='https' or u.hostname!='www.spreadshirt.com' or not u.path.endswith('-D'+d[1]) or q.get('sellable')!=[sku.removeprefix('spreadshop-')] or (q.get('appearance')!=oq.get('appearance') and oq.get('appearance')!=[r.get('previousAppearance')]) or not q.get('appearance') or r.get('currency')!='USD':raise ValueError('Conflicting seller evidence for '+sku)
         name=r['design'];type_=r['title'].removeprefix(name).strip();identifier=d[1]
         group=groups.setdefault(identifier,{'id':identifier,'slug':old.get(identifier,{}).get('slug') or slug(name)+'-'+identifier[-6:],'design':name,'items':[]})
-        group['items'].append({'sku':sku,'type':type_,'price':f"{float(r['price']):.2f}",'url':r['url']})
+        offer={'sku':sku,'type':type_,'price':f"{float(r['price']):.2f}",'url':r['url']}
+        if urlsplit(r.get('image','')).hostname=='image.spreadshirtmedia.com':offer['image']=r['image']
+        group['items'].append(offer)
     needs=[]
     for key,g in groups.items():
         prev=old.get(key,{})
@@ -52,6 +54,9 @@ def refresh(evidence,existing,out):
             g.update(primary=sku,image=img,description=desc)
     for g in groups.values():g['items'].sort(key=lambda o:(o['sku']!=g['primary'],o['type'].lower(),o['sku']))
     data=json.dumps(list(groups.values()),ensure_ascii=False,separators=(',',':')).encode()
-    Path(out).write_bytes(gzip.compress(data,mtime=0));print('Checked',len(rows),'variant IDs;',len(groups),'published designs;',sum(len(g['items']) for g in groups.values()),'exact offers.')
+    Path(out).write_bytes(gzip.compress(data,mtime=0))
+    from evidence import seal
+    seal(out,evidence)
+    print('Checked',len(rows),'variant IDs;',len(groups),'published designs;',sum(len(g['items']) for g in groups.values()),'exact offers.')
 if __name__=='__main__':
     a=argparse.ArgumentParser();a.add_argument('--evidence',action='append',required=True);a.add_argument('--existing');a.add_argument('--out',required=True);o=a.parse_args();refresh(o.evidence,o.existing,o.out)

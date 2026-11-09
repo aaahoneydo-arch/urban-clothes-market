@@ -27,7 +27,10 @@ with tempfile.TemporaryDirectory(prefix='verified-storefronts-') as td:
         if previous.exists():shutil.rmtree(previous)
     if a.push:
         for root,out in jobs:
-            git(root,'add','-f','--','docs')
-            if subprocess.run(['git','-C',str(root),'diff','--cached','--quiet','--','docs']).returncode:
-                git(root,'commit','--only','-m','Publish checked bookstore, merchandise and video catalog','--','docs')
+            paths=['docs']
+            if root==a.urban.resolve():
+                paths.extend(f for f in ['storefront/merch.json.gz','storefront/merch-verification.json','storefront/books.json','storefront/videos.json','storefront/archive.json.gz','checkout/storefront-import-history.ndjson.gz'] if (root/f).exists())
+            git(root,'add','-f','--',*paths)
+            if subprocess.run(['git','-C',str(root),'diff','--cached','--quiet','--',*paths]).returncode:
+                git(root,'commit','--only','-m','Publish checked bookstore, merchandise and video catalog','--',*paths)
             git(root,'push','origin','main')

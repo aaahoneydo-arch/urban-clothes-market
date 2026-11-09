@@ -34,6 +34,8 @@ class Store:
     def __init__(self,target,destination,prefix='',preview=False):
         self.target=target;self.out=Path(destination);self.prefix='/'+prefix.strip('/') if prefix.strip('/') else ''
         self.preview=preview;self.name=NAMES[target];self.host=ORIGINS[target];self.urls=[];self.search=[];self.counts=collections.Counter()
+        from evidence import check
+        self.verification=check(SRC/'merch.json.gz')
         self.designs=readgzip(SRC/'merch.json.gz');self.books=json.loads((SRC/'books.json').read_text());self.archive=readgzip(SRC/'archive.json.gz')
         self.related=json.loads((SRC/'videos.json').read_text())
         for g in self.designs:
@@ -43,6 +45,7 @@ class Store:
                 if u.scheme!='https' or u.hostname!='www.spreadshirt.com' or not u.path.startswith('/shop/design/') or not u.path.endswith('-D'+g['id']) or q.get('sellable')!=[o['sku'].removeprefix('spreadshop-')] or len(q.get('appearance',[]))!=1:raise ValueError(o['sku'])
         if len({o['sku'] for g in self.designs for o in g['items']})!=sum(len(g['items']) for g in self.designs):raise ValueError('Duplicate seller SKU')
         self.bybook={b['slug']:b for b in self.books}
+        self.detail_items={o['sku'] for g in self.designs for o in g['items'] if o.get('image') or (o['sku']==g['primary'] and g.get('image'))}
         self.desmap={g['id']:g for g in self.designs}
         self.skus={v['sku']:(g,v) for g in self.designs for v in g['items']}
         self.channel='https://www.youtube.com/@jasontvyoutube'
@@ -69,16 +72,18 @@ class Store:
     def heading(self,title,desc=''):return '<header class="pagehead"><h1>'+esc(title)+'</h1>'+('<p>'+esc(desc)+'</p>' if desc else '')+'</header>'
     def shelf(self,title,body,path=None,action=None,klass=''):
         return '<section class="shelf '+klass+'"><div class="shelf-head"><h2>'+esc(title)+'</h2>'+(self.link(path,action) if path else '')+'</div>'+body+'</section>'
+    def itempath(self,item):return '/merch/item/'+item['sku'].removeprefix('spreadshop-')+'/'
     def designcard(self,g,override=None):
         v=override or g['items'][0];url='/merch/design/'+g['slug']+'/'
         # The photograph always identifies the primary item; other types have their own labeled offers.
         image=picture(optimized(g['image'],560,700),g['design']+' on '+g['items'][0]['type']) if g['image'] else '<span class="unpictured">'+esc(g['design'])+'</span>'
-        if override and override['sku']!=g['primary']:
+        if override and override['sku']!=g['primary'] and not override.get('image'):
             return '<article class="card stylecard"><div class="tag">'+esc(dept(override['type']))+'</div><h3>'+self.link(url,g['design'],'')+'</h3><p>'+esc(override['type'])+'</p><p class="card-amount">$'+esc(override['price'])+' USD</p>'+buy(override['url'],'Shop exact item','shoplink')+'</article>'
-        return '<article class="card"><a class="picture" href="'+esc(self.url(url))+'">'+image+'</a><div class="tag">'+esc(g['items'][0]['type'])+'</div><h3>'+self.link(url,g['design'],'')+'</h3><p>'+str(len(g['items']))+(' verified style' if len(g['items'])==1 else ' verified styles')+'</p>'+'<p class="card-amount">$'+esc(v['price'])+' USD</p>'+buy(v['url'],'Shop '+v['type'],'shoplink')+'</article>'
+        if override and override.get('image'):image=picture(optimized(override['image'],560,700),g['design']+' on '+override['type'])
+        return '<article class="card"><a class="picture" href="'+esc(v['url'])+'" target="_blank" rel="noopener" aria-label="Shop '+esc(g['design']+' '+v['type'])+' on Spreadshirt">'+image+'</a><div class="tag">'+esc(v['type'])+'</div><h3>'+self.link(url,g['design'],'')+'</h3><p>'+str(len(g['items']))+(' verified style' if len(g['items'])==1 else ' verified styles')+'</p>'+'<p class="card-amount">$'+esc(v['price'])+' USD</p>'+buy(v['url'],'Shop '+v['type'],'shoplink')+'</article>'
     def bookcard(self,b):
         u='/books/'+b['slug']+'/';im=picture(b['image'],b['title']+' book cover')
-        return '<article class="card bookcard"><a class="picture bookpic" href="'+esc(self.url(u))+'">'+im+'</a><div class="tag">'+esc(b['formats'][0]['format'])+'</div><h3>'+self.link(u,b['title'],'')+'</h3>'+buy(amz(b['asin']),'View on Amazon','shoplink')+'</article>'
+        return '<article class="card bookcard"><a class="picture bookpic" href="'+esc(amz(b['asin']))+'" target="_blank" rel="noopener" aria-label="View '+esc(b['title'])+' on Amazon">'+im+'</a><div class="tag">'+esc(b['formats'][0]['format'])+'</div><h3>'+self.link(u,b['title'],'')+'</h3>'+buy(amz(b['asin']),'View on Amazon','shoplink')+'</article>'
     def videoc(self,v):
         u='/watch/'+v['id']+'/';label='YouTube Short' if v['kind']=='shorts' else 'Livestream' if v['kind']=='streams' else 'Video'
         return '<article class="video"><a class="videoimage" href="'+self.url(u)+'">'+picture(video_image(v['id']),v['title'])+'</a><h3>'+self.link(u,v['title'],'')+'</h3><p>'+label+'</p></article>'
@@ -149,8 +154,10 @@ class Store:
         for key,label,_ in [('','Graphic merchandise',''),*DEPTS]:
             pairs=[]
             for g in ordered:
-                v=next((o for o in g['items'] if not key or dept(o['type'])==key),None)
-                if v:pairs.append((g,v))
+                if key:
+                    pairs.extend((g,o) for o in g['items'] if dept(o['type'])==key)
+                else:pairs.append((g,g['items'][0]))
+            if key:pairs.sort(key=lambda pair:(pair[1]['sku'] not in self.detail_items,pair[1]['sku']!=pair[0]['primary'],pair[0]['design'],pair[1]['type']))
             if not pairs:continue
             base='/merch/'+(key+'/' if key else '');pages=batches(pairs,24)
             for i,items in enumerate(pages,1):
@@ -162,16 +169,26 @@ class Store:
         for g in ordered:
             first=g['items'][0];path='/merch/design/'+g['slug']+'/'
             self.search.append([g['design'],'Design',self.url(path),' '.join(dict.fromkeys(o['type'] for o in g['items']))])
-            rows=''.join('<tr data-variant="'+esc(o['type'].lower())+'"><td>'+esc(o['type'])+'</td><td>$'+esc(o['price'])+'</td><td>'+buy(o['url'],'View item','shoplink')+'</td></tr>' for o in g['items'])
-            body='<div class="crumb">'+self.link('/merch/','Merchandise')+' / '+esc(g['design'])+'</div><section class="detail"><div><img class="product" src="'+esc(optimized(g['image'],800,950))+'" alt="'+esc(g['design']+' on '+first['type'])+'"></div><div><div class="kicker">Urban Clothes Market</div><h1>'+esc(g['design'])+'</h1><p class="lede">'+esc(g['description'])+'</p>'+buy(first['url'],'Shop '+first['type'])+'<p class="muted">Pictured on '+esc(first['type'])+'. Choose size and color on Spreadshirt.</p></div></section>'
+            rows=''.join('<tr data-variant="'+esc(o['type'].lower())+'"><td>'+(self.link(self.itempath(o),o['type'],'shoplink') if o['sku'] in self.detail_items else esc(o['type']))+'</td><td>$'+esc(o['price'])+'</td><td>'+buy(o['url'],'View item','shoplink')+'</td></tr>' for o in g['items'])
+            body='<div class="crumb">'+self.link('/merch/','Merchandise')+' / '+esc(g['design'])+'</div><section class="detail"><div><img class="product" src="'+esc(optimized(g['image'],800,950))+'" alt="'+esc(g['design']+' on '+first['type'])+'"></div><div><div class="kicker">Urban Clothes Market</div><h1>'+esc(g['design'])+'</h1><p class="lede">'+esc(g['description'])+'</p>'+buy(first['url'],'Shop '+first['type'])+'<p class="muted">Pictured on '+esc(first['type'])+'. Spreadshirt shows the available options for this item.</p></div></section>'
             body+=self.shelf('Available styles','<label>Find a product type<br><input class="filterinput" data-variant-filter type="search" placeholder="Hoodie, shirt, mug…"></label><p class="muted" data-matches>'+str(len(g['items']))+' matching styles</p><table class="table"><thead><tr><th>Product</th><th>USD</th><th>Spreadshirt</th></tr></thead><tbody>'+rows+'</tbody></table>')
+            associated={r['id'] for r in self.related if r.get('design')==g['id']}
+            dv=[v for v in self.archive if v['id'] in associated]
+            if dv:body+=self.shelf('Watch the design in detail','<div class="videos">'+''.join(self.videoc(v) for v in dv)+'</div>')
             self.page(path,g['design'],g['description'],body,meta_obj('CollectionPage',name=g['design'],url=ORIGINS['urban']+path),canonical=ORIGINS['urban']+path,img=g['image'])
-        self.page('/books/','Books by Jason Coleman','Explore the complete collection shown on Jason Coleman’s Amazon author page, including novels, nonfiction and graphic novels.',self.heading('Books by Jason Coleman','Fantasy, science fiction, espionage and nonfiction. Select a title to find its available Amazon editions.')+self.cards(self.books,self.bookcard))
+        for g in ordered:
+            for o in g['items']:
+                if o['sku'] not in self.detail_items:continue
+                path=self.itempath(o);name=g['design']+' '+o['type'];pic=o.get('image') or g['image'];gp='/merch/design/'+g['slug']+'/'
+                body='<div class="crumb">'+self.link('/merch/','Merchandise')+' / '+self.link(gp,g['design'])+'</div><section class="detail"><div><img class="product" src="'+esc(optimized(pic,850,950))+'" alt="'+esc(name)+'"></div><div><div class="kicker">'+esc(o['type'])+'</div><h1>'+esc(g['design'])+'</h1><p class="lede">'+esc(g['description'])+'</p><p class="itemprice">$'+esc(o['price'])+' USD</p>'+buy(o['url'],'Choose options on Spreadshirt')+'<p class="muted">Spreadshirt shows the options, shipping and final price for this item before checkout.</p>'+self.link(gp,'Other styles for this design')+'</div></section>'
+                data=meta_obj('Product',name=name,sku=o['sku'],description=g['description'] or name,image=[pic],url=ORIGINS['urban']+path,brand={'@type':'Brand','name':'Urban Clothes Market'},offers={'@type':'Offer','price':o['price'],'priceCurrency':'USD','url':o['url'],'availability':'https://schema.org/InStock','seller':{'@type':'Organization','name':'Spreadshirt'}})
+                self.page(path,name,name+'. '+(g['description'] or 'Original graphic design by Urban Clothes Market.'),body,data,canonical=ORIGINS['urban']+path,img=pic)
+        self.page('/books/','Books by Jason Coleman','Explore the complete collection shown on Jason Coleman’s Amazon author page, including novels, nonfiction and graphic novels.',self.heading('Books by Jason Coleman','Fantasy, science fiction, espionage and nonfiction. Select a title to find its available Amazon editions.')+self.cards(self.books,self.bookcard),canonical=ORIGINS['jason']+'/books/')
         for b in self.books:
             path='/books/'+b['slug']+'/';self.search.append([b['title'],'Book',self.url(path),b['genre']+' '+b.get('series','')+' '+b['retailTitle']])
             btns=''.join(buy(amz(f['asin']),f['format']+' on Amazon') for f in b['formats'])
             body='<div class="crumb">'+self.link('/books/','Books')+' / Jason Coleman</div><section class="detail"><div><img class="product bookcover" src="'+esc(b['image'])+'" alt="'+esc(b['title']+' cover')+'"></div><div><div class="kicker">'+esc(b['genre'])+'</div><h1>'+esc(b['title'])+'</h1><p class="muted">By Jason Coleman</p><p class="lede">'+esc(b['desc'])+'</p><div class="bookgroup">'+btns+'</div><p class="muted">Amazon displays the current price and availability for each edition.</p></div></section>'
-            vids=[v for v in self.archive if any(r['id']==v['id'] and r['book']==b['slug'] for r in self.related)]
+            vids=[v for v in self.archive if any(r['id']==v['id'] and r.get('book')==b['slug'] for r in self.related)]
             if vids:body+=self.shelf('Watch the story','<div class="videos">'+''.join(self.videoc(v) for v in vids)+'</div>')
             data=meta_obj('Book',name=b['retailTitle'],author={'@type':'Person','name':'Jason Coleman'},image=b['image'],url=ORIGINS['jason']+path,workExample=[{'@type':'Book','name':f['format']+' edition','url':amz(f['asin'])} for f in b['formats']])
             self.page(path,b['title'],b['desc'] or (b['retailTitle']+' by Jason Coleman.'),body,data,canonical=ORIGINS['jason']+path,img=b['image'])
@@ -184,7 +201,10 @@ class Store:
         self.write('/assets/videos.json',compact([[v['id'],v['title'],v['kind']] for v in self.archive]))
         self.page('/404.html','Page unavailable','Browse the current collection.',self.heading('Page unavailable','This address does not match a current listing.')+'<div class="actions">'+self.link('/merch/','Browse merchandise','btn')+self.link('/books/','Browse books','btn')+'</div>',index=False)
         self.write('/robots.txt',('User-agent: *\nDisallow: /\n' if self.preview else 'User-agent: *\nAllow: /\nSitemap: '+self.host+'/sitemap.xml\n'))
+        if self.target=='jason' and not self.preview:
+            self.write('/robots.txt','User-agent: *\nAllow: /\nSitemap: '+self.host+'/sitemap.xml\nSitemap: '+self.host+'/video-sitemap.xml\n')
         self.write('/sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+xml_escape(u)+'</loc></url>' for u in sorted(set(self.urls)))+'</urlset>')
+        self.write('/release.json',json.dumps({'domain':urlsplit(self.host).hostname,'catalogSha256':self.verification['catalogSha256'],'merchandise':len(self.skus),'designs':len(self.designs),'books':len(self.books),'amazonEditions':sum(len(b['formats']) for b in self.books),'youtubeUploads':len(self.archive)},indent=2))
         self.write('/.nojekyll',''); print(self.target,dict(self.counts),'indexable URLs',len(set(self.urls)))
     def build_video(self):
         groups=[('','Videos and Shorts',self.archive),('videos','Videos',[v for v in self.archive if v['kind']=='videos']),('shorts','YouTube Shorts',[v for v in self.archive if v['kind']=='shorts']),('streams','Livestreams',[v for v in self.archive if v['kind']=='streams'])]
@@ -195,15 +215,26 @@ class Store:
             for i,arr in enumerate(pages,1):
                 path=base if i==1 else base+'page/'+str(i)+'/';body=self.heading(title,'The public Jason TV channel archive. Open a title to watch on this site or on YouTube.')+chips+'<div class="videos">'+''.join(self.videoc(v) for v in arr)+'</div>'+self.pager(base,i,len(pages))
                 self.page(path,title+(f' · Page {i}' if i>1 else ''),'Browse '+title.lower()+' from Jason TV.',body,canonical=ORIGINS['jason']+path)
+        if self.target=='jason':
+            entries=[]
+            for v in self.archive:
+                if not v.get('date') or not v.get('desc') or v.get('embeddable') is False:continue
+                vid=v['id'];loc=self.host+'/watch/'+vid+'/'
+                entries.append('<url><loc>'+xml_escape(loc)+'</loc><video:video><video:thumbnail_loc>'+xml_escape(video_image(vid))+'</video:thumbnail_loc><video:title>'+xml_escape(v['title'])+'</video:title><video:description>'+xml_escape(v['desc'])+'</video:description><video:player_loc>https://www.youtube-nocookie.com/embed/'+vid+'</video:player_loc><video:publication_date>'+xml_escape(v['date'])+'</video:publication_date></video:video></url>')
+            self.write('/video-sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">'+''.join(entries)+'</urlset>')
         for v in self.archive:
             id=v['id'];p='/watch/'+id+'/';u='https://www.youtube.com/'+('shorts/'+id if v['kind']=='shorts' else 'watch?v='+id);self.search.append([v['title'],'Short' if v['kind']=='shorts' else 'Video',self.url(p),'Jason TV '+v.get('kind','')])
             body='<div class="crumb">'+self.link('/watch/','Jason TV videos')+'</div>'+self.heading(v['title'])+'<iframe class="player" title="'+esc(v['title'])+'" src="https://www.youtube-nocookie.com/embed/'+id+'" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe><div class="actions">'+buy(u,'Watch on YouTube','shoplink')+buy(self.channel,'Jason TV channel','shoplink')+'</div>'
             related=next((r for r in self.related if r['id']==id),None)
-            if related and related['book'] in self.bybook:body+=self.shelf('Read the book',self.cards([self.bybook[related['book']]],self.bookcard))
+            if related and related.get('book') in self.bybook:body+=self.shelf('Read the book',self.cards([self.bybook[related['book']]],self.bookcard))
+            if related and related.get('design') in self.desmap:body+=self.shelf('Shop the design',self.cards([self.desmap[related['design']]],self.designcard))
             desc=v.get('desc') or v['title']+' on Jason TV.';body+='<p class="lede">'+esc(desc)+'</p>' if v.get('desc') else ''
             ld=meta_obj('VideoObject',name=v['title'],description=first_sentence(desc),thumbnailUrl=[video_image(id)],embedUrl='https://www.youtube-nocookie.com/embed/'+id)
             if v.get('date'):ld['uploadDate']=v['date']
-            self.page(p,v['title'],desc,body,ld if v.get('date') else None,canonical=ORIGINS['jason']+p,img=video_image(id))
+            if v.get('seconds'):ld['duration']='PT'+str(int(v['seconds']))+'S'
+            if v.get('embeddable') is False:
+                body=re.sub(r'<iframe.*?</iframe>','<p class="lede">This upload is available to watch on YouTube.</p>',body,count=1,flags=re.S)
+            self.page(p,v['title'],desc,body,ld if v.get('date') and v.get('embeddable') is not False else None,canonical=ORIGINS['jason']+p,img=video_image(id))
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--target',choices=list(ORIGINS),required=True);parser.add_argument('--out',required=True);parser.add_argument('--prefix',default='');parser.add_argument('--preview',action='store_true');parser.add_argument('--legacy',help='Previous production repository for ad routes and verification files')
     a=parser.parse_args();store=Store(a.target,a.out,a.prefix,a.preview);store.build()

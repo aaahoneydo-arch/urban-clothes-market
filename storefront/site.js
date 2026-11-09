@@ -80,3 +80,13 @@ document.addEventListener('click', event => {
     window.gtag('event','channel_video_click',{video_url:to.href});
   }
 });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    for (const registration of registrations) {
+      const active=registration.active;
+      if(active && new URL(active.scriptURL).pathname==='/sw.js' && registration.scope===location.origin+'/') {
+        registration.update().catch(()=>{});
+      }
+    }
+  }).catch(()=>{});
+}

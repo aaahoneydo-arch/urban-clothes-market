@@ -51,8 +51,12 @@ def verify(r):
             a=first_script(body,r'window\.analytics\.product\s*=\s*(\{[^\n]+?\});')
             if (a.get('designerName')!='Urban Clothes Market' or a.get('articleId')!=uid or a.get('sellableId')!=sku or str(a.get('productTypeId'))!=sku.split('-')[1]):
                 raise ValueError('Seller, design or variant mismatch')
-            if a.get('stockout') or not a.get('availableSizes') or appearance not in a.get('availableAppearances',[]) or str(a.get('appearanceId'))!=appearance:
-                raise ValueError('Requested appearance or sizes unavailable')
+            if a.get('stockout') or not a.get('availableSizes'):raise ValueError('Requested appearance or sizes unavailable')
+            selected=str(a.get('appearanceId'));available={str(v) for v in a.get('availableAppearances',[])}
+            if appearance not in available or selected!=appearance:
+                if os.environ.get('CHECKOUT_ALLOW_SELLER_COLOR')=='1' and selected in available:
+                    result['previousAppearance']=appearance;appearance=selected
+                else:raise ValueError('Requested appearance or sizes unavailable')
             if 'Add to basket' not in body or not offer.get('url') or offer.get('priceCurrency')!='USD' or not str(offer.get('availability','')).endswith('/InStock'):
                 raise ValueError('Missing orderable USD offer')
             dest=urllib.parse.urlsplit(offer['url']); query=urllib.parse.parse_qs(dest.query)

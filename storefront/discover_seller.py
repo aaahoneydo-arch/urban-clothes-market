@@ -26,8 +26,8 @@ def fetch(url,folder):
   if u.hostname!='www.spreadshirt.com':continue
   if u.path.startswith('/shop/design/'):
    d=re.search(r'-D([a-z0-9]+)$',u.path);sku=parse_qs(u.query).get('sellable',[''])[0]
-   if d and re.fullmatch('[a-z0-9]+-\d+',sku):product_links[sku]=(d[1],full)
-  elif (u.path==urlsplit(ROOT).path or u.path.startswith(urlsplit(ROOT).path+'/')) and (not u.query or re.fullmatch('page=\d+',u.query)):
+   if d and re.fullmatch(r'[a-z0-9]+-\d+',sku):product_links[sku]=(d[1],full)
+  elif (u.path==urlsplit(ROOT).path or u.path.startswith(urlsplit(ROOT).path+'/')) and (not u.query or re.fullmatch(r'page=\d+',u.query)):
    linked.add(full.split('#')[0])
  blob=s.replace(chr(92)+'"','"');rows={}
  for m in re.finditer(r'"favorite":(\{[^{}]+\})',blob):

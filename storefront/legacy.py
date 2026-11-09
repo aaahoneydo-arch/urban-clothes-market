@@ -60,6 +60,23 @@ def install(store,old):
             vids={v for v in re.findall(r'(?:youtube(?:-nocookie)?\.com/embed/|youtube\.com/watch\?v=|youtu\.be/)([\w-]{11})',data) if v in videoids}
             if len(vids)==1:dest='/watch/'+next(iter(vids))+'/'
         write_old(rel,sku,title,dest)
+    previous=old/'docs'
+    if (previous/'release.json').is_file():
+        for oldpath in files:
+            if not oldpath.startswith('docs/') or not oldpath.endswith('.html'):continue
+            rel=oldpath[5:]
+            if rel in existing:continue
+            src=old/oldpath
+            if not src.is_file():continue
+            data=src.read_text(encoding='utf-8',errors='replace');name=re.search(r'<title[^>]*>(.*?)</title>',data,re.S|re.I)
+            sku=None;dest=None
+            hit=re.fullmatch(r'merch/item/([a-z0-9]+-\d+)/index.html',rel)
+            if hit:sku='spreadshop-'+hit[1]
+            if rel.startswith('books/'):
+                targets={bookids[a]['slug'] for a in re.findall(r'/dp/([A-Z0-9]{10})',data) if a in bookids}
+                if len(targets)==1:dest='/books/'+next(iter(targets))+'/'
+            if rel.startswith('watch/') and not dest:dest='/watch/'
+            write_old(rel,sku,name[1] if name else None,dest)
     # Also materialize product landing URLs still appearing in existing ad feeds.
     for f in [*old.glob('*merchant*.xml'),*old.glob('*merchant*.xml.gz')]:
         try:
@@ -75,5 +92,15 @@ def install(store,old):
             write_old(path+'/index.html',html.unescape(sku[1]),None)
     for f in old.glob('*.txt'):
         if re.fullmatch(r'(?:google[a-z\d]+|[a-f0-9]{24,64})\.txt',f.name,re.I):shutil.copy2(f,store.out/f.name)
+    for n in ['favicon.ico','favicon.svg','apple-touch-icon.png','apple-touch-icon-precomposed.png','BingSiteAuth.xml']:
+        if (old/n).is_file():shutil.copy2(old/n,store.out/n)
+    for f in old.glob('sitemap*.xml'):
+        if f.name!='sitemap.xml' and 'merchant' not in f.name:shutil.copy2(store.out/'sitemap.xml',store.out/f.name)
+    if (old/'sw.js').exists():
+        (store.out/'sw.js').write_text("self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));\nself.addEventListener('activate', e => e.waitUntil((async()=>{for(const n of await caches.keys())if(n.startsWith('jasontv-storefront-'))await caches.delete(n);await self.clients.claim();await self.registration.unregister();})()));\n")
+    if (old/'app.js').exists():
+        (store.out/'app.js').write_text("if(!document.body.matches('.urban,.jason')){try{const key='storefront-upgraded-v2';if(!sessionStorage.getItem(key)){sessionStorage.setItem(key,'1');location.reload();}}catch{}}\n")
+    if (old/'search-worker.js').exists():(store.out/'search-worker.js').write_text("self.onmessage=({data})=>self.postMessage({requestId:data.requestId,total:0,pages:1,page:1,rows:[]});\n")
+    if (old/'style.css').exists():(store.out/'style.css').write_text("@import url('/assets/shop.css');\n")
     (store.out/'CNAME').write_text(urlsplit(store.host).hostname+'\n')
     print('Legacy route reconciliation',count)
