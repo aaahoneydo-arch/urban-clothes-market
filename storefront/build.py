@@ -52,6 +52,8 @@ class Store:
         self.metadata=json.loads((SRC/'site-meta.json').read_text())[target]
     def url(self,path):return self.prefix+path if self.prefix else (path.lstrip('/') or './')
     def base(self,path):
+        if path == '/404.html' and not self.preview:
+            return self.prefix + '/'
         depth=len([p for p in path.strip('/').split('/') if p])-(0 if path.endswith('/') else 1)
         return '../'*max(0,depth) or './'
     def write(self,path,body):
