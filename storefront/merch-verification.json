@@ -1,8 +1,8 @@
 {
-  "catalogSha256": "e9a71fb4fe3b39924c80bf3050d2aa05e8c50b1af59d81529e1d9e04add8749e",
-  "designs": 227,
-  "offers": 24796,
-  "checkedOn": "2026-11-09",
+  "catalogSha256": "36971958863234e33bdc764862f63420bc0b707c47e763aabdcbf9904d87ca5c",
+  "designs": 238,
+  "offers": 46877,
+  "checkedOn": "2026-11-16",
   "evidence": [
     {
       "file": "spreadshirt-checkout-evidence.ndjson.gz",
@@ -15,6 +15,10 @@
     {
       "file": "initial-supplement.ndjson.gz",
       "sha256": "1a9e6c7830a0a0787911aebabb5f08340cdb2a056c72f718fd10d596d04f2a31"
+    },
+    {
+      "file": "storefront-import-history.ndjson.gz",
+      "sha256": "df6fa5493e66065db767751ffd5e8499a2ef94d39c14a1b528e9fe0715515e6d"
     }
   ]
 }

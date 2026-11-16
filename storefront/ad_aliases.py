@@ -1,10 +1,12 @@
 """Recover historical advertising URLs using exact catalog IDs and unambiguous SKU suffixes."""
-import gzip,html,json,re,unicodedata
+import concurrent.futures,gzip,html,json,re,unicodedata
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
-from xml.sax.saxutils import escape
 
 def normalize(s):return re.sub(r'[^a-z0-9]+','-',unicodedata.normalize('NFKD',str(s or '').lower())).strip('-')
+def _write_alias(args):
+    p,text=args
+    p.write_text(text,encoding='utf-8')
 def build_aliases(root,out,merch,domain,write_log=True):
     root,out=Path(root),Path(out);offers={o['sku']:(g,o) for g in merch for o in g['items']}
     rows={};aliases={};suffixes={}
@@ -54,11 +56,11 @@ def build_aliases(root,out,merch,domain,write_log=True):
             if candidate:link(key,candidate)
     esc=lambda s:html.escape(str(s),quote=True)
     created=retired=0
+    pending=[]
     for key,ids in aliases.items():
         if len(ids)!=1:continue
         sku=next(iter(ids));p=out/'products'/key/'index.html'
         if p.exists():continue
-        p.parent.mkdir(parents=True,exist_ok=True)
         if sku in offers:
             g,o=offers[sku];label=g['design']+' '+o['type'];u=esc(o['url'])
             body='<p>Urban Clothes Market on Spreadshirt</p><h1>'+esc(label)+'</h1><p>$'+esc(o['price'])+' USD</p><a class="btn" href="'+u+'" target="_blank" rel="noopener">View this exact item on Spreadshirt ↗</a>'
@@ -67,7 +69,12 @@ def build_aliases(root,out,merch,domain,write_log=True):
             label=rows.get(sku,{}).get('name') or rows.get(sku,{}).get('title') or 'Previously listed item'
             body='<h1>This listing has been retired.</h1><p>'+esc(label)+'</p>';can='';retired+=1
         c='<link rel="canonical" href="'+esc(can)+'">' if can else ''
-        p.write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow">'+c+'<title>'+esc(label)+'</title><link rel="stylesheet" href="../../assets/shop.css"></head><body><main class="frame errorbox">'+body+'<p><a class="shoplink" href="../../merch/">Browse merchandise</a> · <a class="shoplink" href="../../books/">Browse books</a></p></main></body></html>',encoding='utf-8')
+        pending.append((p,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow">'+c+'<title>'+esc(label)+'</title><link rel="stylesheet" href="../../assets/shop.css"></head><body><main class="frame errorbox">'+body+'<p><a class="shoplink" href="../../merch/">Browse merchandise</a> · <a class="shoplink" href="../../books/">Browse books</a></p></main></body></html>'))
+    made=set()
+    for p,_ in pending:
+        if p.parent not in made:p.parent.mkdir(parents=True,exist_ok=True);made.add(p.parent)
+    with concurrent.futures.ThreadPoolExecutor(16) as pool:
+        list(pool.map(_write_alias,pending,chunksize=64))
     # Unknown historical naming conventions can recover only an exact, unique known sellable.
     fallback={k:[v,offers[v][1]['url']] for k,v in suffixes.items() if v in offers}
     (out/'assets/legacy-skus.json').write_text(json.dumps(fallback,separators=(',',':')))
@@ -88,7 +95,7 @@ def build_aliases(root,out,merch,domain,write_log=True):
   }).catch(()=>{});
 })();\n""")
     report={'activeAliasesAdded':created,'retiredAliasesAdded':retired,'unambiguousActiveSuffixes':len(fallback)}
-    if write_log:print('Advertising aliases',report)
+    if write_log:print('Advertising aliases',report,flush=True)
     return report
 if __name__=='__main__':
     import argparse

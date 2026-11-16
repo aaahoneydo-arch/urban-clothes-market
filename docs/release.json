@@ -1,17 +1,9 @@
 {
-  "sourceRepo": "aaahoneydo-arch/urban-clothes-market",
-  "sourceCommit": "a0534a561db4a73742ad28673c5a631b5fdaeb0e",
-  "archiveSha256": "7182a59eb0f66460ed07e1b92094ccde5370821a03182d75105fba069579ad41",
   "domain": "urbanclothesmarket.com",
-  "merchandise": 24796,
-  "designs": 227,
+  "catalogSha256": "36971958863234e33bdc764862f63420bc0b707c47e763aabdcbf9904d87ca5c",
+  "merchandise": 46877,
+  "designs": 238,
   "books": 22,
   "amazonEditions": 53,
-  "youtubeUploads": 1491,
-  "historicalAdvertisingRoutes": {
-    "activeAliasesAdded": 16181,
-    "retiredAliasesAdded": 3639,
-    "unambiguousActiveSuffixes": 24796
-  },
-  "aliasRevision": "full-title-v1"
+  "youtubeUploads": 1491
 }
