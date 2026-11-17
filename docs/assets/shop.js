@@ -23,6 +23,26 @@
     return 'https://www.spreadshirt.com/shop/design/' + slug + '-D' + d[0] + '?appearance=' + row[3] + '&sellable=' + uid36 + '-' + t[1];
   }
 
+  const THEME_ALIASES = {
+    'gothic': ['gothic', 'crest', 'crown', 'gargoyle', 'cathedral', 'emblem'],
+    'family & loyalty': ['family', 'loyalty', 'faithful'],
+    'wolves & dogs': ['wolf', 'direwolves', 'dog', 'corso', 'pit bull', 'paws'],
+    'cats & panthers': ['cat', 'panther', 'tiger', 'leopard', 'lion'],
+    'dragons & phoenix': ['dragon', 'phoenix', 'raven', 'griffin', 'falcon'],
+    'gaming & anime': ['gamer', 'anime', 'arcade', 'player', 'ronin', 'ninja'],
+    'cars & garage': ['car', 'garage', 'racing', 'tool', 'measure', 'level', 'piston'],
+    'city crests': ['new york', 'los angeles', 'skyline', 'city', 'urban'],
+    'roses & floral': ['rose', 'floral', 'peonies', 'bloom', 'moon', 'thorns']
+  };
+
+  function compilePipeRegex(pattern) {
+    if (!pattern) return null;
+    const parts = pattern.split('|').map(s => s.trim().toLowerCase()).filter(Boolean);
+    if (!parts.length) return null;
+    const escaped = parts.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    return new RegExp('(?:^|\\b)(?:' + escaped.join('|') + ')', 'i');
+  }
+
   function buildProductCard(row, data, designBase, itemBase) {
     const d = data.designs[row[0]];
     const t = data.types[row[1]];
@@ -31,7 +51,7 @@
     const vImg = decodeImg(row[6], data.imgPfx);
     const dImg = vImg || decodeImg(d[5], data.imgPfx);
     const designHref = designBase + d[1] + '/';
-    const itemHref = row[4] ? (itemBase + (row[7] || d[3]) + '-' + t[1] + '/') : designHref;
+    const designAltHref = row[4] ? (itemBase + (row[7] || d[3]) + '-' + t[1] + '/') : designHref;
 
     const art = document.createElement('article');
     if (vImg) {
@@ -70,29 +90,37 @@
 
     const tag = document.createElement('div');
     tag.className = 'tag';
-    tag.textContent = t[5] + ' · ' + t[0];
+    tag.textContent = vImg ? t[0] : (t[5] + ' · ' + t[0]);
 
     const h3 = document.createElement('h3');
     const aTitle = document.createElement('a');
-    aTitle.href = itemHref;
+    aTitle.href = buyUrl;
+    aTitle.target = '_blank';
+    aTitle.rel = 'noopener';
     aTitle.textContent = d[2];
     h3.append(aTitle);
-
-    const pType = document.createElement('p');
-    pType.textContent = t[0];
 
     const pPrice = document.createElement('p');
     pPrice.className = 'card-amount';
     pPrice.textContent = '$' + price + ' USD';
 
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
+
     const buy = document.createElement('a');
-    buy.className = 'shoplink';
+    buy.className = 'btn btn-buy';
     buy.href = buyUrl;
     buy.target = '_blank';
     buy.rel = 'noopener';
-    buy.textContent = 'Buy exact item on Spreadshirt ↗';
+    buy.textContent = 'Buy on Spreadshirt ↗';
 
-    art.append(tag, h3, pType, pPrice, buy);
+    const more = document.createElement('a');
+    more.className = 'morestyles';
+    more.href = vImg ? designHref : designAltHref;
+    more.textContent = vImg ? 'All styles →' : 'View item →';
+
+    actions.append(buy, more);
+    art.append(tag, h3, pPrice, actions);
     return art;
   }
 
@@ -104,13 +132,15 @@
     return prodPromise;
   }
 
-  // Interactive 47,000+ Product Browser on /merch/ and /merch/<dept>/
+  // Interactive 46,877+ Product Browser on Homepage, /merch/, and /merch/<dept>/
   const finder = document.querySelector('[data-catalog-finder]');
   if (finder) {
     const form = finder.querySelector('form');
     const qInput = form.elements.q;
     const deptSel = form.elements.dept;
+    const ptypeSel = form.elements.ptype || null;
     const sortSel = form.elements.sort;
+    const resetBtn = finder.querySelector('[data-catalog-reset]');
     const status = finder.querySelector('[data-catalog-status]');
     const grid = finder.querySelector('[data-catalog-results]');
     const moreBtn = finder.querySelector('[data-catalog-more]');
@@ -118,37 +148,73 @@
     const defDept = finder.dataset.defaultDept || '';
     const dBase = finder.dataset.designBase || 'merch/design/';
     const iBase = finder.dataset.itemBase || 'merch/item/';
+    const defaultStatusText = status.textContent;
+    const qChips = Array.from(finder.querySelectorAll('[data-quick-q]'));
+    const pChips = Array.from(finder.querySelectorAll('[data-quick-ptype]'));
+    const allChipReset = finder.querySelector('[data-quick-reset]');
+
+    function syncQuickChips(q, ptype, dept, sort) {
+      const qLower = q.toLowerCase();
+      const isDefault = !q && dept === defDept && !ptype && sort === 'rel';
+      if (resetBtn) resetBtn.hidden = isDefault;
+      if (allChipReset) allChipReset.classList.toggle('current', isDefault);
+      for (const c of qChips) c.classList.toggle('current', !!qLower && c.dataset.quickQ.toLowerCase() === qLower);
+      for (const c of pChips) c.classList.toggle('current', !!ptype && c.dataset.quickPtype === ptype);
+    }
 
     async function runFinder() {
       const q = qInput.value.trim();
       const dept = deptSel.value;
+      const ptype = ptypeSel ? ptypeSel.value : '';
       const sort = sortSel.value;
-      const isDefaultState = !q && dept === defDept && sort === 'rel';
+      syncQuickChips(q, ptype, dept, sort);
+
+      const isDefaultState = !q && dept === defDept && !ptype && sort === 'rel';
       if (isDefaultState) {
         grid.hidden = true;
         grid.replaceChildren();
         moreBtn.hidden = true;
+        status.textContent = defaultStatusText;
         if (staticBox) staticBox.hidden = false;
         return;
       }
+
       status.textContent = 'Searching full verified catalog…';
       try {
         const data = await loadProductsIndex(finder.dataset.index);
-        if (qInput.value.trim() !== q || deptSel.value !== dept || sortSel.value !== sort) return;
-        const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-        const typeMatch = data.types.map(t => !dept || t[3] === dept || t[4] === dept);
+        if (qInput.value.trim() !== q || deptSel.value !== dept || (ptypeSel ? ptypeSel.value : '') !== ptype || sortSel.value !== sort) return;
+
+        const ptypeRx = compilePipeRegex(ptype);
+        const typeMatch = data.types.map(t => (!dept || t[3] === dept || t[4] === dept) && (!ptypeRx || ptypeRx.test(t[0])));
         const designLower = data.designs.map(d => d[2].toLowerCase());
         const typeLower = data.types.map(t => (t[0] + ' ' + t[5] + ' ' + t[4]).toLowerCase());
-        const comboPass = new Uint8Array(data.designs.length);
+
+        const aliasList = q ? THEME_ALIASES[q.toLowerCase()] : null;
+        const wordGroups = (!aliasList && q)
+          ? q.toLowerCase().split(/\s+/).filter(Boolean).map(tok => tok.split('|').filter(Boolean))
+          : [];
+
         const matches = [];
         for (let i = 0; i < data.items.length; i++) {
           const row = data.items[i];
           if (!typeMatch[row[1]]) continue;
-          if (words.length) {
+          if (aliasList) {
+            const hay = designLower[row[0]] + ' ' + typeLower[row[1]];
+            let anyHit = false;
+            for (let a = 0; a < aliasList.length; a++) {
+              if (hay.includes(aliasList[a])) { anyHit = true; break; }
+            }
+            if (!anyHit) continue;
+          } else if (wordGroups.length) {
             const hay = designLower[row[0]] + ' ' + typeLower[row[1]];
             let ok = true;
-            for (let w = 0; w < words.length; w++) {
-              if (!hay.includes(words[w])) { ok = false; break; }
+            for (let w = 0; w < wordGroups.length; w++) {
+              const alts = wordGroups[w];
+              let grpHit = false;
+              for (let a = 0; a < alts.length; a++) {
+                if (hay.includes(alts[a])) { grpHit = true; break; }
+              }
+              if (!grpHit) { ok = false; break; }
             }
             if (!ok) continue;
           }
@@ -162,8 +228,8 @@
         grid.hidden = false;
         grid.replaceChildren();
         status.textContent = matches.length
-          ? matches.length.toLocaleString() + ' matching verified products (out of ' + data.items.length.toLocaleString() + ' total)' + (q ? ' for “' + q + '”' : '')
-          : 'No matching verified products for “' + q + '”. Try fewer keywords or choose All Categories.';
+          ? matches.length.toLocaleString() + ' matching verified products (out of ' + data.items.length.toLocaleString() + ' total)' + (q ? ' for “' + q + '”' : '') + ' — every link goes straight to Spreadshirt.'
+          : 'No matching verified products for “' + q + '”. Click Reset filters or try fewer keywords.';
         let shown = 0;
         const append = () => {
           const frag = document.createDocumentFragment();
@@ -182,11 +248,109 @@
       }
     }
 
+    function resetAllFilters() {
+      qInput.value = '';
+      deptSel.value = defDept;
+      if (ptypeSel) ptypeSel.value = '';
+      sortSel.value = 'rel';
+      runFinder();
+    }
+
     form.addEventListener('submit', e => { e.preventDefault(); runFinder(); });
     deptSel.addEventListener('change', runFinder);
+    if (ptypeSel) ptypeSel.addEventListener('change', runFinder);
     sortSel.addEventListener('change', runFinder);
+    if (resetBtn) resetBtn.addEventListener('click', resetAllFilters);
+    if (allChipReset) allChipReset.addEventListener('click', resetAllFilters);
+    for (const btn of qChips) {
+      btn.addEventListener('click', () => {
+        const same = qInput.value.trim().toLowerCase() === btn.dataset.quickQ.toLowerCase();
+        qInput.value = same ? '' : btn.dataset.quickQ;
+        runFinder();
+      });
+    }
+    for (const btn of pChips) {
+      btn.addEventListener('click', () => {
+        if (!ptypeSel) return;
+        ptypeSel.value = ptypeSel.value === btn.dataset.quickPtype ? '' : btn.dataset.quickPtype;
+        runFinder();
+      });
+    }
+    for (const btn of document.querySelectorAll('[data-filter-dept]')) {
+      btn.addEventListener('click', () => {
+        deptSel.value = btn.dataset.filterDept;
+        runFinder();
+        finder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
     let fTimer;
     qInput.addEventListener('input', () => { clearTimeout(fTimer); fTimer = setTimeout(runFinder, 180); });
+  }
+
+  // Accessible Spreadshop Category Tabs with keyboard navigation, beforematch find-in-page sync & scroll-edge fades
+  const tabsRoot = document.querySelector('[data-merch-tabs]');
+  if (tabsRoot) {
+    const tablist = tabsRoot.querySelector('[role="tablist"]');
+    const tabs = tablist ? Array.from(tablist.querySelectorAll('[role="tab"]')) : [];
+    const panelMap = new Map(tabs.map(t => [t, document.getElementById(t.dataset.panel)]));
+
+    function selectTab(nextTab, moveFocus = false) {
+      if (!nextTab) return;
+      for (const tab of tabs) {
+        const active = tab === nextTab;
+        tab.setAttribute('aria-selected', String(active));
+        tab.toggleAttribute('focusgroupstart', active);
+        tab.tabIndex = active ? 0 : -1;
+        const panel = panelMap.get(tab);
+        if (panel) {
+          if (active) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', 'until-found');
+        }
+      }
+      if (moveFocus) nextTab.focus();
+      try {
+        nextTab.scrollIntoView({ block: 'nearest', inline: 'nearest', container: 'nearest' });
+      } catch {
+        nextTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+    }
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => selectTab(tab, false));
+      const panel = panelMap.get(tab);
+      if (panel) panel.addEventListener('beforematch', () => selectTab(tab, false));
+    }
+
+    if (tablist && !Object.hasOwn(HTMLElement.prototype, 'focusGroup')) {
+      tablist.addEventListener('keydown', e => {
+        const cur = tabs.indexOf(document.activeElement);
+        if (cur === -1) return;
+        let next = -1;
+        if (e.key === 'ArrowRight') next = (cur + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') next = (cur - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = tabs.length - 1;
+        if (next !== -1) {
+          e.preventDefault();
+          selectTab(tabs[next], true);
+        }
+      });
+    }
+  }
+
+  if (typeof CSS !== 'undefined' && typeof IntersectionObserver !== 'undefined' && !CSS.supports('animation-timeline', 'scroll()')) {
+    for (const scroller of document.querySelectorAll('.scroller')) {
+      const first = scroller.firstElementChild;
+      const last = scroller.lastElementChild;
+      if (!first || !last) continue;
+      const observer = new IntersectionObserver(entries => {
+        for (const { target, intersectionRatio } of entries) {
+          scroller.classList.toggle(target === first ? 'more-start' : 'more-end', intersectionRatio < 1);
+        }
+      }, { root: scroller, threshold: 1, rootMargin: '1px' });
+      observer.observe(first);
+      observer.observe(last);
+    }
   }
 
   // Unified Full-Catalog + Books + Designs + Videos Search on /search/
